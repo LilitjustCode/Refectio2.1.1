@@ -182,17 +182,17 @@ export default class DesignerPageTwoComponent extends React.Component {
   // }
 
   componentDidMount() {
-    Font.loadAsync({
-      Poppins_300Light,
-      Poppins_400Regular,
-      Poppins_500Medium,
-      Poppins_600SemiBold,
-      Poppins_700Bold,
-      Raleway_400Regular,
-      Raleway_500Medium,
-      Raleway_600SemiBold,
-      Raleway_700Bold,
-    });
+    // Font.loadAsync({
+    //   Poppins_300Light,
+    //   Poppins_400Regular,
+    //   Poppins_500Medium,
+    //   Poppins_600SemiBold,
+    //   Poppins_700Bold,
+    //   Raleway_400Regular,
+    //   Raleway_500Medium,
+    //   Raleway_600SemiBold,
+    //   Raleway_700Bold,
+    // });
 
     this.setState({fontsLoaded: true});
     this.loadedDataAfterLoadPage();

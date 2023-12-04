@@ -1,34 +1,31 @@
-import React, {Component} from 'react';
+import React from 'react';
 
 import {
-  SafeAreaView,
-  View,
+  ActivityIndicator,
+  Dimensions,
+  FlatList,
   Image,
-  Text,
+  ImageBackground,
   Keyboard,
-  TouchableOpacity,
-  TextInput,
+  Linking,
+  Modal,
+  Platform,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Pressable,
-  Modal,
-  ImageBackground,
-  FlatList,
-  ActivityIndicator,
-  Platform,
-  Linking,
-  Dimensions,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Svg, {Path, Rect} from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 
-import Slider from '../slider/Slider';
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
-import FilterComponent from '../Component/FilterComponent';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import BlueButton from '../Component/Buttons/BlueButton';
+import FilterComponent from '../Component/FilterComponent';
 import Slider2 from '../slider/Slider2';
+import CustomerMainPageNavComponent from './CustomerMainPageNav';
 
-import {ImageSlider} from 'react-native-image-slider-banner';
 // import { useLinkTo } from "@react-navigation/native";
 const {width: screenWidth} = Dimensions.get('window');
 export default class CustomerMainPageComponent extends React.Component {
@@ -101,11 +98,11 @@ export default class CustomerMainPageComponent extends React.Component {
           let data = res.data.data.data;
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
-              if (data[i].slider_photo.length > 0) {
+              if (data[i].slider_photo.length && data[i].slider_photo[i].user_id === data[i].id) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
-              } else if (data[i].user_product_limit1.length < 1) {
+              } else if (data[i].user_product_limit1.length < 1 && data[i].id === data[i].user_product_limit1[0].user_id) {
                 data[i].images = [];
                 continue;
               } else {

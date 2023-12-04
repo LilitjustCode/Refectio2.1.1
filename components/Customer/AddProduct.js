@@ -16,6 +16,7 @@ import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import * as ImagePicker from "expo-image-picker";
+import { launchImageLibrary } from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Loading from '../Component/Loading';
@@ -75,29 +76,35 @@ export default class AddProductComponent extends React.Component {
   }
   formdata = new FormData();
 
-  // pickImage = async () => {
-  //   this.setState({ buttonSend: false });
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsMultipleSelection: true,
-  //     quality: 0.5,
-  //   });
-  //   let all_images = this.state.all_images;
-  //   if (!result.canceled) {
-  //     await result.assets.map((element, index) => {
-  //       all_images.push({
-  //         uri: element.uri,
-  //         type: "image/jpg",
-  //         name: "photo.jpg",
-  //       });
-  //     });
-  //     this.setState({
-  //       all_images: all_images,
-  //       all_images_error: false,
-  //     });
-  //   }
-  //   this.setState({ buttonSend: true });
-  // };
+  pickImage = async () => {
+    this.setState({ buttonSend: false });
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsMultipleSelection: true,
+    //   quality: 0.5,
+    // });
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 1,
+      selectionLimit:50
+      // includeBase64: true,
+    });
+    let all_images = this.state.all_images;
+    if (!result.canceled) {
+      await result.assets.map((element, index) => {
+        all_images.push({
+          uri: element.uri,
+          type: "image/jpg",
+          name: "photo.jpg",
+        });
+      });
+      this.setState({
+        all_images: all_images,
+        all_images_error: false,
+      });
+    }
+    this.setState({ buttonSend: true });
+  };
 
   clearAllData = () => {
     this.setState({

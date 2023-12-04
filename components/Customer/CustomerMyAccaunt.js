@@ -23,6 +23,7 @@ import {AuthContext} from '../AuthContext/context';
 // import * as ImagePicker from "expo-image-picker";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import HTML from 'react-native-render-html';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -748,46 +749,52 @@ export default class CustomerMyAccauntComponent extends React.Component {
       .catch(error => console.log('error', error));
   };
 
-  // pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [4, 4],
-  //     quality: 1,
-  //   });
-  //   if (!result.canceled) {
-  //     this.setState({ logo: result.assets[0].uri });
-  //   }
+  pickImage = async () => {
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   aspect: [4, 4],
+    //   quality: 1,
+    // });
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 1,
+      selectionLimit:50
+      // includeBase64: true,
+    });
+    if (!result.canceled) {
+      this.setState({ logo: result.assets[0].uri });
+    }
 
-  //   let myHeaders = new Headers();
-  //   let userToken = await AsyncStorage.getItem("userToken");
-  //   let AuthStr = "Bearer " + userToken;
-  //   myHeaders.append("Authorization", AuthStr);
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem("userToken");
+    let AuthStr = "Bearer " + userToken;
+    myHeaders.append("Authorization", AuthStr);
 
-  //   let formdata = new FormData();
+    let formdata = new FormData();
 
-  //   formdata.append("logo", {
-  //     uri: result.assets[0].uri,
-  //     type: "image/jpg",
-  //     name: "photo.jpg",
-  //   });
+    formdata.append("logo", {
+      uri: result.assets[0].uri,
+      type: "image/jpg",
+      name: "photo.jpg",
+    });
 
-  //   let requestOptions = {
-  //     method: "POST",
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: "follow",
-  //   };
+    let requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      body: formdata,
+      redirect: "follow",
+    };
 
-  //   fetch(`${APP_URL}updateLogoProizvoditel`, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       if (result.status === true) {
-  //         this.getAuthUserProfile();
-  //       }
-  //     })
-  //     .catch((error) => console.log("error", error));
-  // };
+    fetch(`https://admin.refectio.ru/public/api/updateLogoProizvoditel`, requestOptions)
+      .then((response) => response.json())
+      .then((result) => {
+        if (result.status === true) {
+          this.getAuthUserProfile();
+        }
+      })
+      .catch((error) => console.log("error", error));
+  };
 
   logouth = async () => {
     let myHeaders = new Headers();

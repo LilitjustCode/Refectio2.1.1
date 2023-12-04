@@ -36,7 +36,7 @@ export default function AboutUsScreen({ navigation, value, hideText }) {
   //     redirect: "follow",
   //   };
 
-  //   fetch(`${APP_URL}update_about_us_user`, requestOptions)
+  //   fetch(`https://admin.refectio.ru/public/api/update_about_us_user`, requestOptions)
   //     .then((response) => response.json())
   //     .then((result) => {
   //       console.log(result);

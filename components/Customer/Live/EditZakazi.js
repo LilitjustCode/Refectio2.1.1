@@ -21,6 +21,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '../../Component/Loading';
 import {Modal} from 'react-native';
 import {ImageBackground} from 'react-native';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default class EditZakaziComponent extends React.Component {
   constructor(props) {
@@ -47,21 +48,27 @@ export default class EditZakaziComponent extends React.Component {
     };
   }
 
-  // pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [4, 4],
-  //     quality: 0.5,
-  //   });
-  //   if (!result.canceled) {
-  //     this.setState({
-  //       photo: result.assets[0].uri,
-  //       photo_error: false,
-  //       photo_bool: false,
-  //     });
-  //   }
-  // };
+  pickImage = async () => {
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   aspect: [4, 4],
+    //   quality: 0.5,
+    // });
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 1,
+      selectionLimit:50
+      // includeBase64: true,
+    });
+    if (!result.canceled) {
+      this.setState({
+        photo: result.assets[0].uri,
+        photo_error: false,
+        photo_bool: false,
+      });
+    }
+  };
 
   UpdateordersDataFromManufacter = async () => {
     this.setState({isLoading: true});

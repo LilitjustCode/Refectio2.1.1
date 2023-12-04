@@ -21,6 +21,7 @@ import Loading from '../Component/Loading';
 import HTML from 'react-native-render-html';
 import {Dimensions} from 'react-native';
 import RichTextEditorComponent from '../Auth/RichTextEditor';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -85,40 +86,46 @@ export default class EditProductComponent extends React.Component {
 
   handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>;
 
-  // pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsMultipleSelection: true,
-  //     quality: 0.5,
-  //   });
-  //   if (!result.canceled) {
-  //     this.setState({ img: result.assets[0].uri, all_images_error: false });
-  //   } else {
-  //     this.setState({ all_images_error: true });
-  //   }
+  pickImage = async () => {
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsMultipleSelection: true,
+    //   quality: 0.5,
+    // });
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 1,
+      selectionLimit:50
+      // includeBase64: true,
+    });
+    if (!result.canceled) {
+      this.setState({ img: result.assets[0].uri, all_images_error: false });
+    } else {
+      this.setState({ all_images_error: true });
+    }
 
-  //   let all_images = this.state.all_images;
-  //   if (result.hasOwnProperty("assets")) {
-  //     await result.assets.map((element, index) => {
-  //       all_images.push({
-  //         uri: element.uri,
-  //         type: "image/jpg",
-  //         name: "photo.jpg",
-  //       });
-  //     });
-  //   } else {
-  //     all_images.push({
-  //       uri: result.assets[0].uri,
-  //       type: "image/jpg",
-  //       name: "photo.jpg",
-  //     });
-  //   }
+    let all_images = this.state.all_images;
+    if (result.hasOwnProperty("assets")) {
+      await result.assets.map((element, index) => {
+        all_images.push({
+          uri: element.uri,
+          type: "image/jpg",
+          name: "photo.jpg",
+        });
+      });
+    } else {
+      all_images.push({
+        uri: result.assets[0].uri,
+        type: "image/jpg",
+        name: "photo.jpg",
+      });
+    }
 
-  //   this.setState({
-  //     all_images: all_images,
-  //     all_images_error: false,
-  //   });
-  // };
+    this.setState({
+      all_images: all_images,
+      all_images_error: false,
+    });
+  };
 
   delateSelectedNewImage = async index => {
     let {all_images} = this.state;

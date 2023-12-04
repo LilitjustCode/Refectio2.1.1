@@ -1,20 +1,18 @@
-import React, {useEffect, useState, useRef, memo} from 'react';
+import React, {useState} from 'react';
 import {
-  StyleSheet,
-  View,
-  Image,
-  Dimensions,
-  TouchableOpacity,
-  Modal,
-  Text,
-  FlatList,
   Animated,
-  Platform,
+  Dimensions,
+  FlatList,
+  Image,
+  Modal,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
-import {SafeAreaView} from 'react-native';
 
-const width = Dimensions.get('window').width - 25;
+const {width, height} = Dimensions.get('window');
 
 export default function Slider2(props) {
   const [sliderModal, setSliderModal] = useState(false);
@@ -57,7 +55,7 @@ export default function Slider2(props) {
   };
 
   const [fadeAnim] = useState(new Animated.Value(0));
-
+  const scrollX = React.useRef(new Animated.Value(0)).current;
   const fadeIn = () => {
     Animated.timing(fadeAnim, {
       toValue: 1,
@@ -87,39 +85,70 @@ export default function Slider2(props) {
             <Image
               source={require('../../assets/image/ixs.png')}
               style={[
-                {tintColor: 'white', width: 30, height: 30},
+                {tintColor: 'white', width: 30, height: 30, zIndex: 999},
                 Platform.OS == 'ios' ? {marginTop: 25} : '',
               ]}
             />
           </TouchableOpacity>
-          <View
+          <View style={StyleSheet.absoluteFillObject}>
+            {props.slid.map((val, ind) => {
+              const inputRange = [
+                (ind - 1) * width,
+                ind * width,
+                (ind + 1) * width,
+              ];
+              const opacity = scrollX.interpolate({
+                inputRange,
+                outputRange: [0, 1, 0],
+              });
+              return (
+                <Animated.Image
+                  key={`image-${ind}`}
+                  // @ts-ignore
+                  source={
+                    val.img
+                      ? val.img
+                      : {
+                          uri: `https://admin.refectio.ru/storage/app/uploads/${val.img}`,
+                        }
+                  }
+                  style={[StyleSheet.absoluteFillObject, {opacity}]}
+                  blurRadius={20}
+                />
+              );
+            })}
+          </View>
+          <ImageViewer
+            imageUrls={props.slid.map((el, i) => ({
+              url: `https://admin.refectio.ru/storage/app/uploads/${el.image}`,
+            }))}
+            onChange={index => {
+              setInmageActive(index);
+              fadeIn();
+            }}
+            // renderImage={(props) => (
+            //   <Animated.View style={{ opacity: fadeAnim }}>
+            //     <Image {...props} />
+            //   </Animated.View>
+            // )}
             style={{
-              backgroundColor: 'black',
-              flex: 1,
-            }}>
-            <ImageViewer
-              imageUrls={props.slid.map((el, i) => ({
-                url: `https://admin.refectio.ru/storage/app/uploads/${el.image}`,
-              }))}
-              onChange={index => {
-                setInmageActive(index);
-                fadeIn();
-              }}
-              // renderImage={(props) => (
-              //   <Animated.View style={{ opacity: fadeAnim }}>
-              //     <Image {...props} />
-              //   </Animated.View>
-              // )}
-              index={imgActive}
-              renderIndicator={() => null}
-              enableSwipeDown
-              onSwipeDown={() => {
-                setSliderModal(false);
-                setInmageActive(0);
-                fadeOut();
-              }}
-            />
-            {/* {props.slid.length > 1 && (
+              minHeight: height,
+              minWidth: width,
+
+              // flex: 1,
+              backgroundColor: '#fff',
+              // bottom: 25,
+            }}
+            index={imgActive}
+            renderIndicator={() => null}
+            enableSwipeDown
+            onSwipeDown={() => {
+              setSliderModal(false);
+              setInmageActive(0);
+              fadeOut();
+            }}
+          />
+          {/* {props.slid.length > 1 && (
               <View style={styles.wrapDot}>
                 {props.slid.map((item, index) => (
                   <Animated.View
@@ -129,7 +158,6 @@ export default function Slider2(props) {
                 ))}
               </View>
             )} */}
-          </View>
         </SafeAreaView>
       </Modal>
 

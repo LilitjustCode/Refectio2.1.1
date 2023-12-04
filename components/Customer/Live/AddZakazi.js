@@ -20,6 +20,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 // import * as ImagePicker from "expo-image-picker";
 
 import Loading from '../../Component/Loading';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 export default class AddZakaziComponent extends React.Component {
   constructor(props) {
@@ -64,22 +65,28 @@ export default class AddZakaziComponent extends React.Component {
 
   form_data = new FormData();
 
-  // pickImage = async () => {
-  //   let result = await ImagePicker.launchImageLibraryAsync({
-  //     mediaTypes: ImagePicker.MediaTypeOptions.Images,
-  //     allowsEditing: true,
-  //     aspect: [4, 4],
-  //     quality: 0.5,
-  //   });
-  //   if (!result.canceled) {
-  //     this.setState({
-  //       photo: result.assets[0].uri,
-  //       photo_error: false,
-  //     });
-  //   } else {
-  //     this.setState({ photo_error: true, photo: null });
-  //   }
-  // };
+  pickImage = async () => {
+    // let result = await ImagePicker.launchImageLibraryAsync({
+    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //   allowsEditing: true,
+    //   aspect: [4, 4],
+    //   quality: 0.5,
+    // });
+    const result = await launchImageLibrary({
+      mediaType: 'photo',
+      quality: 1,
+      selectionLimit:50
+      // includeBase64: true,
+    });
+    if (!result.canceled) {
+      this.setState({
+        photo: result.assets[0].uri,
+        photo_error: false,
+      });
+    } else {
+      this.setState({ photo_error: true, photo: null });
+    }
+  };
 
   AddNextOrderCustomer = async () => {
     this.setState({isLoading: true});
