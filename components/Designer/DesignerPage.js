@@ -1,28 +1,25 @@
-import React, {Component} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
+  ActivityIndicator,
+  FlatList,
   Image,
-  Text,
+  ImageBackground,
   Keyboard,
-  TouchableOpacity,
-  TextInput,
+  Modal,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Pressable,
-  Modal,
-  ImageBackground,
-  FlatList,
-  ActivityIndicator,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Svg, {Path, Rect} from 'react-native-svg';
-import {ImageSlider} from 'react-native-image-slider-banner';
-import Slider2 from '../slider/Slider2';
-import FilterComponent from '../Component/FilterComponent';
-import DesignerPageNavComponent from './DesignerPageNav';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import Svg, {Path} from 'react-native-svg';
 import BlueButton from '../Component/Buttons/BlueButton';
-
+import FilterComponent from '../Component/FilterComponent';
+import Slider2 from '../slider/Slider2';
+import DesignerPageNavComponent from './DesignerPageNav';
 
 export default class CustomerMainPageComponent extends React.Component {
   constructor(props) {
@@ -55,8 +52,6 @@ export default class CustomerMainPageComponent extends React.Component {
   componentDidMount() {
     this.checkForUpdate();
   }
-
-  
 
   clearAllData = async () => {
     await this.setState({

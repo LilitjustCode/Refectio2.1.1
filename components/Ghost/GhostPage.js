@@ -1,25 +1,22 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  Image,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  Keyboard,
-  Platform,
   ActivityIndicator,
   FlatList,
+  Image,
+  Keyboard,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Svg, {Path, Rect} from 'react-native-svg';
+import Svg, {Path} from 'react-native-svg';
 // import Slider from "../slider/Slider";
-import Slider2 from '../slider/Slider2';
-import {ImageSlider} from 'react-native-image-slider-banner';
-import GhostNavComponent from './GhostNav';
 import FilterComponent from '../Component/FilterComponent';
+import Slider2 from '../slider/Slider2';
+import GhostNavComponent from './GhostNav';
 // import * as Font from 'expo-font';
 
 export default class GhostPageComponent extends React.Component {
@@ -419,8 +416,12 @@ export default class GhostPageComponent extends React.Component {
             //     img: `https://admin.refectio.ru/storage/app/uploads/`+ item.images,
             //   },
             // ]}
-            data={item.images.map((value) => {
-              return { img: `https://admin.refectio.ru/storage/app/uploads/` + value.image };
+            data={item.images.map(value => {
+              return {
+                img:
+                  `https://admin.refectio.ru/storage/app/uploads/` +
+                  value.image,
+              };
             })}
             // dataSource={item.images.map((item, index) => ({
             //   url: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
@@ -429,11 +430,11 @@ export default class GhostPageComponent extends React.Component {
             //   // For example: description: item.description
             // }))}
             autoPlay={false}
-            onItemChanged={(item) => console.log(item)}
+            onItemChanged={item => console.log(item)}
             closeIconColor="#fff"
             // showIndicator={false}
             caroselImageStyle={{
-              resizeMode: "cover",
+              resizeMode: 'cover',
               height: 270,
             }}
           /> */}

@@ -1,20 +1,19 @@
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Animated,
   Dimensions,
   FlatList,
   Image,
   Modal,
-  SafeAreaView,
+  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
-
-const {width, height} = Dimensions.get('window');
-
+import CloseIcon from './CloseIcon.jsx';
+import Carousel from './SliderNew.tsx';
 export default function Slider2(props) {
+  const {width} = Dimensions.get('window');
   const [sliderModal, setSliderModal] = useState(false);
   const [imgActive, setInmageActive] = useState(0);
   const change = nativeEvent => {
@@ -26,7 +25,7 @@ export default function Slider2(props) {
     }
   };
 
-  let sliderItem = ({item, index}) => {
+  let sliderItem = ({item}) => {
     return sliderModal === true ? (
       <Image
         source={{
@@ -54,111 +53,22 @@ export default function Slider2(props) {
     );
   };
 
-  const [fadeAnim] = useState(new Animated.Value(0));
-  const scrollX = React.useRef(new Animated.Value(0)).current;
-  const fadeIn = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
-  };
-
-  const fadeOut = () => {
-    Animated.timing(fadeAnim, {
-      toValue: 0,
-      duration: 100,
-      useNativeDriver: true,
-    }).start();
-  };
+  const scrollX = useRef(new Animated.Value(0)).current;
 
   return (
     <View>
       <Modal visible={sliderModal} onRequestClose={() => setSliderModal(false)}>
-        <SafeAreaView style={styles.sliderModal}>
-          <TouchableOpacity
-            style={{position: 'absolute', right: 18, top: 18, zIndex: 50}}
-            onPress={() => {
-              setSliderModal(false);
-              setInmageActive(0);
-            }}>
-            <Image
-              source={require('../../assets/image/ixs.png')}
-              style={[
-                {tintColor: 'white', width: 30, height: 30, zIndex: 999},
-                Platform.OS == 'ios' ? {marginTop: 25} : '',
-              ]}
-            />
-          </TouchableOpacity>
-          <View style={StyleSheet.absoluteFillObject}>
-            {props.slid.map((val, ind) => {
-              const inputRange = [
-                (ind - 1) * width,
-                ind * width,
-                (ind + 1) * width,
-              ];
-              const opacity = scrollX.interpolate({
-                inputRange,
-                outputRange: [0, 1, 0],
-              });
-              return (
-                <Animated.Image
-                  key={`image-${ind}`}
-                  // @ts-ignore
-                  source={
-                    val.img
-                      ? val.img
-                      : {
-                          uri: `https://admin.refectio.ru/storage/app/uploads/${val.img}`,
-                        }
-                  }
-                  style={[StyleSheet.absoluteFillObject, {opacity}]}
-                  blurRadius={20}
-                />
-              );
-            })}
-          </View>
-          <ImageViewer
-            imageUrls={props.slid.map((el, i) => ({
-              url: `https://admin.refectio.ru/storage/app/uploads/${el.image}`,
-            }))}
-            onChange={index => {
-              setInmageActive(index);
-              fadeIn();
-            }}
-            // renderImage={(props) => (
-            //   <Animated.View style={{ opacity: fadeAnim }}>
-            //     <Image {...props} />
-            //   </Animated.View>
-            // )}
-            style={{
-              minHeight: height,
-              minWidth: width,
-
-              // flex: 1,
-              backgroundColor: '#fff',
-              // bottom: 25,
-            }}
-            index={imgActive}
-            renderIndicator={() => null}
-            enableSwipeDown
-            onSwipeDown={() => {
-              setSliderModal(false);
-              setInmageActive(0);
-              fadeOut();
-            }}
-          />
-          {/* {props.slid.length > 1 && (
-              <View style={styles.wrapDot}>
-                {props.slid.map((item, index) => (
-                  <Animated.View
-                    style={imgActive === index ? styles.dotActive : styles.dot}
-                    key={index}
-                  />
-                ))}
-              </View>
-            )} */}
-        </SafeAreaView>
+        <Pressable
+          onPress={() => setSliderModal(false)}
+          style={{position: 'absolute', zIndex: 999, top: '8%', right: '5%'}}>
+          <CloseIcon />
+        </Pressable>
+        <View
+          style={{
+            width,
+          }}>
+          <Carousel imagesData={props.slid} imgActive={imgActive} />
+        </View>
       </Modal>
 
       <View>
@@ -191,10 +101,6 @@ export default function Slider2(props) {
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: width,
-    height: width,
-  },
   wrapDot: {
     position: 'absolute',
     bottom: 10,

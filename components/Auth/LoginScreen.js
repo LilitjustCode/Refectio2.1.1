@@ -1,23 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {Component} from 'react';
 import {
-  SafeAreaView,
-  View,
   Image,
-  Text,
-  StyleSheet,
-  TouchableOpacity,
-  TextInput,
-  Modal,
   ImageBackground,
-  Platform,
+  Modal,
+  SafeAreaView,
   ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import ArrowGrayComponent from '../../assets/image/ArrowGray';
-import BlueButton from '../Component/Buttons/BlueButton';
-import {AuthContext} from '../AuthContext/context';
 import MaskInput from 'react-native-mask-input';
-import jwtDecode from 'jwt-decode';
+import ArrowGrayComponent from '../../assets/image/ArrowGray';
+import {AuthContext} from '../AuthContext/context';
+import BlueButton from '../Component/Buttons/BlueButton';
 
 export default class LoginScreenComponent extends Component {
   constructor(props) {
@@ -688,14 +686,14 @@ const styles = StyleSheet.create({
   vxod: {
     width: '100%',
     textAlign: 'center',
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: 'Poppins-Medium',
     lineHeight: 54,
     fontSize: 32,
     color: '#2D9EFB',
     marginTop: 20,
   },
   fiealdset: {
-    fontFamily: 'Poppins_500Medium',
+    fontFamily: 'Poppins-Medium',
     lineHeight: 23,
     fontSize: 15,
     marginBottom: 5,
