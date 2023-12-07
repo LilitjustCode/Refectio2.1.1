@@ -377,6 +377,10 @@ PODS:
     - glog
   - react-native-image-picker (7.0.3):
     - React-Core
+  - react-native-orientation-locker (1.6.0):
+    - React-Core
+  - react-native-pinchable (0.2.1):
+    - React-Core
   - react-native-render-html (6.3.4):
     - React-Core
   - react-native-safe-area-context (4.7.4):
@@ -561,6 +565,8 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-orientation-locker (from `../node_modules/react-native-orientation-locker`)
+  - react-native-pinchable (from `../node_modules/react-native-pinchable`)
   - react-native-render-html (from `../node_modules/react-native-render-html`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
   - react-native-webview (from `../node_modules/react-native-webview`)
@@ -652,6 +658,10 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-orientation-locker:
+    :path: "../node_modules/react-native-orientation-locker"
+  react-native-pinchable:
+    :path: "../node_modules/react-native-pinchable"
   react-native-render-html:
     :path: "../node_modules/react-native-render-html"
   react-native-safe-area-context:
@@ -742,6 +752,8 @@ SPEC CHECKSUMS:
   React-jsinspector: 8baadae51f01d867c3921213a25ab78ab4fbcd91
   React-logger: 8edc785c47c8686c7962199a307015e2ce9a0e4f
   react-native-image-picker: 2381c008bbb09e72395a2d043c147b11bd1523d9
+  react-native-orientation-locker: 4409c5b12b65f942e75449872b4f078b6f27af81
+  react-native-pinchable: b4381b0807d15c12b14bfacd927128f52d96f0f1
   react-native-render-html: 984dfe2294163d04bf5fe25d7c9f122e60e05ebe
   react-native-safe-area-context: 2cd91d532de12acdb0a9cbc8d43ac72a8e4c897c
   react-native-webview: 88293a0f23eca8465c0433c023ec632930e644d0

@@ -3,13 +3,14 @@ import {Animated, Dimensions} from 'react-native';
 interface BackgroundProps {
   scrollX: Animated.Value;
   imagesData: any[];
+  setLoading: React.SetStateAction<boolean>;
 }
 const CarouselBackground: React.FC<BackgroundProps> = ({
   scrollX,
   imagesData,
+  setLoading,
 }: any) => {
   const {width, height} = Dimensions.get('screen');
-
   return imagesData?.map((item: any, index: number) => {
     const inputRange = [(index - 1) * width, index * width];
     const opacity = scrollX.interpolate({
@@ -18,8 +19,18 @@ const CarouselBackground: React.FC<BackgroundProps> = ({
     });
 
     return (
-      <Animated.View key={item.id}>
+      <Animated.View
+        key={item.id}
+        style={
+          {
+            // transform: [
+            //   {rotate: devicePosition === 'PORTRAIT' ? '90deg' : '0deg'},
+            // ],
+          }
+        }>
         <Animated.Image
+          onPartialLoad={() => setLoading(true)}
+          onLoadEnd={() => setLoading(false)}
           source={{
             uri: `https://admin.refectio.ru/storage/app/uploads/${item.image}`,
           }}
@@ -28,9 +39,11 @@ const CarouselBackground: React.FC<BackgroundProps> = ({
             {
               opacity,
               resizeMode: 'cover',
-              zIndex: 333,
+              zIndex: 998,
               width,
               height,
+              minHeight: height,
+              minWidth: width,
               position: 'absolute',
             },
           ]}

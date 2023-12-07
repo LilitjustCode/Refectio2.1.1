@@ -1,21 +1,21 @@
-import React, {useRef, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
+import React, {useState} from 'react';
 import {
   Animated,
   Dimensions,
   FlatList,
   Image,
-  Modal,
-  Pressable,
   StyleSheet,
   TouchableOpacity,
   View,
 } from 'react-native';
-import CloseIcon from './CloseIcon.jsx';
-import Carousel from './SliderNew.tsx';
+
 export default function Slider2(props) {
-  const {width} = Dimensions.get('window');
+  const {width, height} = Dimensions.get('window');
   const [sliderModal, setSliderModal] = useState(false);
   const [imgActive, setInmageActive] = useState(0);
+  const navigation = useNavigation();
+
   const change = nativeEvent => {
     const slider = Math.ceil(
       nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width,
@@ -38,7 +38,14 @@ export default function Slider2(props) {
         }}
       />
     ) : (
-      <TouchableOpacity onPress={() => setSliderModal(true)} activeOpacity={1}>
+      <TouchableOpacity
+        onPress={() =>
+          navigation.navigate('Slider', {
+            imagesData: props.slid,
+            imgActive,
+          })
+        }
+        activeOpacity={1}>
         <Image
           source={{
             uri: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
@@ -53,24 +60,8 @@ export default function Slider2(props) {
     );
   };
 
-  const scrollX = useRef(new Animated.Value(0)).current;
-
   return (
-    <View>
-      <Modal visible={sliderModal} onRequestClose={() => setSliderModal(false)}>
-        <Pressable
-          onPress={() => setSliderModal(false)}
-          style={{position: 'absolute', zIndex: 999, top: '8%', right: '5%'}}>
-          <CloseIcon />
-        </Pressable>
-        <View
-          style={{
-            width,
-          }}>
-          <Carousel imagesData={props.slid} imgActive={imgActive} />
-        </View>
-      </Modal>
-
+    <>
       <View>
         <FlatList
           horizontal
@@ -85,7 +76,7 @@ export default function Slider2(props) {
           renderItem={sliderItem}
           onScroll={({nativeEvent}) => change(nativeEvent)}
         />
-        {props.slid.length > 1 && (
+        {props?.slid?.length > 1 && (
           <View style={styles.wrapDot}>
             {props.slid.map((item, index) => (
               <Animated.View
@@ -96,7 +87,7 @@ export default function Slider2(props) {
           </View>
         )}
       </View>
-    </View>
+    </>
   );
 }
 

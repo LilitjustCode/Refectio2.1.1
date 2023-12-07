@@ -1,29 +1,28 @@
-import * as React from 'react';
-import {useState, useEffect} from 'react';
-import {View, Image, StatusBar, Dimensions} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import AuthScreenComponent from './components/Auth/AuthScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {AuthContext} from './components/AuthContext/context';
-import LoginScreenComponent from './components/Auth/LoginScreen';
-import RegisteredScreenComponent from './components/Auth/RegisteredScreen';
-import RegistrationUserScreenComponent from './components/Auth/RegistrationUserScreen';
-import RegistrationManufacturerComponent from './components/Auth/RegistrationManufacturer';
+import {NavigationContainer} from '@react-navigation/native';
+import * as React from 'react';
+import {useState} from 'react';
+import {Dimensions, Image, StatusBar, View} from 'react-native';
+import AuthScreenComponent from './components/Auth/AuthScreen';
 import ConfirmTelScreenComponent from './components/Auth/ConfirmTelScreen';
-import CustomerMainPageComponent from './components/Customer/CustomerMainPage';
-import GhostPageComponent from './components/Ghost/GhostPage';
-import GhostPageTwoComponent from './components/Ghost/GhostPageTwo';
-import DesignerPageComponent from './components/Designer/DesignerPage';
 import EditPhoneNumberComponent from './components/Auth/EditPhoneNumber';
-import DesignerPageTwoComponent from './components/Designer/DesignerPageTwo';
-import CustomerPageTwoComponent from './components/Customer/CustomerPageTwo';
 import ForgetPasswordComponent from './components/Auth/ForgetPassword';
 import ForgetPasswordTelComponent from './components/Auth/ForgetPasswordTel';
+import LoginScreenComponent from './components/Auth/LoginScreen';
 import NewPasswordComponent from './components/Auth/NewPassword';
+import RegisteredScreenComponent from './components/Auth/RegisteredScreen';
+import RegistrationManufacturerComponent from './components/Auth/RegistrationManufacturer';
+import RegistrationUserScreenComponent from './components/Auth/RegistrationUserScreen';
+import {AuthContext} from './components/AuthContext/context';
+import CustomerMainPageComponent from './components/Customer/CustomerMainPage';
+import CustomerPageTwoComponent from './components/Customer/CustomerPageTwo';
+import DesignerPageComponent from './components/Designer/DesignerPage';
+import DesignerPageTwoComponent from './components/Designer/DesignerPageTwo';
+import GhostPageComponent from './components/Ghost/GhostPage';
+import GhostPageTwoComponent from './components/Ghost/GhostPageTwo';
 // import DesignerMyBroniComponent from "./components/Designer/DesignerMyBroni";
-import MyAccauntComponent from './components/Designer/MyAccaunt';
 import DesignerSavedComponent from './components/Designer/DesignerSaved';
+import MyAccauntComponent from './components/Designer/MyAccaunt';
 // import CustomerMyBroniComponent from "./components/Customer/CustomerMyBroni";
 // import CustomerRewardsComponent from "./components/Customer/CustomerRewards";
 import CustomerMyAccauntComponent from './components/Customer/CustomerMyAccaunt';
@@ -46,40 +45,41 @@ import CustomerMyAccauntComponent from './components/Customer/CustomerMyAccaunt'
 
 // import { Montserrat_400Regular } from "@expo-google-fonts/montserrat";
 // import * as Linking from "expo-linking";
-import PraductiaComponent from './components/Customer/Praductia';
-import AddProductComponent from './components/Customer/AddProduct';
-import ModalComponent from './components/Ghost/Modal';
-import EditPhoneNumberConfirmComponent from './components/Auth/EditPhoneNumberConfirm';
-import EditPasswordCustomerCompnent from './components/Auth/EditPaswordCustomer';
-import EditPhoneNumberDesignerComponent from './components/Auth/EditPhoneNumberDesigner';
-import EditPhoneNumberDesignerConfirmComponent from './components/Auth/EditPhoneNumberDesignerConfirm';
-import EditPasswordDesignerCompnent from './components/Auth/EditPaswordDesigner';
-import ZakaziLiveComponent from './components/Customer/Live/ZakaziLive';
-import LiveZakazchikSinglComponent from './components/Customer/Live/LiveZakazchikSingl';
-import AddZakaziComponent from './components/Customer/Live/AddZakazi';
-import EditZakaziComponent from './components/Customer/Live/EditZakazi';
-import ZakaziLiveDesignerComponent from './components/Designer/Live/ZakaziLiveDesigner';
-import LiveZakazchikSinglDesignerComponent from './components/Designer/Live/LiveZakazchikSinglDesigner';
-import AddZakazchikDesignerComponent from './components/Designer/Live/AddZakazchikDesigner';
-import EditProductComponent from './components/Customer/EditProduct';
 import {createStackNavigator} from '@react-navigation/stack';
 import 'react-native-gesture-handler';
+import EditPasswordCustomerCompnent from './components/Auth/EditPaswordCustomer';
+import EditPasswordDesignerCompnent from './components/Auth/EditPaswordDesigner';
+import EditPhoneNumberConfirmComponent from './components/Auth/EditPhoneNumberConfirm';
+import EditPhoneNumberDesignerComponent from './components/Auth/EditPhoneNumberDesigner';
+import EditPhoneNumberDesignerConfirmComponent from './components/Auth/EditPhoneNumberDesignerConfirm';
+import AddProductComponent from './components/Customer/AddProduct';
+import EditProductComponent from './components/Customer/EditProduct';
+import AddZakaziComponent from './components/Customer/Live/AddZakazi';
+import EditZakaziComponent from './components/Customer/Live/EditZakazi';
+import LiveZakazchikSinglComponent from './components/Customer/Live/LiveZakazchikSingl';
+import ZakaziLiveComponent from './components/Customer/Live/ZakaziLive';
+import PraductiaComponent from './components/Customer/Praductia';
+import AddZakazchikDesignerComponent from './components/Designer/Live/AddZakazchikDesigner';
+import LiveZakazchikSinglDesignerComponent from './components/Designer/Live/LiveZakazchikSinglDesigner';
+import ZakaziLiveDesignerComponent from './components/Designer/Live/ZakaziLiveDesigner';
+import ModalComponent from './components/Ghost/Modal';
 
-import SearchScreenGuest from './components/search/guest/SearchScreen';
-import CategoryScreenGuest from './components/search/guest/CategoryScreen';
-import CategorySingleScreenGuest from './components/search/guest/CategorySingleScreen';
-import SearchScreenDesigner from './components/search/designer/SearchScreen';
-import CategoryScreenDesigner from './components/search/designer/CategoryScreen';
-import CategorySingleScreenDesigner from './components/search/designer/CategorySingleScreen';
-import SearchScreenCustomer from './components/search/customer/SearchScreen';
-import CategoryScreenCustomer from './components/search/customer/CategoryScreen';
-import CategorySingleScreenCustomer from './components/search/customer/CategorySingleScreen';
 import AboutUsScreen from './components/Customer/AboutUsScreen';
-import SubCategoryScreenCustomer from './components/search/customer/SubCategoryScreen';
-import SubCategoryScreenDesigner from './components/search/designer/SubCategoryScreen';
-import SubCategoryScreenGuest from './components/search/guest/SubCategoryScreen';
 import SelectCategoryScreen from './components/Customer/SelectCategoryScreen';
 import SelectSubCategoryScreen from './components/Customer/SelectSubCategoryScreen';
+import CategoryScreenCustomer from './components/search/customer/CategoryScreen';
+import CategorySingleScreenCustomer from './components/search/customer/CategorySingleScreen';
+import SearchScreenCustomer from './components/search/customer/SearchScreen';
+import SubCategoryScreenCustomer from './components/search/customer/SubCategoryScreen';
+import CategoryScreenDesigner from './components/search/designer/CategoryScreen';
+import CategorySingleScreenDesigner from './components/search/designer/CategorySingleScreen';
+import SearchScreenDesigner from './components/search/designer/SearchScreen';
+import SubCategoryScreenDesigner from './components/search/designer/SubCategoryScreen';
+import CategoryScreenGuest from './components/search/guest/CategoryScreen';
+import CategorySingleScreenGuest from './components/search/guest/CategorySingleScreen';
+import SearchScreenGuest from './components/search/guest/SearchScreen';
+import SubCategoryScreenGuest from './components/search/guest/SubCategoryScreen';
+import Carousel from './components/slider/SliderNew';
 
 // const customFonts = {
 //   Poppins_300Light,
@@ -811,6 +811,22 @@ export default function App() {
                 <Stack.Screen
                   name="LoginScreen"
                   component={LoginScreenComponent}
+                />
+                <Stack.Screen
+                  name={'Slider'}
+                  component={Carousel}
+                  options={{
+                    headerTransparent: true,
+                    gestureEnabled: true,
+
+                    animation: 'fade_from_bottom',
+
+                    contentStyle: {
+                      flex: 1,
+                    },
+                    presentation: 'modal',
+                    animationTypeForReplace: 'pop',
+                  }}
                 />
                 <Stack.Screen
                   name="ConfirmTelScreen"

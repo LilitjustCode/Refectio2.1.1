@@ -87,7 +87,6 @@ export default class GhostPageComponent extends React.Component {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
-                console.log(product_image, 'asd');
               } else if (data[i].user_product_limit1.length < 1) {
                 data[i].images = [];
                 continue;
@@ -104,7 +103,6 @@ export default class GhostPageComponent extends React.Component {
               isLoading: false,
             });
           } else {
-            console.log('else');
             this.setState({
               isLastPage: true,
               isLoading: false,
@@ -172,7 +170,6 @@ export default class GhostPageComponent extends React.Component {
             let product_image = data[i].slider_photo;
             product_image?.length > 5 ? product_image.splice(5) : null;
             data[i].images = product_image;
-            console.log(product_image, 'llhuh');
           } else if (data[i].user_product_limit1?.length < 1) {
             data[i].images = [];
             continue;
@@ -250,8 +247,6 @@ export default class GhostPageComponent extends React.Component {
             data[i].images = product_image;
           }
 
-          // console.log(data, 'res.data.data.data');
-
           this.setState({
             getAllProducts: data,
           });
@@ -314,7 +309,6 @@ export default class GhostPageComponent extends React.Component {
 
   renderItem = ({item, index}) => {
     let count = item.meshok;
-    console.log(item.id, 'imgre');
     return (
       item.user_product_limit1.length !== 0 && (
         <View key={index} style={styles.campaign}>
@@ -403,41 +397,6 @@ export default class GhostPageComponent extends React.Component {
           {item.images.filter(value => value.user_id === item.id) && (
             <Slider2 slid={item.images} />
           )}
-          {/* <ImageSlider
-            showIndicator
-            indicatorSize={8} // Adjust the size of the indicators
-            indicatorColor="red" // Adjust the color of the indicators
-            inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
-            indicatorAtBottom={true}
-            preview={true}
-            // children
-            // data={[
-            //   {
-            //     img: `https://admin.refectio.ru/storage/app/uploads/`+ item.images,
-            //   },
-            // ]}
-            data={item.images.map(value => {
-              return {
-                img:
-                  `https://admin.refectio.ru/storage/app/uploads/` +
-                  value.image,
-              };
-            })}
-            // dataSource={item.images.map((item, index) => ({
-            //   url: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
-            //   // title: item.title,
-            //   // You can add more properties as needed
-            //   // For example: description: item.description
-            // }))}
-            autoPlay={false}
-            onItemChanged={item => console.log(item)}
-            closeIconColor="#fff"
-            // showIndicator={false}
-            caroselImageStyle={{
-              resizeMode: 'cover',
-              height: 270,
-            }}
-          /> */}
         </View>
       )
     );
@@ -453,7 +412,6 @@ export default class GhostPageComponent extends React.Component {
   };
 
   handleLoadMore = () => {
-    console.log('handleLoadMore');
     this.getProductsFunction();
   };
 
