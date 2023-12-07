@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   ActivityIndicator,
   Animated,
@@ -7,18 +7,23 @@ import {
   View,
 } from 'react-native';
 import Pinchable from 'react-native-pinchable';
-import {SharedElement} from 'react-navigation-shared-element';
 
-const {width, height} = Dimensions.get('window');
-
-const ListItem = ({item, orientation}) => {
+const ListItem = ({item}) => {
+  const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
-  let itemStyle =
-    orientation === 'LANDSPACE'
-      ? styles.listItemLandspace
-      : styles.imageContainer;
-  let imageStyle =
-    orientation === 'PORTRAIT' ? styles.image : styles.landscapeImage;
+  const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
+
+  useEffect(() => {
+    Dimensions.addEventListener('change', ({window: {width, height}}) => {
+      console.log(width, height);
+      if (width < height) {
+        setCurrentOrintation('PORTRAIT');
+      } else {
+        setCurrentOrintation('LANDSCAPE');
+      }
+    });
+  }, [height, width]);
+
   return (
     <View>
       {loading && (
@@ -30,22 +35,31 @@ const ListItem = ({item, orientation}) => {
           />
         </View>
       )}
-      <SharedElement id={`${item.id}`}>
-        <Pinchable>
-          <Animated.View style={[styles.listItemContainer]}>
-            <Animated.View style={[itemStyle]}>
-              <Animated.Image
-                style={imageStyle}
-                onPartialLoad={() => setLoading(true)}
-                onLoadEnd={() => setLoading(false)}
-                source={{
-                  uri: `https://admin.refectio.ru/storage/app/uploads/${item.image}`,
-                }}
-              />
-            </Animated.View>
+      {/* <SharedElement id={`${item.id}`}> */}
+      <Pinchable>
+        <Animated.View style={[styles.listItemContainer]}>
+          <Animated.View
+            style={
+              currentOrintation === 'LANDSCAPE'
+                ? styles.listItemLandspace
+                : styles.imageContainer
+            }>
+            <Animated.Image
+              style={
+                currentOrintation !== 'LANDSCAPE'
+                  ? [styles.image, {minHeight: height * 0.7, width}]
+                  : [styles.landscapeImage, {minHeight: height, height, width}]
+              }
+              onPartialLoad={() => setLoading(true)}
+              onLoadEnd={() => setLoading(false)}
+              source={{
+                uri: `https://admin.refectio.ru/storage/app/uploads/${item.image}`,
+              }}
+            />
           </Animated.View>
-        </Pinchable>
-      </SharedElement>
+        </Animated.View>
+      </Pinchable>
+      {/* </SharedElement> */}
     </View>
   );
 };
@@ -57,8 +71,6 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   image: {
-    minHeight: height * 0.7,
-    width,
     alignSelf: 'center',
     resizeMode: 'contain',
   },
@@ -73,8 +85,6 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   landscapeImage: {
-    minHeight: height,
-    width,
     justifyContent: 'center',
     alignSelf: 'center',
     alignItems: 'center',

@@ -4,9 +4,11 @@ import {
   ActivityIndicator,
   Animated,
   Dimensions,
+  Pressable,
   StyleSheet,
   View,
 } from 'react-native';
+import CloseIcon from './CloseIcon';
 import ListItem from './ListItem';
 import CarouselBackground from './SliderBackground';
 
@@ -18,7 +20,7 @@ const Carousel = ({route}) => {
   const [loading, setLoading] = useState(true);
   const [sliderImages, setSliderImages] = useState(imagesData);
   const [orientation, setOrientation] = useState(
-    height < width ? 'LANDSPACE' : 'PORTRAIT',
+    height < width ? 'LANDSCAPE' : 'PORTRAIT',
   );
   useEffect(() => {
     Dimensions.addEventListener('change', ({window: {width, height}}) => {
@@ -89,6 +91,9 @@ const Carousel = ({route}) => {
       style={{
         width,
       }}>
+      <Pressable style={styles.closeBox} onPress={() => navigation.goBack()}>
+        <CloseIcon />
+      </Pressable>
       <View style={styles.mainContainer}>
         {loading && (
           <View style={styles.loaderBox}>
@@ -153,5 +158,11 @@ const styles = StyleSheet.create({
     right: 0,
     zIndex: 999,
     backgroundColor: 'rgba(0,0,0,0.6)',
+  },
+  closeBox: {
+    position: 'absolute',
+    zIndex: 999,
+    top: 20,
+    right: 20,
   },
 });

@@ -3,19 +3,8 @@
 
 // const width = Dimensions.get('window').width - 25
 
-import React, {Component, useEffect, useRef, useState} from 'react';
-import {
-  Animated,
-  Dimensions,
-  FlatList,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {Path, Svg} from 'react-native-svg';
+import React, {useState} from 'react';
+import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
 
 const width = Dimensions.get('window').width - 25;
 

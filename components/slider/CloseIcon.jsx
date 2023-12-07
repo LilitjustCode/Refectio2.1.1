@@ -1,15 +1,15 @@
 import * as React from 'react';
 import Svg, {Path, Rect} from 'react-native-svg';
 
-function CloseIcon(props) {
+function CloseIcon({onPress}) {
   return (
     <Svg
       width={24}
       height={24}
+      onPress={onPress}
       viewBox="0 0 24 24"
       fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}>
+      xmlns="http://www.w3.org/2000/svg">
       <Path
         d="M1.725 21.482a2.499 2.499 0 01.083-3.533L18.742 1.79a2.499 2.499 0 113.45 3.615L5.257 21.565a2.499 2.499 0 01-3.532-.082z"
         fill="#fff"
