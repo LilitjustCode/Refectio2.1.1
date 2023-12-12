@@ -91,9 +91,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   getObjectData = async () => {
-    let userID = this.props.userID
-      ? this.props.userID
-      : this.state.paramsFromLinking;
+    let userID = this.props.route.params.id;
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
         userID,
@@ -219,24 +217,24 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }`)
+            }/${this.props.route.params.id}`)
           : (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }`);
+            }/${this.props.route.params.id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -255,7 +253,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       change_category_loaded: true,
     });
 
-    let userID = this.props.userID;
+    let userID = this.props.route.params.id;
 
     if (userID == this.state.user_id_for_search) {
       let myHeaders = new Headers();
@@ -382,7 +380,7 @@ export default class DesignerPageTwoComponent extends React.Component {
         active: index,
       });
 
-      let userID = this.props.userID;
+      let userID = this.props.route.params.id;
 
       if (userID == this.state.user_id_for_search) {
         let myHeaders = new Headers();
@@ -882,6 +880,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                           style={{
                             fontSize: 20,
                             fontFamily: 'Raleway_500Medium',
+                            color: '#333333',
                           }}>
                           {this.state.user[0].company_name}
                         </Text>
@@ -1074,7 +1073,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                         sOpenCityDropDown: !this.state.sOpenCityDropDown,
                       })
                     }>
-                    <Text style={{fontFamily: 'Raleway_400Regular'}}>
+                    <Text
+                      style={{
+                        fontFamily: 'Raleway_400Regular',
+                        color: '#333333',
+                      }}>
                       {this.state.changed}
                     </Text>
                     <View style={{position: 'absolute', right: 17, bottom: 6}}>
@@ -1137,6 +1140,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               textAlign: 'left',
                               paddingVertical: 10,
                               fontFamily: 'Raleway_400Regular',
+                              color: '#333333',
                             }}>
                             {this.state.changed}
                           </Text>
@@ -1162,6 +1166,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                                   textAlign: 'left',
                                   paddingVertical: 10,
                                   fontFamily: 'Raleway_400Regular',
+                                  color: '#333333',
                                 }}>
                                 {item.city_name}
                               </Text>
@@ -1183,6 +1188,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                           fontSize: 13,
                           marginRight: 5,
                           fontFamily: 'Raleway_400Regular',
+                          color: '#333333',
                         }}>
                         Шоурум
                       </Text>
@@ -1389,23 +1395,48 @@ export default class DesignerPageTwoComponent extends React.Component {
                               marginTop: 5,
                               marginBottom: 4,
                               width: '90%',
+                              color: '#333333',
                             }}>
                             {item.name}
                           </Text>
-                          {item.facades && <Text>Фасады : {item.facades}</Text>}
-                          {item.frame && <Text>Корпус: {item.frame}</Text>}
-                          {item.profile && <Text>Профиль: {item.profile}</Text>}
-                          {item.tabletop && (
-                            <Text>Столешница: {item.tabletop}</Text>
+                          {item.facades && (
+                            <Text style={{color: '#333333'}}>
+                              Фасады : {item.facades}
+                            </Text>
                           )}
-                          {item.length && <Text>Длина: {item.length} м.</Text>}
+                          {item.frame && (
+                            <Text style={{color: '#333333'}}>
+                              Корпус: {item.frame}
+                            </Text>
+                          )}
+                          {item.profile && (
+                            <Text style={{color: '#333333'}}>
+                              Профиль: {item.profile}
+                            </Text>
+                          )}
+                          {item.tabletop && (
+                            <Text style={{color: '#333333'}}>
+                              Столешница: {item.tabletop}
+                            </Text>
+                          )}
+                          {item.length && (
+                            <Text style={{color: '#333333'}}>
+                              Длина: {item.length} м.
+                            </Text>
+                          )}
 
-                          {item.height && <Text>Высота: {item.height} м.</Text>}
+                          {item.height && (
+                            <Text style={{color: '#333333'}}>
+                              Высота: {item.height} м.
+                            </Text>
+                          )}
                           {item.material && (
-                            <Text>Материал: {item.material}</Text>
+                            <Text style={{color: '#333333'}}>
+                              Материал: {item.material}
+                            </Text>
                           )}
                           {item.price && (
-                            <Text>
+                            <Text style={{color: '#333333'}}>
                               Цена:{' '}
                               {item.price
                                 .toString()
@@ -1491,11 +1522,14 @@ const styles = StyleSheet.create({
   // },
   categoriesName: {
     fontSize: 14,
-    fontFamily: 'Raleway_600SemiBold',
+    // fontFamily: 'Raleway_SemiBold',
+    fontWeight: '500',
+    color: '#333333',
   },
   categoriesNameActive: {
     fontSize: 14,
-    fontFamily: 'Raleway_600SemiBold',
+    // fontFamily: 'Raleway_600SemiBold',
+    fontWeight: '500',
     color: '#fff',
   },
   info: {

@@ -79,7 +79,8 @@ export default class GhostPageTwoComponent extends React.Component {
   }
 
   getObjectData = async () => {
-    let userID = this.props.user_id;
+    let userID = this.props.route.params.id;
+    // console.log(this.props.route.params.id, 'ljj');
 
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
@@ -133,7 +134,7 @@ export default class GhostPageTwoComponent extends React.Component {
       change_category_loaded: true,
     });
 
-    let userID = this.props.user_id;
+    let userID = this.props.route.params.id;
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
@@ -247,7 +248,7 @@ export default class GhostPageTwoComponent extends React.Component {
         change_category_loaded: true,
       });
 
-      let userID = this.props.user_id;
+      let userID = this.props.route.params.id;
 
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');

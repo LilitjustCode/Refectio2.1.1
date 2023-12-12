@@ -73,9 +73,9 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.refectio21"
+    namespace "com.JustCode.Refection"
     defaultConfig {
-        applicationId "com.refectio21"
+        applicationId "com.JustCode.Refection"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1

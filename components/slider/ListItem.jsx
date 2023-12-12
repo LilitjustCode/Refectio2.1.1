@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import Pinchable from 'react-native-pinchable';
 
-const ListItem = ({item}) => {
+const ListItem = ({item, keys}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
@@ -18,12 +18,15 @@ const ListItem = ({item}) => {
       console.log(width, height);
       if (width < height) {
         setCurrentOrintation('PORTRAIT');
+        // setLoading(true);
       } else {
         setCurrentOrintation('LANDSCAPE');
+        // setLoading(true);
       }
     });
   }, [height, width]);
 
+  // console.log(keys, 'width');
   return (
     <View>
       {loading && (
@@ -48,7 +51,16 @@ const ListItem = ({item}) => {
               style={
                 currentOrintation !== 'LANDSCAPE'
                   ? [styles.image, {minHeight: height * 0.7, width}]
-                  : [styles.landscapeImage, {minHeight: height, height, width}]
+                  : [
+                      styles.landscapeImage,
+                      {
+                        minHeight: height * 0.7,
+                        height,
+                        minWidth: width * 0.1,
+                        // marginRight: keys == 2 ? -150 : '',
+                        width,
+                      },
+                    ]
               }
               onPartialLoad={() => setLoading(true)}
               onLoadEnd={() => setLoading(false)}
@@ -68,27 +80,29 @@ export default ListItem;
 
 const styles = StyleSheet.create({
   listItemContainer: {
-    alignSelf: 'center',
-  },
-  image: {
-    alignSelf: 'center',
-    resizeMode: 'contain',
-  },
-  listItemLandspace: {
     width: '100%',
-    justifyContent: 'center',
+    height: '100%',
     alignSelf: 'center',
     alignItems: 'center',
+    justifyContent: 'center',
+  },
+  image: {
+    width: '100%',
+    alignSelf: 'center',
+    resizeMode: 'contain',
+    height: '100%',
+  },
+  listItemLandspace: {
+    resizeMode: 'contain',
+    height: '100%',
   },
   imageContainer: {
     alignItems: 'center',
     width: '100%',
   },
   landscapeImage: {
-    justifyContent: 'center',
-    alignSelf: 'center',
-    alignItems: 'center',
     resizeMode: 'contain',
+    height: '100%',
   },
   landscapeImageContainer: {
     justifyContent: 'center',

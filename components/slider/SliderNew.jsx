@@ -76,6 +76,7 @@ const Carousel = ({route}) => {
     scrollEndTimer = setTimeout(onMomentumScrollEnd, 150);
   };
 
+
   useEffect(() => {
     const shiftingItem = sliderImages.find((_, i) => i === imgActive);
     if (shiftingItem) {
@@ -134,8 +135,8 @@ const Carousel = ({route}) => {
           horizontal
           pagingEnabled
           keyExtractor={(_, index) => index}
-          renderItem={({item}) => (
-            <ListItem item={item} orientation={orientation} />
+          renderItem={({item, index}) => (
+            <ListItem item={item} keys={index} orientation={orientation} />
           )}
         />
       </View>

@@ -1,7 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
+import {Linking} from 'react-native';
 import * as React from 'react';
-import {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {Dimensions, Image, StatusBar, View} from 'react-native';
 import AuthScreenComponent from './components/Auth/AuthScreen';
 import ConfirmTelScreenComponent from './components/Auth/ConfirmTelScreen';
@@ -178,11 +179,6 @@ function EditPasswordCustomer({navigation}) {
   return <EditPasswordCustomerCompnent navigation={navigation} />;
 }
 
-function GhostPageTwoFunc({route, navigation}) {
-  const {params} = route.params;
-
-  return <GhostPageTwoComponent user_id={params} navigation={navigation} />;
-}
 function DesignerPageTwo({route, navigation}) {
   const {params} = route.params;
   return <DesignerPageTwoComponent user_id={params} navigation={navigation} />;
@@ -322,6 +318,12 @@ function NewPassword({navigation}) {
   return <NewPasswordComponent navigation={navigation} />;
 }
 
+function GhostPageTwoFunc({route, navigation, id}) {
+  console.log(route);
+  // const {params} = route.params ? route.params : '367';
+
+  return <GhostPageTwoComponent user_id={'367'} navigation={navigation} />;
+}
 // function DesignerMyBroni({ navigation }) {
 //   return <DesignerMyBroniComponent navigation={navigation} />;
 // }
@@ -440,8 +442,73 @@ const tabBarStyle = {
 export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
+  const [id, setId] = useState('');
   const [userRole, setUserRole] = React.useState(null);
   const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [urlLinking, setUrlLinking] = useState('');
+
+  // useEffect(() => {
+  //   const handleDeepLink = ({url}) => {
+  //     console.log(url, 'ureeell');
+  //     const match = url.match(/performer\/(\d+)/);
+  //     const performerId = match && match[1];
+
+  //     if (performerId) {
+  //       // Perform actions based on performerId
+  //       console.log('Opening performer with ID:', performerId);
+  //     }
+  //   };
+
+  //   Linking.addEventListener('url', handleDeepLink);
+
+  //   return () => {
+  //     // Linking.removeEventListener('url', handleDeepLink);
+  //   };
+  // }, []);
+
+  useEffect(() => {
+    const handleDeepLink = ({url}) => {
+      console.log(url, 'llll');
+      // Проверяем, что это наша deep link схема
+      if (url && url.startsWith('mychat://id/')) {
+        // Извлекаем данные из схемы URL
+        const parts = url.split('/');
+        console.log(parts);
+        const id = parts[parts.length - 1];
+
+        setUrlLinking(url);
+        // Теперь у вас есть данные из схемы URL
+        setId(id);
+        console.log('Opened chat for user:', id);
+      }
+      if (url && url.startsWith('http://refectio.ru/')) {
+        // Извлекаем данные из схемы URL
+        const parts = url.split('/');
+        console.log(parts);
+        const id = parts[parts.length - 1];
+
+        setUrlLinking(url);
+        // Теперь у вас есть данные из схемы URL
+        setId(id);
+        console.log('Opened chat for user:', id);
+      }
+    };
+
+    // Добавляем слушателя событий для обработки deep linking
+    Linking.addEventListener('url', handleDeepLink);
+
+    // Проверяем deep link при запуске приложения
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        handleDeepLink({url});
+      }
+    });
+
+    // Убираем слушателя событий при размонтировании компонента
+    return () => {
+      // Linking.removeEventListener('url', handleDeepLink);
+    };
+  }, []);
 
   // useEffect(() => {
   //   async function checkForUpdate() {
@@ -545,6 +612,35 @@ export default function App() {
     [],
   );
 
+  // useEffect(() => {
+  //   const handleDeepLink = async event => {
+  //     const url = event.url;
+  //     if (url) {
+  //       // Handle the deep link URL received
+  //       console.log('Received deep link:', url);
+  //     }
+  //   };
+
+  //   // Add event listener for deep links
+  //   Linking.addEventListener('url', handleDeepLink);
+
+  //   // Remove event listener on component unmount
+  //   return () => {
+  //     Linking.removeEventListener('url', handleDeepLink);
+  //   };
+  // }, []);
+
+  // const linking = {
+  //   prefixes: ['com.JustCode.Refection://'],
+  //   config: {
+  //     screens: {
+  //       // CatalogCategory: 'CatalogCategory',
+  //       // ThemesCatalogComponent: 'ThemesCatalogComponent',
+  //       // CheckUserLoginOrNot: 'CheckUserLoginOrNot',
+  //     },
+  //   },
+  // };
+
   getLiveZakaz = async () => {
     let token = await AsyncStorage.getItem('userToken');
     let myHeaders = new Headers();
@@ -631,11 +727,30 @@ export default function App() {
           barStyle="dark-content"
         />
         <NavigationContainer>
+          {/* {urlLinking.length > 0 && (
+            <Stack.Navigator
+              initialRouteName="GhostPageTwo"
+              screenOptions={({route}) => ({
+                tabBarShowLabel: false,
+                headerShown: false,
+                tabBarActiveTintColor: '#2EB6A5',
+                tabBarInactiveTintColor: 'gray',
+                tabBarStyle: tabBarStyle,
+              })}>
+              <Stack.Screen name="GhostPageTwo" component={GhostPageTwoFunc} />
+            </Stack.Navigator>
+          )} */}
           {
             //  Designer Pages Tabs
             loginState.userToken !== null && loginState.userRole == '2' ? (
               <Stack.Navigator
-                initialRouteName="DesignerPage"
+                initialRouteName={
+                  urlLinking.length > 0 &&
+                  loginState.userRole == '2' &&
+                  loginState.userToken !== null
+                    ? 'DesignerPageTwo'
+                    : 'DesignerPage'
+                }
                 screenOptions={({route}) => ({
                   tabBarShowLabel: false,
                   headerShown: false,
@@ -643,24 +758,59 @@ export default function App() {
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
-                <Stack.Screen
-                  name="DesignerPage"
-                  component={DesignerPageComponent}
-                />
-
+                {urlLinking.length > 0 &&
+                loginState.userRole == '2' &&
+                loginState.userToken !== null ? (
+                  <Stack.Screen
+                    name="DesignerPageTwo"
+                    component={DesignerPageTwoComponent}
+                    initialParams={{id}}
+                  />
+                ) : (
+                  <Stack.Screen
+                    name="DesignerPage"
+                    component={DesignerPageComponent}
+                  />
+                )}
+                {urlLinking.length > 0 &&
+                loginState.userRole == '2' &&
+                loginState.userToken !== null ? (
+                  <Stack.Screen
+                    name="DesignerPage"
+                    component={DesignerPageComponent}
+                  />
+                ) : (
+                  <Stack.Screen
+                    name="DesignerPageTwo"
+                    component={DesignerPageTwoComponent}
+                    initialParams={{id}}
+                  />
+                )}
                 {/* <Stack.Screen
                   name="DesignerMyBroni"
     
                   component={DesignerMyBroniComponent}
                 /> */}
-                <Stack.Screen
-                  name="DesignerPageTwo"
-                  component={DesignerPageTwo}
-                />
 
                 <Stack.Screen
                   name="DesignerSaved"
                   component={DesignerSavedComponent}
+                />
+                <Stack.Screen
+                  name={'Slider'}
+                  component={Carousel}
+                  options={{
+                    headerTransparent: true,
+                    gestureEnabled: true,
+
+                    animation: 'fade_from_bottom',
+
+                    contentStyle: {
+                      flex: 1,
+                    },
+                    presentation: 'modal',
+                    animationTypeForReplace: 'pop',
+                  }}
                 />
                 <Stack.Screen name="MyAccaunt" component={MyAccauntComponent} />
                 <Stack.Screen
@@ -712,7 +862,13 @@ export default function App() {
 
             loginState.userToken !== null && loginState.userRole == '3' ? (
               <Stack.Navigator
-                initialRouteName="CustomerMainPage"
+                initialRouteName={
+                  urlLinking.length > 0 &&
+                  loginState.userRole == '3' &&
+                  loginState.userToken !== null
+                    ? 'CustomerMainPageTwo'
+                    : 'CustomerMainPage'
+                }
                 screenOptions={({route}) => ({
                   tabBarShowLabel: false,
                   headerShown: false,
@@ -720,10 +876,52 @@ export default function App() {
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
+                {urlLinking.length > 0 &&
+                loginState.userRole == '3' &&
+                loginState.userToken !== null ? (
+                  <Stack.Screen
+                    name="CustomerMainPageTwo"
+                    component={CustomerPageTwoComponent}
+                    initialParams={{id}}
+                  />
+                ) : (
+                  <Stack.Screen
+                    name="CustomerMainPage"
+                    component={CustomerMainPageComponent}
+                  />
+                )}
+                {urlLinking.length > 0 &&
+                loginState.userRole == '3' &&
+                loginState.userToken !== null ? (
+                  <Stack.Screen
+                    name="CustomerMainPage"
+                    component={CustomerMainPageComponent}
+                  />
+                ) : (
+                  <Stack.Screen
+                    name="CustomerMainPageTwo"
+                    component={CustomerPageTwoComponent}
+                    initialParams={{id}}
+                  />
+                )}
+
                 <Stack.Screen
-                  name="CustomerMainPage"
-                  component={CustomerMainPageComponent}
+                  name={'Slider'}
+                  component={Carousel}
+                  options={{
+                    headerTransparent: true,
+                    gestureEnabled: true,
+
+                    animation: 'fade_from_bottom',
+
+                    contentStyle: {
+                      flex: 1,
+                    },
+                    presentation: 'modal',
+                    animationTypeForReplace: 'pop',
+                  }}
                 />
+
                 <Stack.Screen name="AddProduct" component={AddProductScreen} />
                 {/* <Stack.Screen
                   name="CheckDesigner"
@@ -740,7 +938,8 @@ export default function App() {
                 />
                 <Stack.Screen
                   name="CustomerPageTwo"
-                  component={CustomerPageTwo}
+                  component={CustomerPageTwoComponent}
+                  initialParams={{id}}
                 />
                 <Stack.Screen
                   name="SelectCategoryScreen"
@@ -799,7 +998,11 @@ export default function App() {
 
             loginState.userToken == null ? (
               <Stack.Navigator
-                initialRouteName="GhostPage"
+                initialRouteName={
+                  urlLinking.length > 0 && loginState.userToken == null
+                    ? 'GhostPageTwo'
+                    : 'GhostPage'
+                }
                 screenOptions={({route}) => ({
                   tabBarShowLabel: false,
                   headerShown: false,
@@ -807,6 +1010,27 @@ export default function App() {
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
+                {/* {urlLinking.length > 0 ? (
+                  <Stack.Screen
+                    name="GhostPageTwo"
+                    // component={GhostPageTwoFunc}
+                    component={GhostPageTwoComponent}
+                    initialParams={{id}}
+                  />
+                ) : (
+                  <Stack.Screen
+                    name="GhostPage"
+                    component={GhostPageComponent}
+                  />
+                )}
+                {} */}
+                <Stack.Screen
+                  name="GhostPageTwo"
+                  // component={GhostPageTwoFunc}
+                  component={GhostPageTwoComponent}
+                  initialParams={{id}}
+                />
+
                 <Stack.Screen name="GhostPage" component={GhostPageComponent} />
                 <Stack.Screen
                   name="LoginScreen"
@@ -864,10 +1088,7 @@ export default function App() {
                   name="SubCategoryScreen"
                   component={SubCategoryScreenComponentGuest}
                 />
-                <Stack.Screen
-                  name="GhostPageTwo"
-                  component={GhostPageTwoFunc}
-                />
+
                 <Stack.Screen
                   name="ForgetPassword"
                   component={ForgetPasswordComponent}

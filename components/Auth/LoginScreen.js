@@ -124,44 +124,6 @@ export default class LoginScreenComponent extends Component {
   //   }
   // };
 
-  // loginUserFromApple = async () => {
-  //   fetch(`${APP_URL}loginuserFromApple`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       email: this.state.login,
-  //       apple_id: this.state.apple_id,
-  //     }),
-  //   })
-  //     .then((response) => response.json())
-  //     .then((res) => {
-  //       let userToken = res.message.token;
-  //       if (res.status == false) {
-  //         if (res.message.message == "user does not exist") {
-  //           this.setState({
-  //             no_user: true,
-  //           });
-  //         } else {
-  //           this.setState({
-  //             no_user: false,
-  //           });
-  //         }
-  //       } else {
-  //         if (res.message.user.active == "2") {
-  //           let foundUser = {
-  //             userToken: userToken,
-  //             userRole: res.message.role_id,
-  //           };
-  //           this.context.signIn(foundUser);
-  //         } else if (res.message.user.active == "1") {
-  //           this.setState({ moderacia: true });
-  //         }
-  //       }
-  //     });
-  // };
-
   sendLoginData = async () => {
     fetch(`https://admin.refectio.ru/public/api/loginuser`, {
       method: 'POST',
@@ -227,120 +189,6 @@ export default class LoginScreenComponent extends Component {
               position: 'relative',
               alignItems: 'center',
             }}>
-            {/* {Platform.OS === "ios" && (
-            <Modal visible={this.state.designer_or_manufacturer}>
-              <View
-                style={{
-                  flex: 1,
-                  backgroundColor: "white",
-                  paddingTop: 50,
-                  position: "relative",
-                }}
-              >
-                <View
-                  style={{
-                    width: "100%",
-                    height: 130,
-                  }}
-                ></View>
-                <TouchableOpacity
-                  onPress={() => this.goToAuthScreen()}
-                  style={{
-                    position: "absolute",
-                    left: 10,
-                    top: 55,
-                    zIndex: 100,
-                  }}
-                >
-                  <ArrowGrayComponent />
-                </TouchableOpacity>
-                <Image
-                  source={require("../../assets/image/Refectio.png")}
-                  style={{
-                    width: "95%",
-                    height: 135,
-                    resizeMode: "contain",
-                    position: "absolute",
-                    right: 0,
-                    top: 60,
-                    zIndex: -1,
-                  }}
-                />
-
-                <Text
-                  style={{
-                    width: "100%",
-                    textAlign: "center",
-                    fontFamily: "Poppins_500Medium",
-                    lineHeight: 54,
-                    fontSize: 32,
-                    color: "#2D9EFB",
-                    marginTop: 40,
-                  }}
-                >
-                  Вход
-                </Text>
-                <View>
-                  <Text
-                    style={{
-                      color: "#888888",
-                      textAlign: "center",
-                      marginTop: 5,
-                      fontSize: 20,
-                      lineHeight: 30,
-                      fontFamily: "Poppins_500Medium",
-                      letterSpacing: 0,
-                    }}
-                  >
-                    Вы к нам в какой роли?
-                  </Text>
-                </View>
-
-                <View
-                  style={{
-                    justifyContent: "center",
-                    width: "100%",
-                    flexDirection: "row",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      marginTop: 100,
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        i_am_designer: true,
-                        designer_or_manufacturer: false,
-                      });
-                    }}
-                  >
-                    <BlueButton name="Я-Дизайнер" />
-                  </TouchableOpacity>
-                </View>
-                <View
-                  style={{
-                    justifyContent: "center",
-                    width: "100%",
-                    flexDirection: "row",
-                  }}
-                >
-                  <TouchableOpacity
-                    style={{
-                      marginTop: 21,
-                    }}
-                    onPress={() => {
-                      this.setState({
-                        i_am_designer: false,
-                        designer_or_manufacturer: false,
-                      });
-                    }}
-                  >
-                    <BlueButton name="Я-Производитель" />
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </Modal>
-          )} */}
             <Modal visible={this.state.moderacia}>
               <ImageBackground
                 style={{
@@ -690,10 +538,12 @@ const styles = StyleSheet.create({
     lineHeight: 54,
     fontSize: 32,
     color: '#2D9EFB',
+    fontWeight: '700',
     marginTop: 20,
   },
   fiealdset: {
-    fontFamily: 'Poppins-Medium',
+    fontFamily: 'Poppins-SemiBold',
+    fontWeight: '700',
     lineHeight: 23,
     fontSize: 15,
     marginBottom: 5,

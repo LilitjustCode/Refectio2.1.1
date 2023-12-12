@@ -40,6 +40,7 @@ const CarouselBackground: React.FC<BackgroundProps> = ({
                 minHeight: height,
                 minWidth: width,
                 position: 'absolute',
+                
               },
             ]}
             blurRadius={20}

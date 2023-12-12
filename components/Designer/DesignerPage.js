@@ -378,7 +378,7 @@ export default class CustomerMainPageComponent extends React.Component {
           <TouchableOpacity
             onPress={async () => {
               await this.props.navigation.navigate('DesignerPageTwo', {
-                params: item.id,
+                id: item.id,
               });
               // await this.clearAllData();
             }}>
@@ -404,9 +404,10 @@ export default class CustomerMainPageComponent extends React.Component {
                     numberOfLines={1}
                     style={{
                       fontSize: 20,
-                      // fontFamily: "Raleway_700Bold",
-                      marginBottom: 6,
+                      fontFamily: 'Raleway_700Bold',
                       fontWeight: '700',
+                      marginBottom: 6,
+                      color: '#333333',
                     }}>
                     {item.company_name}
                   </Text>
@@ -636,11 +637,12 @@ export default class CustomerMainPageComponent extends React.Component {
               placeholderTextColor="#000"
               style={{
                 width: '85%',
-                height: '90%',
+                height: '100%',
                 borderColor: '#D9D9D9',
                 borderRightWidth: 1,
                 color: '#000',
-                fontSize: 15,
+                fontSize: 12,
+                fontFamily: 'Poppins_500Medium',
               }}
               value={this.state.searchUser}
               onChangeText={text => {
@@ -714,8 +716,9 @@ const styles = StyleSheet.create({
   myComponyName: {
     fontSize: 22,
     marginLeft: 10,
-    // fontFamily: "Raleway_700Bold",
+    fontFamily: 'Raleway_700Bold',
     fontWeight: '700',
+    color: '#333333',
   },
   searchParent: {
     marginVertical: 17,
@@ -744,10 +747,11 @@ const styles = StyleSheet.create({
   },
   categoriesName: {
     fontSize: 13,
-    // fontFamily: "Montserrat_400Regular",
+    fontFamily: 'Montserrat_400Regular',
+    // fontWeight: '300',
+    color: '#333333',
     paddingHorizontal: 3,
     paddingVertical: 5,
     marginRight: 11,
-    fontWeight: '300',
   },
 });

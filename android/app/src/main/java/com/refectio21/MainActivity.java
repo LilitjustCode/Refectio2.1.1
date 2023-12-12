@@ -1,4 +1,4 @@
-package com.refectio21;
+package com.JustCode.Refection;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

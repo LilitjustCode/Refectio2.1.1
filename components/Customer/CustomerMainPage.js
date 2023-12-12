@@ -98,11 +98,17 @@ export default class CustomerMainPageComponent extends React.Component {
           let data = res.data.data.data;
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
-              if (data[i].slider_photo.length && data[i].slider_photo[i].user_id === data[i].id) {
+              if (
+                data[i].slider_photo.length &&
+                data[i].slider_photo[i].user_id === data[i].id
+              ) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
-              } else if (data[i].user_product_limit1.length < 1 && data[i].id === data[i].user_product_limit1[0].user_id) {
+              } else if (
+                data[i].user_product_limit1.length < 1 &&
+                data[i].id === data[i].user_product_limit1[0].user_id
+              ) {
                 data[i].images = [];
                 continue;
               } else {
@@ -399,7 +405,7 @@ export default class CustomerMainPageComponent extends React.Component {
           <TouchableOpacity
             onPress={async () => {
               await this.props.navigation.navigate('CustomerPageTwo', {
-                params: item.id,
+                id: item.id,
               });
               // await this.clearAllData();
             }}>
@@ -426,8 +432,9 @@ export default class CustomerMainPageComponent extends React.Component {
                     style={{
                       width: '100%',
                       fontSize: 20,
-                      // fontFamily: "Raleway_700Bold",
+                      fontFamily: 'Raleway_700Bold',
                       fontWeight: '700',
+                      color: '#333333',
                       marginBottom: 6,
                     }}>
                     {item.company_name}
@@ -456,8 +463,8 @@ export default class CustomerMainPageComponent extends React.Component {
                   style={{
                     fontSize: 16,
                     color: '#A8A8A8',
-                    // fontFamily: "Raleway_500Medium",
-                    fontWeight: '400',
+                    fontFamily: 'Raleway_500Medium',
+                    // fontWeight: '400',
                     paddingTop: 5,
                   }}>
                   {item.made_in}
@@ -730,11 +737,12 @@ export default class CustomerMainPageComponent extends React.Component {
               placeholderTextColor="#000"
               style={{
                 width: '85%',
-                height: '90%',
+                height: '100%',
                 borderColor: '#D9D9D9',
                 borderRightWidth: 1,
                 color: '#000',
-                fontSize: 15,
+                fontSize: 12,
+                fontFamily: 'Poppins_500Medium',
               }}
               value={this.state.searchUser}
               onChangeText={this.searchUser}
@@ -807,8 +815,9 @@ const styles = StyleSheet.create({
   myComponyName: {
     fontSize: 22,
     marginLeft: 10,
-    // fontFamily: "Raleway_700Bold",
+    fontFamily: 'Raleway_700Bold',
     fontWeight: '700',
+    color: '#333333',
   },
   searchParent: {
     marginVertical: 17,
@@ -838,10 +847,11 @@ const styles = StyleSheet.create({
   },
   categoriesName: {
     fontSize: 13,
-    // fontFamily: "Montserrat_400Regular",
+    fontFamily: 'Montserrat_400Regular',
     paddingHorizontal: 3,
     paddingVertical: 5,
     marginRight: 11,
-    fontWeight: '300',
+    // fontWeight: '300',
+    color: '#333333',
   },
 });
