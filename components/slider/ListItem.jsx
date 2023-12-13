@@ -12,25 +12,16 @@ const ListItem = React.memo(({item}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
-  // useEffect(() => {
-  // }, [ScrollX]);
   useEffect(() => {
     Dimensions.addEventListener('change', ({window: {width, height}}) => {
       if (width < height) {
         setCurrentOrintation('PORTRAIT');
-        // setLoading(true);
       } else {
         setCurrentOrintation('LANDSCAPE');
-        // const currentScrollIndex = (width / ScrollX).toFixed(0) * width;
-        // console.log('currentScrollIndex', currentScrollIndex);
-        // currentScrollIndex > 0 ? onMomentumScrollEnd(currentScrollIndex) : null;
-
-        // setLoading(true);
       }
     });
   }, [height, width]);
 
-  // console.log(keys, 'width');
   return (
     <View>
       {loading && (
@@ -42,7 +33,6 @@ const ListItem = React.memo(({item}) => {
           />
         </View>
       )}
-      {/* <SharedElement id={`${item.id}`}> */}
       <Pinchable>
         <Animated.View style={[styles.listItemContainer]}>
           <Animated.View
@@ -74,7 +64,6 @@ const ListItem = React.memo(({item}) => {
           </Animated.View>
         </Animated.View>
       </Pinchable>
-      {/* </SharedElement> */}
     </View>
   );
 });
