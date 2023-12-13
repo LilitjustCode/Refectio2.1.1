@@ -8,19 +8,23 @@ import {
 } from 'react-native';
 import Pinchable from 'react-native-pinchable';
 
-const ListItem = ({item, keys}) => {
+const ListItem = React.memo(({item}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
-
+  // useEffect(() => {
+  // }, [ScrollX]);
   useEffect(() => {
     Dimensions.addEventListener('change', ({window: {width, height}}) => {
-      console.log(width, height);
       if (width < height) {
         setCurrentOrintation('PORTRAIT');
         // setLoading(true);
       } else {
         setCurrentOrintation('LANDSCAPE');
+        // const currentScrollIndex = (width / ScrollX).toFixed(0) * width;
+        // console.log('currentScrollIndex', currentScrollIndex);
+        // currentScrollIndex > 0 ? onMomentumScrollEnd(currentScrollIndex) : null;
+
         // setLoading(true);
       }
     });
@@ -57,7 +61,6 @@ const ListItem = ({item, keys}) => {
                         minHeight: height * 0.7,
                         height,
                         minWidth: width * 0.1,
-                        // marginRight: keys == 2 ? -150 : '',
                         width,
                       },
                     ]
@@ -74,7 +77,7 @@ const ListItem = ({item, keys}) => {
       {/* </SharedElement> */}
     </View>
   );
-};
+});
 
 export default ListItem;
 

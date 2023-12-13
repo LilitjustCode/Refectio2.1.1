@@ -19,21 +19,13 @@ const Carousel = ({route}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [sliderImages, setSliderImages] = useState(imagesData);
-  const [orientation, setOrientation] = useState(
-    height < width ? 'LANDSCAPE' : 'PORTRAIT',
-  );
-  useEffect(() => {
-    Dimensions.addEventListener('change', ({window: {width, height}}) => {
-      if (width < height) {
-        setOrientation('PORTRAIT');
-      } else {
-        setOrientation('LANDSCAPE');
-      }
-    });
-  }, [height, width]);
+  const [scrollValue, setScrollValue] = useState(0);
+  const [activeIndex, setActiveIndex] = useState(0);
 
+  const scrollViewRef = useRef();
   const ScrollX = useRef(new Animated.Value(0)).current;
   const offsetAnim = useRef(new Animated.Value(0)).current;
+
   const navigation = useNavigation();
 
   let _clampedScrollValue = 0;
@@ -42,6 +34,7 @@ const Carousel = ({route}) => {
 
   useEffect(() => {
     ScrollX.addListener(({value}) => {
+      setScrollValue(value);
       const diff = value - _scrollValue;
       _scrollValue = value;
       _clampedScrollValue = Math.min(
@@ -55,9 +48,11 @@ const Carousel = ({route}) => {
   }, []);
 
   let scrollEndTimer = null;
+
   const onMomentumScrollBegin = () => {
     clearTimeout(scrollEndTimer);
   };
+
   const onMomentumScrollEnd = () => {
     const toValue =
       _scrollValue > CONTAINER_HEIGHT &&
@@ -76,7 +71,6 @@ const Carousel = ({route}) => {
     scrollEndTimer = setTimeout(onMomentumScrollEnd, 150);
   };
 
-
   useEffect(() => {
     const shiftingItem = sliderImages.find((_, i) => i === imgActive);
     if (shiftingItem) {
@@ -86,6 +80,38 @@ const Carousel = ({route}) => {
       setSliderImages(filteredData);
     }
   }, [imgActive]);
+
+  const handleChangeViewableItem = ({window: {width, height}}) => {
+    const offsetforBigScreens = activeIndex * width;
+    const offsetforSmallScreens = activeIndex * width;
+    console.log(
+      'activeIndex',
+      activeIndex,
+      'offsetforSmallScreens',
+      offsetforSmallScreens,
+    );
+    if (width > height && activeIndex) {
+      scrollViewRef.current?.scrollToOffset({
+        offset: width > 700 ? offsetforBigScreens : offsetforSmallScreens,
+        animated: true,
+      });
+    } else {
+      scrollViewRef.current?.scrollToOffset({
+        offset: 1,
+        animated: true,
+      });
+    }
+  };
+  const viewabilityConfigCallbackPairs = useRef([
+    {
+      onViewableItemsChanged: ({viewableItems}) =>
+        viewableItems[0]?.index > 0
+          ? setActiveIndex(viewableItems[0].index)
+          : setActiveIndex(null),
+    },
+  ]);
+
+  Dimensions.addEventListener('change', handleChangeViewableItem);
 
   return (
     <View
@@ -125,19 +151,21 @@ const Carousel = ({route}) => {
             justifyContent: 'center',
             alignItems: 'center',
           }}
+          ref={scrollViewRef}
           onMomentumScrollBegin={onMomentumScrollBegin}
           onMomentumScrollEnd={onMomentumScrollEnd}
           onScrollEndDrag={onScrollEndDrag}
           scrollEventThrottle={1}
+          viewabilityConfigCallbackPairs={
+            viewabilityConfigCallbackPairs.current
+          }
           data={sliderImages}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
           horizontal
           pagingEnabled
-          keyExtractor={(_, index) => index}
-          renderItem={({item, index}) => (
-            <ListItem item={item} keys={index} orientation={orientation} />
-          )}
+          keyExtractor={(_, index) => index.toString()}
+          renderItem={({item, index}) => <ListItem item={item} keys={index} />}
         />
       </View>
     </View>
