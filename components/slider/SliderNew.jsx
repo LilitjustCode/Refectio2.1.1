@@ -19,8 +19,15 @@ const Carousel = ({route}) => {
   const {width, height} = Dimensions.get('screen');
   const [loading, setLoading] = useState(true);
   const [sliderImages, setSliderImages] = useState(imagesData);
-  const [activeId, setActiveId] = useState(0);
-  const [currentOrintation, setCurrentOrintation] = useState('PORTRAIT');
+  const [currentOrintation, setCurrentOrintation] = useState(null);
+  const [activeId, setActiveId] = useState('');
+
+  const windowDimensions = Dimensions.get('window');
+  const screenDimensions = Dimensions.get('screen');
+  const [dimensions, setDimensions] = useState({
+    window: windowDimensions,
+    screen: screenDimensions,
+  });
 
   const scrollViewRef = useRef();
   const ScrollX = useRef(new Animated.Value(0)).current;
@@ -56,34 +63,37 @@ const Carousel = ({route}) => {
     scrollEndTimer = setTimeout(onMomentumScrollEnd, 150);
   };
 
-  const handleChangeViewableItem = ({window: {width}}) => {
+  const handleChangeViewableItem = () => {
+    const {width} = Dimensions.get('window');
     const findedIndex = sliderImages.findIndex(el => el.id === activeId);
     const offsetforBigScreens = findedIndex >= 0 ? findedIndex * width : 0;
 
-    offsetforBigScreens > 0
-      ? scrollViewRef.current?.scrollToOffset({
-          offset: offsetforBigScreens,
-          animated: false,
-        })
-      : scrollViewRef.current?.scrollToOffset({
-          offset: 0,
-          animated: false,
-        });
+    scrollViewRef.current?.scrollToOffset({
+      offset: offsetforBigScreens,
+      animated: false,
+    });
   };
 
   const viewabilityConfigCallbackPairs = useRef([
     {
       onViewableItemsChanged: ({viewableItems}) => {
-        viewableItems[0] && setActiveId(viewableItems[0].item.id);
+        if (viewableItems[0]) {
+          setActiveId(viewableItems[0].item.id);
+        }
       },
     },
-  ]);
+  ]).current;
 
   useEffect(() => {
-    currentOrintation === 'LANDSCAPE'
-      ? Dimensions.addEventListener('change', handleChangeViewableItem)
-      : null;
-  }, [currentOrintation]);
+    Dimensions.addEventListener('change', ({window: {width, height}}) => {
+      if (width < height) {
+        setCurrentOrintation('PORTRAIT');
+      } else {
+        setCurrentOrintation('LANDSCAPE');
+        handleChangeViewableItem();
+      }
+    });
+  }, [dimensions.screen]);
 
   useEffect(() => {
     const shiftingItem = sliderImages.find((_, i) => i === imgActive);
@@ -94,6 +104,12 @@ const Carousel = ({route}) => {
       setSliderImages(filteredData);
     }
   }, [imgActive]);
+
+  useEffect(() => {
+    currentOrintation === 'LANDSCAPE'
+      ? Dimensions.addEventListener('change', handleChangeViewableItem)
+      : null;
+  }, [currentOrintation, activeId]);
 
   useEffect(() => {
     ScrollX.addListener(({value}) => {
@@ -110,14 +126,14 @@ const Carousel = ({route}) => {
   }, []);
 
   useEffect(() => {
-    Dimensions.addEventListener('change', ({window: {width, height}}) => {
-      if (width < height) {
-        setCurrentOrintation('PORTRAIT');
-      } else {
-        setCurrentOrintation('LANDSCAPE');
-      }
-    });
-  }, [height, width]);
+    const subscription = Dimensions.addEventListener(
+      'change',
+      ({window, screen}) => {
+        setDimensions({window, screen});
+      },
+    );
+    return () => subscription?.remove();
+  });
 
   return (
     <View
@@ -162,9 +178,7 @@ const Carousel = ({route}) => {
           onMomentumScrollEnd={onMomentumScrollEnd}
           onScrollEndDrag={onScrollEndDrag}
           scrollEventThrottle={1}
-          viewabilityConfigCallbackPairs={
-            viewabilityConfigCallbackPairs.current
-          }
+          viewabilityConfigCallbackPairs={viewabilityConfigCallbackPairs}
           data={sliderImages}
           showsHorizontalScrollIndicator={false}
           showsVerticalScrollIndicator={false}
