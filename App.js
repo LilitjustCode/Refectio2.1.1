@@ -467,49 +467,52 @@ export default function App() {
   // }, []);
 
   useEffect(() => {
+    // setUrlLinking('');
     const handleDeepLink = ({url}) => {
       console.log(url, 'llll');
-      // Проверяем, что это наша deep link схема
+      setIsLoading(true);
+      setUrlLinking(url);
       if (url && url.startsWith('mychat://id/')) {
-        // Извлекаем данные из схемы URL
         const parts = url.split('/');
         console.log(parts);
         const id = parts[parts.length - 1];
-
         setUrlLinking(url);
-        // Теперь у вас есть данные из схемы URL
         setId(id);
-        console.log('Opened chat for user:', id);
+        setIsLoading(false);
+        console.log('Opened chat for user useeeg:', id);
       }
+
       if (url && url.startsWith('http://refectio.ru/')) {
-        // Извлекаем данные из схемы URL
         const parts = url.split('/');
         console.log(parts);
         const id = parts[parts.length - 1];
-
         setUrlLinking(url);
-        // Теперь у вас есть данные из схемы URL
         setId(id);
-        console.log('Opened chat for user:', id);
+        setIsLoading(false);
+        console.log('Opened chat for user useegg:', id);
       }
     };
 
-    // Добавляем слушателя событий для обработки deep linking
-    Linking.addEventListener('url', handleDeepLink);
-
-    // Проверяем deep link при запуске приложения
-    Linking.getInitialURL().then(url => {
-      if (url) {
-        handleDeepLink({url});
+    const handleInitialUrl = async () => {
+      try {
+        const initialUrl = await Linking.getInitialURL();
+        if (initialUrl) {
+          handleDeepLink({url: initialUrl});
+        }
+      } catch (error) {
+        console.error('Error getting initial URL:', error);
       }
-    });
+    };
 
-    // Убираем слушателя событий при размонтировании компонента
+    Linking.addEventListener('url', handleDeepLink);
+    handleInitialUrl();
+
     return () => {
-      // Linking.removeEventListener('url', handleDeepLink);
+      setUrlLinking('');
     };
   }, []);
 
+  console.log(urlLinking, 'kkk');
   // useEffect(() => {
   //   async function checkForUpdate() {
   //     const update = await Updates.checkForUpdateAsync();

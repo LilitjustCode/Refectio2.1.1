@@ -353,8 +353,9 @@ export default class RegistrationManufacturerComponent extends Component {
     )
       .then(response => response.json())
       .then(result => {
+        console.log(result, 'country');
         this.setState({
-          made_in_array: result.data,
+          made_in_array: result.new_order_data,
           made_in_select: true,
         });
       })
@@ -2117,12 +2118,12 @@ export default class RegistrationManufacturerComponent extends Component {
                   style={{
                     color: 'white',
                     fontSize: 15,
-                    fontFamily: 'Raleway_500Medium',
-                    marginTop: 7,
+                    fontWeight: '700',
+                    marginBottom: 2,
+                    textAlign: 'center',
                   }}>
                   Загрузить
                 </Text>
-             
               </TouchableOpacity>
               {this.state.logo === null && <></>}
               {this.state.logo !== null && this.state.logo_error === false && (
@@ -2286,7 +2287,8 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     borderRadius: 8,
-    lineHeight: 18,
+    // lineHeight: 18,
+    justifyContent: 'center',
   },
   checkBox: {
     marginTop: 22,

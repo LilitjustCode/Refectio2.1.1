@@ -102,11 +102,17 @@ export default class CustomerMainPageComponent extends React.Component {
 
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
-              if (data[i].slider_photo.length > 0) {
+              if (
+                data[i].slider_photo.length &&
+                data[i].slider_photo[i].user_id === data[i].id
+              ) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
-              } else if (data[i].user_product_limit1.length < 1) {
+              } else if (
+                data[i].user_product_limit1.length < 1 &&
+                data[i].id === data[i].user_product_limit1[0].user_id
+              ) {
                 data[i].images = [];
                 continue;
               } else {
@@ -264,7 +270,7 @@ export default class CustomerMainPageComponent extends React.Component {
         });
         this.ref.current.scrollToIndex({index: 0, animated: true});
       })
-      .catch(error => console.log('error', error));
+      .catch(error => console.log('errorFilter', error));
 
     // this.setState({
     //   filter: false
@@ -583,8 +589,6 @@ export default class CustomerMainPageComponent extends React.Component {
                     color: '#888888',
                   }}>
                   Вы зарегистрировались.{'\n'}
-                  Теперь вы можете добавить фото и описание продукции в профиле,
-                  чтобы вас могли увидеть.
                 </Text>
                 <TouchableOpacity
                   onPress={async () => {

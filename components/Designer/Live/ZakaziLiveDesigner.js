@@ -278,21 +278,50 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
           </View>
 
           {this.state.data.length == 0 &&
-            !this.state.isLoading &&
-            this.state.isLastPage && (
-              <Text style={{textAlign: 'center', fontSize: 16, marginTop: 20}}>
-                У вас пока нет предложений от производителей
+          !this.state.isLoading &&
+          this.state.isLastPage ? (
+            <View
+              style={{
+                width: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+              }}>
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 16,
+                  marginTop: 20,
+                  fontWeight: '600',
+                  color: '#333333',
+                }}>
+                Этот раздел создан, чтобы заказчики или дизайнеры могли
+                отслеживать дату готовности и дату поставки от всех поставщиков
+                по конкретному объекту в одном месте.
               </Text>
-            )}
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            renderItem={this.renderItem}
-            data={this.state.data}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-          />
+              <Text
+                style={{
+                  textAlign: 'center',
+                  fontSize: 16,
+                  marginTop: 20,
+                  fontWeight: '600',
+                  color: '#333333',
+                }}>
+                Если у вас уже заключены договора с поставщиками, нажмите + и
+                укажите этих поставщиков.
+              </Text>
+            </View>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              renderItem={this.renderItem}
+              data={this.state.data}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={this.renderFooter}
+            />
+          )}
         </View>
         <DesignerPageNavComponent
           active_page={'Заказы'}

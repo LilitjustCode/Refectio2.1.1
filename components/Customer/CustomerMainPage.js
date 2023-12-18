@@ -32,6 +32,8 @@ export default class CustomerMainPageComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      urlLinking: null,
+      id: null,
       updateAvailable: false,
       filter: false,
       keyboardOpen: false,
@@ -336,8 +338,56 @@ export default class CustomerMainPageComponent extends React.Component {
       // if (!this.props.route.params?.screen) {
       //   this.clearAllData();
       // }
+
       this.getAuthUserProfile();
       this.getProductsFunction();
+      handleDeepLink = ({url}) => {
+        // console.log(url, 'llll');
+
+        if (url && url.startsWith('mychat://id/')) {
+          const parts = url.split('/');
+          console.log(parts);
+          const id = parts[parts.length - 1];
+          this.setState({urlLinking: url, id});
+          console.log('Opened chat for user:', id);
+          id
+            ? this.props.navigation.navigate('CustomerPageTwo', {
+                id: id,
+              })
+            : '';
+        }
+
+        if (url && url.startsWith('http://refectio.ru/')) {
+          const parts = url.split('/');
+          console.log(parts);
+          const id = parts[parts.length - 1];
+          this.setState({urlLinking: url, id});
+          console.log('Opened chat for user:', id);
+          id
+            ? this.props.navigation.navigate('CustomerPageTwo', {
+                id: id,
+              })
+            : '';
+        }
+        const handleInitialUrl = async () => {
+          try {
+            const initialUrl = await Linking.getInitialURL();
+            if (initialUrl) {
+              handleDeepLink({url: initialUrl});
+            }
+          } catch (error) {
+            console.error('Error getting initial URL:', error);
+          }
+        };
+
+        // Add event listener for deep linking
+        Linking.addEventListener('url', handleDeepLink);
+
+        // Check for deep link when the app launches
+        handleInitialUrl();
+      };
+
+      // Add event listener for deep linking
     });
 
     this.keyboardDidShowListener = Keyboard.addListener(
@@ -660,6 +710,7 @@ export default class CustomerMainPageComponent extends React.Component {
                   width: '90%',
                   borderRadius: 20,
                   position: 'relative',
+                  paddingHorizontal: 10,
                 }}>
                 {/* <TouchableOpacity style={{ position: 'absolute', right: 18, top: 18 }}>
                   <Image source={require('../../assets/image/ixs.png')} style={{ width: 22.5, height: 22.5 }} />

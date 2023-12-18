@@ -23,7 +23,7 @@ import {AuthContext} from '../AuthContext/context';
 // import * as ImagePicker from "expo-image-picker";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import HTML from 'react-native-render-html';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -106,6 +106,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
   static contextType = AuthContext;
 
   getCityApi = async () => {
+    console.log('aa');
     this.setState({
       gorodModal: true,
     });
@@ -115,15 +116,20 @@ export default class CustomerMyAccauntComponent extends React.Component {
       redirect: 'follow',
     };
 
-    await fetch(`getCityApi`, requestOptions)
+    await fetch(
+      `https://admin.refectio.ru/public/api/getCityApi`,
+      requestOptions,
+    )
       .then(response => response.json())
       .then(res => {
+        console.log(res, 'l');
         if (res.status === true) {
           this.setState({sOpenCityDropDown3: !this.state.sOpenCityDropDown3});
         }
         this.setState({
           cityItems: [{name: 'Все города России', id: 9999}, ...res.data.city],
         });
+        // console.log(this.state.cityItems, 'city');
       });
   };
 
@@ -759,41 +765,44 @@ export default class CustomerMyAccauntComponent extends React.Component {
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
-      selectionLimit:50
+      selectionLimit: 50,
       // includeBase64: true,
     });
     if (!result.canceled) {
-      this.setState({ logo: result.assets[0].uri });
+      this.setState({logo: result.assets[0].uri});
     }
 
     let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem("userToken");
-    let AuthStr = "Bearer " + userToken;
-    myHeaders.append("Authorization", AuthStr);
+    let userToken = await AsyncStorage.getItem('userToken');
+    let AuthStr = 'Bearer ' + userToken;
+    myHeaders.append('Authorization', AuthStr);
 
     let formdata = new FormData();
 
-    formdata.append("logo", {
+    formdata.append('logo', {
       uri: result.assets[0].uri,
-      type: "image/jpg",
-      name: "photo.jpg",
+      type: 'image/jpg',
+      name: 'photo.jpg',
     });
 
     let requestOptions = {
-      method: "POST",
+      method: 'POST',
       headers: myHeaders,
       body: formdata,
-      redirect: "follow",
+      redirect: 'follow',
     };
 
-    fetch(`https://admin.refectio.ru/public/api/updateLogoProizvoditel`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
+    fetch(
+      `https://admin.refectio.ru/public/api/updateLogoProizvoditel`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(result => {
         if (result.status === true) {
           this.getAuthUserProfile();
         }
       })
-      .catch((error) => console.log("error", error));
+      .catch(error => console.log('error', error));
   };
 
   logouth = async () => {
@@ -1120,6 +1129,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     }>
                     <ScrollView nestedScrollEnabled={true}>
                       {this.state.cityItems.map((item, index) => {
+                        console.log(item, 'irteemm');
                         return (
                           <TouchableOpacity
                             key={index}
@@ -2160,7 +2170,8 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   style={{
                     color: '#fff',
                     fontSize: 18,
-                    fontFamily: 'Poppins_500Medium',
+                    // fontFamily: 'Poppins_500Medium',
+                    fontWeight: '700',
                   }}>
                   Изменить
                 </Text>
@@ -2339,7 +2350,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 style={{
                   color: '#fff',
                   fontSize: 18,
-                  fontFamily: 'Poppins_500Medium',
+                  fontWeight: '700',
                 }}>
                 Выйти
               </Text>
@@ -2445,7 +2456,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                 style={{
                   color: '#fff',
                   fontSize: 18,
-                  fontFamily: 'Poppins_500Medium',
+                  fontWeight: '700',
                 }}>
                 Удалить
               </Text>

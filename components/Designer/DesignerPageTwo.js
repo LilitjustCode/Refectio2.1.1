@@ -384,24 +384,24 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }`)
+            }/${this.props.route.params.id}`)
           : (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }`);
+            }/${this.props.route.params.id}`);
       }
 
       if (Platform.OS === 'android') {

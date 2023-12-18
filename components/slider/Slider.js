@@ -4,13 +4,22 @@
 // const width = Dimensions.get('window').width - 25
 
 import React, {useState} from 'react';
-import {Dimensions, FlatList, Image, StyleSheet, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  StyleSheet,
+  View,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 
 const width = Dimensions.get('window').width - 25;
 
 export default function Slider(props) {
   const [imgActive, setInmageActive] = useState(0);
-
+  const navigation = useNavigation();
   const change = nativeEvent => {
     const slider = Math.ceil(
       nativeEvent.contentOffset.x / nativeEvent.layoutMeasurement.width,
@@ -22,29 +31,34 @@ export default function Slider(props) {
 
   let sliderItem = ({item, index}) => {
     return (
-      <View>
-        {/* {props.showStars && (
+      <Pressable
+        onPress={() =>
+          navigation.navigate('Slider', {
+            imagesData: props.slid,
+            imgActive,
+          })
+        }>
+        {props.showStars && (
           <TouchableOpacity
-            style={{ position: "absolute", top: 5, right: 10, zIndex: 999 }}
-            onPress={() => props.onPressStar(item)}
-          >
+            style={{position: 'absolute', top: 5, right: 10, zIndex: 999}}
+            onPress={() => props.onPressStar(item)}>
             <Image
               source={
-                item.star == "0"
-                  ? require("../../assets/image/unfilled_star.png")
-                  : require("../../assets/image/filled_star.png")
+                item.star == '0'
+                  ? require('../../assets/image/unfilled_star.png')
+                  : require('../../assets/image/filled_star.png')
               }
-              style={{ width: 20, height: 20 }}
+              style={{width: 20, height: 20}}
             />
           </TouchableOpacity>
-        )} */}
+        )}
         <Image
           source={{
             uri: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
           }}
           style={{height: '100%', width: width, resizeMode: 'cover'}}
         />
-      </View>
+      </Pressable>
     );
   };
 

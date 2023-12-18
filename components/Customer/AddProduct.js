@@ -16,7 +16,7 @@ import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import * as ImagePicker from "expo-image-picker";
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Loading from '../Component/Loading';
@@ -77,7 +77,7 @@ export default class AddProductComponent extends React.Component {
   formdata = new FormData();
 
   pickImage = async () => {
-    this.setState({ buttonSend: false });
+    this.setState({buttonSend: false});
     // let result = await ImagePicker.launchImageLibraryAsync({
     //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
     //   allowsMultipleSelection: true,
@@ -86,7 +86,7 @@ export default class AddProductComponent extends React.Component {
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
-      selectionLimit:50
+      selectionLimit: 50,
       // includeBase64: true,
     });
     let all_images = this.state.all_images;
@@ -94,8 +94,8 @@ export default class AddProductComponent extends React.Component {
       await result.assets.map((element, index) => {
         all_images.push({
           uri: element.uri,
-          type: "image/jpg",
-          name: "photo.jpg",
+          type: 'image/jpg',
+          name: 'photo.jpg',
         });
       });
       this.setState({
@@ -103,7 +103,7 @@ export default class AddProductComponent extends React.Component {
         all_images_error: false,
       });
     }
-    this.setState({ buttonSend: true });
+    this.setState({buttonSend: true});
   };
 
   clearAllData = () => {
@@ -327,6 +327,7 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 51 ||
         this.props.category.id == 57 ||
         this.props.category.id == 63 ||
+        this.props.category.id == 58 ||
         this.props.category.id == 65,
       hasFrame:
         this.props.category.id == 28 ||
@@ -422,7 +423,6 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 98,
       hasProfile:
         this.props.category.id == 37 ||
-        this.props.category.id == 58 ||
         this.props.category.id == 66 ||
         this.props.category.id == 94 ||
         this.props.category.id == 95 ||
@@ -466,7 +466,20 @@ export default class AddProductComponent extends React.Component {
     return bool;
   };
 
+  truncateText = (text, maxLength) => {
+    if (
+      text.length <= maxLength &&
+      this.props.category.parent?.name.length >= 25
+    ) {
+      return text;
+    }
+    return text.substring(0, maxLength - 2) + '';
+  };
+
   render() {
+    // console.log(this.props.category.parent?.name.length, 'length');
+    const longText = this.props.category.name;
+    const truncatedText = this.truncateText(longText, 9);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -576,7 +589,8 @@ export default class AddProductComponent extends React.Component {
                     }}>
                     {this.props.category.parent &&
                       this.props.category.parent?.name + ' -> '}
-                    {this.props.category.name}
+                    {/* {this.props.category.name} */}
+                    {truncatedText}
                   </Text>
                 </View>
               </View>
@@ -917,7 +931,9 @@ export default class AddProductComponent extends React.Component {
                 style={{
                   fontSize: 18,
                   color: '#fff',
-                  fontFamily: 'Poppins_500Medium',
+                  textAlign: 'center',
+                  // fontFamily: 'Poppins_500Medium',
+                  fontWeight: '700',
                 }}>
                 Загрузить
               </Text>
