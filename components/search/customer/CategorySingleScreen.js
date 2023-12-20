@@ -134,7 +134,7 @@ export default function CategorySingleScreenCustomer({
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
                       navigation.navigate('CustomerPageTwo', {
-                        params: item.user_product.id,
+                        id: item.user_product.id,
                       });
                     }}>
                     <Image

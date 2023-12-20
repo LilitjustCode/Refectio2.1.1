@@ -127,7 +127,7 @@ export default function CategorySingleScreenGuest({
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() =>
                       navigation.navigate('GhostPageTwo', {
-                        params: item.user_product.id,
+                        id: item.user_product.id,
                       })
                     }>
                     <Image

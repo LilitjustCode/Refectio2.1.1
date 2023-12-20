@@ -230,16 +230,50 @@ export default class ZakaziLiveComponent extends React.Component {
               </Text>
             </TouchableOpacity>
           </View>
-
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            renderItem={this.renderItem}
-            data={this.state.data}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-          />
+          {this.state.data.length > 0 ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              renderItem={this.renderItem}
+              data={this.state.data}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={this.renderFooter}
+            />
+          ) : (
+            <View
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+                paddingHorizontal: 20,
+                paddingBottom: 100,
+              }}>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: '500',
+                  color: '#333333',
+                  textAlign: 'center',
+                }}>
+                Этот раздел создан, чтобы дизайнеры или заказчики могли
+                отслеживать дату готовности и дату поставки от всех поставщиков
+                по конкретному объекту в одном месте.
+              </Text>
+              <Text
+                style={{
+                  fontSize: 15,
+                  fontWeight: '500',
+                  color: '#333333',
+                  textAlign: 'center',
+                }}>
+                {' '}
+                Информация для заполнения в данном разделе появится после
+                создания заказа дизайнером или заказчиком.
+              </Text>
+            </View>
+          )}
         </View>
         <CustomerMainPageNavComponent
           active_page={'Заказы'}

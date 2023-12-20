@@ -129,7 +129,7 @@ export default function CategorySingleScreenDesigner({
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() =>
                       navigation.navigate('DesignerPageTwo', {
-                        params: item.user_product.id,
+                        id: item.user_product.id,
                       })
                     }>
                     <Image

@@ -213,7 +213,10 @@ export default class MyAccauntComponent extends React.Component {
       redirect: 'follow',
     };
 
-    fetch(`https://admin.refectio.ru/public/api/deleteMyAccount`, requestOptions)
+    fetch(
+      `https://admin.refectio.ru/public/api/deleteMyAccount`,
+      requestOptions,
+    )
       .then(response => response.json())
       .then(async result => {
         if (result.status === true && result.message === 'Account Deleted') {
@@ -450,7 +453,7 @@ export default class MyAccauntComponent extends React.Component {
                 style={{
                   color: '#fff',
                   fontSize: 18,
-                  fontFamily: 'Poppins_500Medium',
+                  fontWeight: '700',
                 }}>
                 Выйти
               </Text>
@@ -556,7 +559,7 @@ export default class MyAccauntComponent extends React.Component {
                 style={{
                   color: '#fff',
                   fontSize: 18,
-                  fontFamily: 'Poppins_500Medium',
+                  fontWeight: '700',
                 }}>
                 Удалить
               </Text>

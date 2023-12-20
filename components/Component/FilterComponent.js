@@ -14,7 +14,6 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 import {Modal} from 'react-native';
 
-
 export default class FilterComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -47,7 +46,7 @@ export default class FilterComponent extends React.Component {
         },
         {
           companyLogo: require('../../assets/image/category7.png'),
-          category_name: 'Мебель для спальни',
+          category_name: 'Спальни',
           filterName: 'Спальни',
           size: 10,
           lineHeight: 12.9,

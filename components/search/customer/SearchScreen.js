@@ -21,7 +21,8 @@ export default function SearchScreenCustomer({navigation}) {
     )
       .then(response => response.json())
       .then(result => {
-        console.log(result.data.city);
+        // console.log(result.data.city);
+
         setCategories(result.data.city);
       });
   }
@@ -29,6 +30,7 @@ export default function SearchScreenCustomer({navigation}) {
   useEffect(() => {
     getCategories();
   }, []);
+  // console.log(categories[0].childrens);
 
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>

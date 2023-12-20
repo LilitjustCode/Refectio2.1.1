@@ -644,7 +644,9 @@ export default class PraductiaComponent extends React.Component {
                   marginTop: 15,
                   textAlign: 'center',
                   fontSize: 17,
-                  fontFamily: 'Poppins_600SemiBold',
+                  // fontFamily: 'Poppins_600SemiBold',
+                  fontWeight: '700',
+                  color: '#333333',
                 }}>
                 Продукция
               </Text>

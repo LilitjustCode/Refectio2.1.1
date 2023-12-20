@@ -202,24 +202,24 @@ export default class GhostPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }`)
+            }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }`)
+            }/${this.props.route.params.id}`)
           : (url = `refectio.ru/${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }`);
+            }/${this.props.route.params.id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -767,12 +767,16 @@ export default class GhostPageTwoComponent extends React.Component {
                         flexDirection: 'row',
                         alignItems: 'center',
                         justifyContent: 'space-between',
+                        width: '100%',
                       }}>
                       <View>
                         <Text
                           style={{
                             fontSize: 20,
-                            fontFamily: 'Raleway_500Medium',
+                            // fontFamily: 'Raleway_Medium',
+                            fontFamily: 'Raleway_Regular',
+                            fontWeight: '700',
+                            color: '#333333',
                           }}>
                           {this.state.user[0].company_name}
                         </Text>
@@ -796,12 +800,13 @@ export default class GhostPageTwoComponent extends React.Component {
                         style={{
                           flexDirection: 'row',
                           marginTop: 4,
-                          width:
-                            screenWidth > 360
-                              ? '62.5%'
-                              : screenWidth > 393
-                              ? '71%'
-                              : '59%',
+                          // width:
+                          //   screenWidth > 360
+                          //     ? '62.5%'
+                          //     : screenWidth > 393
+                          //     ? '71%'
+                          //     : '59%',
+                          position: 'relative',
                         }}>
                         {`${this.state.user[0].saite}` !== 'null' && (
                           <TouchableOpacity
@@ -844,7 +849,8 @@ export default class GhostPageTwoComponent extends React.Component {
                         {this.state.user[0].extract !== null && (
                           <TouchableOpacity
                             onPress={() => {
-                              this.setState({VipiskaModal: true});
+                              // this.setState({VipiskaModal: true});
+                              this.props.navigation.navigate('Modal');
                             }}>
                             <Image
                               source={require('../../assets/image/sidebar.png')}
@@ -886,8 +892,11 @@ export default class GhostPageTwoComponent extends React.Component {
                       </View>
                       <TouchableOpacity
                         style={{
-                          marginTop: 4,
-                          marginLeft: screenWidth > 393 ? 7 : 0,
+                          // marginTop: 4,
+                          // marginLeft: screenWidth > 393 ? 7 : 0,
+                          position: 'absolute',
+                          right: 11,
+                          top: 5,
                         }}
                         onPress={this.handleShare}>
                         <Image
@@ -896,48 +905,6 @@ export default class GhostPageTwoComponent extends React.Component {
                         />
                       </TouchableOpacity>
                     </View>
-                    {/* <View>
-                   
-                    
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                        width: "78%",
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          marginTop: 4,
-                        }}
-                      >
-                       
-                       
-                      </View>
-                    </View>
-                  </View> */}
-                    {/*  */}
-                    {/* 
-                  <TouchableOpacity
-                    style={{ alignSelf: "flex-end" }}
-                    onPress={() => {
-                      this.generateShareLink();
-                    }}
-                  >
-                    <Svg
-                      width={24}
-                      height={24}
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <Path
-                        d="M18 22a2.893 2.893 0 0 1-2.125-.875A2.893 2.893 0 0 1 15 19c0-.117.008-.238.025-.363s.042-.238.075-.337l-7.05-4.1c-.283.25-.6.446-.95.588-.35.142-.717.213-1.1.212a2.893 2.893 0 0 1-2.125-.875A2.893 2.893 0 0 1 3 12c0-.833.292-1.542.875-2.125A2.893 2.893 0 0 1 6 9c.383 0 .75.071 1.1.213.35.142.667.338.95.587l7.05-4.1a1.843 1.843 0 0 1-.075-.337A2.734 2.734 0 0 1 15 5c0-.833.292-1.542.875-2.125A2.893 2.893 0 0 1 18 2c.833 0 1.542.292 2.125.875S21 4.167 21 5s-.292 1.542-.875 2.125A2.893 2.893 0 0 1 18 8c-.383 0-.75-.07-1.1-.212a3.273 3.273 0 0 1-.95-.588L8.9 11.3c.033.1.058.213.075.338a2.747 2.747 0 0 1 0 .725 1.813 1.813 0 0 1-.075.337l7.05 4.1c.283-.25.6-.446.95-.587.35-.141.717-.212 1.1-.213.833 0 1.542.292 2.125.875S21 18.167 21 19s-.292 1.542-.875 2.125A2.893 2.893 0 0 1 18 22Zm0-16a.968.968 0 0 0 .713-.288A.964.964 0 0 0 19 5a.968.968 0 0 0-.288-.713A.964.964 0 0 0 18 4a.968.968 0 0 0-.713.288A.964.964 0 0 0 17 5c0 .283.096.521.288.713.192.192.43.288.712.287ZM6 13a.968.968 0 0 0 .713-.288A.964.964 0 0 0 7 12a.968.968 0 0 0-.288-.713A.964.964 0 0 0 6 11a.968.968 0 0 0-.713.288A.964.964 0 0 0 5 12c0 .283.096.521.288.713.192.192.43.288.712.287Zm12 7a.968.968 0 0 0 .713-.288A.964.964 0 0 0 19 19a.968.968 0 0 0-.288-.713A.964.964 0 0 0 18 18a.968.968 0 0 0-.713.288A.964.964 0 0 0 17 19c0 .283.096.521.288.713.192.192.43.288.712.287Z"
-                        fill="#52A8EF"
-                      />
-                    </Svg>
-                  </TouchableOpacity> */}
                   </View>
                 </View>
               )}
@@ -965,7 +932,8 @@ export default class GhostPageTwoComponent extends React.Component {
                       sOpenCityDropDown: !this.state.sOpenCityDropDown,
                     })
                   }>
-                  <Text style={{fontFamily: 'Raleway_400Regular'}}>
+                  <Text
+                    style={{fontFamily: 'Raleway_Regular', color: '#333333'}}>
                     {this.state.changed}
                   </Text>
                   <View style={{position: 'absolute', right: 17, bottom: 6}}>
@@ -1028,6 +996,7 @@ export default class GhostPageTwoComponent extends React.Component {
                             textAlign: 'left',
                             paddingVertical: 10,
                             fontFamily: 'Raleway_400Regular',
+                            color: '#333333',
                           }}>
                           {this.state.changed}
                         </Text>
@@ -1053,6 +1022,7 @@ export default class GhostPageTwoComponent extends React.Component {
                                 textAlign: 'left',
                                 paddingVertical: 10,
                                 fontFamily: 'Raleway_400Regular',
+                                color: '#333333',
                               }}>
                               {item.city_name}
                             </Text>
@@ -1076,6 +1046,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           fontSize: 13,
                           marginRight: 5,
                           fontFamily: 'Raleway_400Regular',
+                          color: '#333333',
                         }}>
                         Шоурум
                       </Text>
@@ -1288,22 +1259,47 @@ export default class GhostPageTwoComponent extends React.Component {
                             marginTop: 5,
                             marginBottom: 4,
                             width: '90%',
+                            color: '#333333',
                           }}>
                           {item.name}
                         </Text>
-                        {item.facades && <Text>Фасады : {item.facades}</Text>}
-                        {item.frame && <Text>Корпус: {item.frame}</Text>}
-                        {item.profile && <Text>Профиль: {item.profile}</Text>}
-                        {item.tabletop && (
-                          <Text>Столешница: {item.tabletop}</Text>
+                        {item.facades && (
+                          <Text style={{color: '#333333'}}>
+                            Фасады : {item.facades}
+                          </Text>
                         )}
-                        {item.length && <Text>Длина: {item.length} м.</Text>}
-                        {item.height && <Text>Высота: {item.height} м.</Text>}
+                        {item.frame && (
+                          <Text style={{color: '#333333'}}>
+                            Корпус: {item.frame}
+                          </Text>
+                        )}
+                        {item.profile && (
+                          <Text style={{color: '#333333'}}>
+                            Профиль: {item.profile}
+                          </Text>
+                        )}
+                        {item.tabletop && (
+                          <Text style={{color: '#333333'}}>
+                            Столешница: {item.tabletop}
+                          </Text>
+                        )}
+                        {item.length && (
+                          <Text style={{color: '#333333'}}>
+                            Длина: {item.length} м.
+                          </Text>
+                        )}
+                        {item.height && (
+                          <Text style={{color: '#333333'}}>
+                            Высота: {item.height} м.
+                          </Text>
+                        )}
                         {item.material && (
-                          <Text>Материал: {item.material}</Text>
+                          <Text style={{color: '#333333'}}>
+                            Материал: {item.material}
+                          </Text>
                         )}
                         {item.price && (
-                          <Text>
+                          <Text style={{color: '#333333'}}>
                             Цена:{' '}
                             {item.price
                               .toString()
@@ -1369,23 +1365,25 @@ const styles = StyleSheet.create({
     marginBottom: 34,
   },
   infoCompanyMain: {
-    width: '100%',
+    width: screenWidth,
     flexDirection: 'row',
     alignItems: 'center',
     marginTop: 15,
   },
   infoCompany: {
-    // width: "70%",
+    width: screenWidth - 130,
     // flexDirection: "row",
     // justifyContent: "space-between",
   },
   categoriesName: {
     fontSize: 14,
-    fontFamily: 'Raleway_600SemiBold',
+    // fontFamily: 'Raleway_SemiBold',
+    fontWeight: '600',
+    color: '#333333',
   },
   categoriesNameActive: {
     fontSize: 14,
-    fontFamily: 'Raleway_600SemiBold',
+    fontWeight: '600',
     color: '#fff',
   },
   categoriesButton: {
