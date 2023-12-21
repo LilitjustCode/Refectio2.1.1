@@ -1,29 +1,27 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  Image,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  ScrollView,
-  StyleSheet,
-  Modal,
-  ImageBackground,
   ActivityIndicator,
-  Platform,
   Dimensions,
+  Image,
+  ImageBackground,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
   Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
-import {ImageSlider} from 'react-native-image-slider-banner';
 // import Slider from "../slider/Slider";
-import GhostNavComponent from './GhostNav';
-import BlueButton from '../Component/Buttons/BlueButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Slider2 from '../slider/Slider2';
 import {Linking} from 'react-native';
 import WebView from 'react-native-webview';
+import BlueButton from '../Component/Buttons/BlueButton';
+import Slider2 from '../slider/Slider2';
+import GhostNavComponent from './GhostNav';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -603,149 +601,6 @@ export default class GhostPageTwoComponent extends React.Component {
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.campaign}>
               {this.state.user.length > 0 && (
-                // <View style={styles.infoCompanyMain}>
-                //   <Image
-                //     source={{
-                //       uri: this.state.urlImage + this.state.user[0].logo,
-                //     }}
-                //     style={{
-                //       width: 100,
-                //       height: 100,
-                //       marginRight: 12,
-                //       borderColor: "#C8C8C8",
-                //       borderWidth: 1,
-                //       resizeMode: "cover",
-                //       borderRadius: 10,
-                //     }}
-                //   />
-                //   <View style={styles.infoCompany}>
-                //     <View>
-                //       <Text
-                //         style={{
-                //           fontSize: 20,
-                //           fontFamily: "Raleway_500Medium",
-                //         }}
-                //       >
-                //         {this.state.user[0].company_name}
-                //       </Text>
-                //       <Text
-                //         style={{
-                //           fontSize: 16,
-                //           color: "#A8A8A8",
-                //           fontFamily: "Raleway_500Medium",
-                //         }}
-                //       >
-                //         {this.state.user[0].made_in}
-                //       </Text>
-                //       <View
-                //         style={{
-                //           flexDirection: "row",
-                //           marginTop: 4,
-                //         }}
-                //       >
-                //         {`${this.state.user[0].saite}` !== "null" && (
-                //           <TouchableOpacity
-                //             onPress={() => {
-                //               Linking.openURL(
-                //                 this.addProtocol(this.state.user[0].saite)
-                //               );
-                //             }}
-                //           >
-                //             <Image
-                //               source={require("../../assets/image/globus.png")}
-                //               style={{
-                //                 width: 24,
-                //                 height: 24,
-                //                 marginRight: 14,
-                //               }}
-                //             />
-                //           </TouchableOpacity>
-                //         )}
-                //         {this.state.user[0].saite == null && (
-                //           <View style={{ height: 24 }}></View>
-                //         )}
-                //         {this.state.user[0].telegram !== null && (
-                //           <TouchableOpacity
-                //             onPress={() => {
-                //               Linking.openURL(
-                //                 "https://t.me/" + this.state.user[0].telegram
-                //               );
-                //             }}
-                //           >
-                //             <Image
-                //               source={require("../../assets/image/telegram.png")}
-                //               style={{
-                //                 width: 24,
-                //                 height: 24,
-                //                 marginRight: 14,
-                //               }}
-                //             />
-                //           </TouchableOpacity>
-                //         )}
-
-                //         {this.state.user[0].extract !== null && (
-                //           <TouchableOpacity
-                //             onPress={() => {
-                //               this.props.navigation.navigate("Modal");
-                //             }}
-                //           >
-                //             <Image
-                //               source={require("../../assets/image/sidebar.png")}
-                //               style={{
-                //                 width: 18,
-                //                 height: 24,
-                //                 marginRight: 14,
-                //               }}
-                //             />
-                //           </TouchableOpacity>
-                //         )}
-                //         {this.state.user[0].job_with_designer == "Да" && (
-                //           <TouchableOpacity
-                //             onPress={() => {
-                //               this.setState({ designerModal: true });
-                //             }}
-                //           >
-                //             <Image
-                //               source={require("../../assets/image/design.png")}
-                //               style={{
-                //                 width: 24,
-                //                 height: 24,
-                //                 marginRight: 10,
-                //               }}
-                //             />
-                //           </TouchableOpacity>
-                //         )}
-                //         {this.state.user[0].dmodel == "Да" && (
-                //           <TouchableOpacity
-                //             onPress={() =>
-                //               this.setState({ dmodel_popup: true })
-                //             }
-                //           >
-                //             <Image
-                //               source={require("../../assets/image/cube.png")}
-                //               style={{
-                //                 width: 24,
-                //                 height: 24,
-                //               }}
-                //             />
-                //           </TouchableOpacity>
-                //         )}
-                //       </View>
-                //     </View>
-                //     <TouchableOpacity
-                //       style={{
-                //         marginTop: 45,
-                //         marginRight: screenWidth > 360 ? 0 : -10,
-                //       }}
-                //       onPress={this.handleShare}
-                //     >
-                //       <Image
-                //         style={{ width: 25, height: 25 }}
-                //         source={require("../../assets/image/PNG/share.png")}
-                //       />
-                //     </TouchableOpacity>
-                //   </View>
-                // </View>
                 <View style={styles.infoCompanyMain}>
                   <Image
                     source={{
@@ -794,6 +649,7 @@ export default class GhostPageTwoComponent extends React.Component {
                       style={{
                         flexDirection: 'row',
                         alignItems: 'center',
+                        width: '95%',
                         justifyContent: 'space-between',
                       }}>
                       <View
@@ -891,13 +747,15 @@ export default class GhostPageTwoComponent extends React.Component {
                         )}
                       </View>
                       <TouchableOpacity
-                        style={{
-                          // marginTop: 4,
-                          // marginLeft: screenWidth > 393 ? 7 : 0,
-                          position: 'absolute',
-                          right: 11,
-                          top: 5,
-                        }}
+                        style={
+                          {
+                            // marginTop: 4,
+                            // marginLeft: screenWidth > 393 ? 7 : 0,
+                            // position: 'absolute',
+                            // right: 11,
+                            // top: 5,
+                          }
+                        }
                         onPress={this.handleShare}>
                         <Image
                           style={{width: 25, height: 25}}
