@@ -1077,6 +1077,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                                 height: 21.43,
                                 // marginRight: screenWidth > 393 ? -2 : 1,
                                 marginBottom: 15,
+                                marginRight: 1,
                                 // marginTop: 5,
                               }}
                             />
@@ -1088,6 +1089,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                                 width: 24,
                                 height: 21.43,
                                 tintColor: 'red',
+                                marginRight: 1,
                                 // marginTop: 5,
                                 // marginRight: screenWidth > 393 ? -2 : 1,
                                 marginBottom: 15,

@@ -853,303 +853,275 @@ export default class DesignerPageTwoComponent extends React.Component {
               showsVerticalScrollIndicator={false}
               style={{marginTop: 15}}>
               <View style={styles.campaign}>
-                <View style={styles.infoCompanyMain}>
-                  <Image
-                    source={{
-                      uri: this.state.urlImage + this.state.user[0].logo,
-                    }}
-                    style={{
-                      width: 100,
-                      height: 100,
-                      marginRight: 12,
-                      borderColor: '#C8C8C8',
-                      borderWidth: 1,
-                      resizeMode: 'cover',
-                      borderRadius: 10,
-                    }}
-                  />
-                  <View style={styles.infoCompany}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View>
-                        <Text
-                          style={{
-                            fontSize: 20,
-                            fontFamily: 'Raleway_500Medium',
-                            color: '#333333',
-                          }}>
-                          {this.state.user[0].company_name}
-                        </Text>
-                        <Text
-                          style={{
-                            fontSize: 16,
-                            color: '#A8A8A8',
-                            fontFamily: 'Raleway_500Medium',
-                          }}>
-                          {this.state.user[0].made_in}
-                        </Text>
-                      </View>
-                    </View>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                      }}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          marginTop: 4,
-                          width:
-                            screenWidth > 360
-                              ? '62.5%'
-                              : screenWidth > 393
-                              ? '71%'
-                              : '59%',
-                        }}>
-                        {`${this.state.user[0].saite}` !== 'null' && (
-                          <TouchableOpacity
-                            onPress={() => {
-                              Linking.openURL(
-                                this.addProtocol(this.state.user[0].saite),
-                              );
-                            }}>
-                            <Image
-                              source={require('../../assets/image/globus.png')}
-                              style={{
-                                width: 24,
-                                height: 24,
-                                marginRight: 14,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {this.state.user[0].saite == null && (
-                          <View style={{height: 24}}></View>
-                        )}
-                        {this.state.user[0].telegram !== null && (
-                          <TouchableOpacity
-                            onPress={() => {
-                              Linking.openURL(
-                                'https://t.me/' + this.state.user[0].telegram,
-                              );
-                            }}>
-                            <Image
-                              source={require('../../assets/image/telegram.png')}
-                              style={{
-                                width: 24,
-                                height: 24,
-                                marginRight: 14,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
-
-                        {this.state.user[0].extract !== null && (
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.setState({VipiskaModal: true});
-                            }}>
-                            <Image
-                              source={require('../../assets/image/sidebar.png')}
-                              style={{
-                                width: 18,
-                                height: 24,
-                                marginRight: 14,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {this.state.user[0].job_with_designer == 'Да' && (
-                          <TouchableOpacity
-                            onPress={() => {
-                              this.setState({designerModal: true});
-                            }}>
-                            <Image
-                              source={require('../../assets/image/design.png')}
-                              style={{
-                                width: 24,
-                                height: 24,
-                                marginRight: 10,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
-                        {this.state.user[0].dmodel == 'Да' && (
-                          <TouchableOpacity
-                            onPress={() => this.setState({dmodel_popup: true})}>
-                            <Image
-                              source={require('../../assets/image/cube.png')}
-                              style={{
-                                width: 24,
-                                height: 24,
-                              }}
-                            />
-                          </TouchableOpacity>
-                        )}
-                      </View>
-                      <TouchableOpacity
-                        style={{
-                          marginTop: 4,
-                          alignSelf: 'flex-end',
-                          marginLeft: screenWidth > 393 ? 7 : 0,
+                {this.state.user.length > 0 && (
+                  <>
+                    <View style={styles.infoCompanyMain}>
+                      <Image
+                        source={{
+                          uri: this.state.urlImage + this.state.user[0].logo,
                         }}
-                        onPress={this.handleShare}>
-                        <Image
-                          style={{width: 25, height: 25}}
-                          source={require('../../assets/image/PNG/share.png')}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                    {/* <View>
-                     
-                      
-                      <View
                         style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          width: "78%",
+                          width: 100,
+                          height: 100,
+                          marginRight: 12,
+                          borderColor: '#C8C8C8',
+                          borderWidth: 1,
+                          resizeMode: 'cover',
+                          borderRadius: 10,
                         }}
-                      >
+                      />
+                      <View style={styles.infoCompany}>
                         <View
                           style={{
-                            flexDirection: "row",
-                            marginTop: 4,
-                          }}
-                        >
-                         
-                         
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            // width: '95%',
+                            // backgroussndColor: 'red',
+                          }}>
+                          <View>
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                // fontFamily: 'Raleway_500Medium',
+                                color: '#333333',
+                                fontWeight: '700',
+                              }}>
+                              {this.state.user[0].company_name}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 16,
+                                color: '#A8A8A8',
+                                fontFamily: 'Raleway_500Medium',
+                              }}>
+                              {this.state.user[0].made_in}
+                            </Text>
+                          </View>
+                          <TouchableOpacity onPress={() => this.favorite()}>
+                            {this.state.favoriteBool == true && (
+                              <Image
+                                source={require('../../assets/image/heartHast.png')}
+                                style={{
+                                  width: 24,
+                                  height: 21.43,
+                                  // marginRight: screenWidth > 393 ? -2 : 1,
+                                  marginBottom: 15,
+                                  marginRight: 1,
+                                  // marginTop: 5,
+                                }}
+                              />
+                            )}
+                            {this.state.favoriteBool == false && (
+                              <Image
+                                source={require('../../assets/image/heartSev.png')}
+                                style={{
+                                  width: 24,
+                                  height: 21.43,
+                                  tintColor: 'red',
+                                  marginRight: 1,
+                                  // marginTop: 5,
+                                  // marginRight: screenWidth > 393 ? -2 : 1,
+                                  marginBottom: 15,
+                                }}
+                              />
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              marginTop: 4,
+                              width:
+                                screenWidth > 360
+                                  ? '62.5%'
+                                  : screenWidth > 393
+                                  ? '71%'
+                                  : '59%',
+                            }}>
+                            {`${this.state.user[0].saite}` !== 'null' && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  Linking.openURL(
+                                    this.addProtocol(this.state.user[0].saite),
+                                  );
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/globus.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].saite == null && (
+                              <View style={{height: 24}}></View>
+                            )}
+                            {this.state.user[0].telegram !== null && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  Linking.openURL(
+                                    'https://t.me/' +
+                                      this.state.user[0].telegram,
+                                  );
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/telegram.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+
+                            {this.state.user[0].extract !== null && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.setState({VipiskaModal: true});
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/sidebar.png')}
+                                  style={{
+                                    width: 18,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].job_with_designer == 'Да' && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.setState({designerModal: true});
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/design.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 10,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].dmodel == 'Да' && (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  this.setState({dmodel_popup: true})
+                                }>
+                                <Image
+                                  source={require('../../assets/image/cube.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+                          </View>
+                          <TouchableOpacity
+                            style={{
+                              marginTop: 4,
+                              // marginLeft: screenWidth > 393 ? 7 : 0,
+                            }}
+                            onPress={this.handleShare}>
+                            <Image
+                              style={{width: 25, height: 25}}
+                              source={require('../../assets/image/PNG/share.png')}
+                            />
+                          </TouchableOpacity>
                         </View>
                       </View>
-                    </View> */}
-                    {/*  */}
-                    {/* 
-                    <TouchableOpacity
-                      style={{ alignSelf: "flex-end" }}
-                      onPress={() => {
-                        this.generateShareLink();
-                      }}
-                    >
-                      <Svg
-                        width={24}
-                        height={24}
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                      >
-                        <Path
-                          d="M18 22a2.893 2.893 0 0 1-2.125-.875A2.893 2.893 0 0 1 15 19c0-.117.008-.238.025-.363s.042-.238.075-.337l-7.05-4.1c-.283.25-.6.446-.95.588-.35.142-.717.213-1.1.212a2.893 2.893 0 0 1-2.125-.875A2.893 2.893 0 0 1 3 12c0-.833.292-1.542.875-2.125A2.893 2.893 0 0 1 6 9c.383 0 .75.071 1.1.213.35.142.667.338.95.587l7.05-4.1a1.843 1.843 0 0 1-.075-.337A2.734 2.734 0 0 1 15 5c0-.833.292-1.542.875-2.125A2.893 2.893 0 0 1 18 2c.833 0 1.542.292 2.125.875S21 4.167 21 5s-.292 1.542-.875 2.125A2.893 2.893 0 0 1 18 8c-.383 0-.75-.07-1.1-.212a3.273 3.273 0 0 1-.95-.588L8.9 11.3c.033.1.058.213.075.338a2.747 2.747 0 0 1 0 .725 1.813 1.813 0 0 1-.075.337l7.05 4.1c.283-.25.6-.446.95-.587.35-.141.717-.212 1.1-.213.833 0 1.542.292 2.125.875S21 18.167 21 19s-.292 1.542-.875 2.125A2.893 2.893 0 0 1 18 22Zm0-16a.968.968 0 0 0 .713-.288A.964.964 0 0 0 19 5a.968.968 0 0 0-.288-.713A.964.964 0 0 0 18 4a.968.968 0 0 0-.713.288A.964.964 0 0 0 17 5c0 .283.096.521.288.713.192.192.43.288.712.287ZM6 13a.968.968 0 0 0 .713-.288A.964.964 0 0 0 7 12a.968.968 0 0 0-.288-.713A.964.964 0 0 0 6 11a.968.968 0 0 0-.713.288A.964.964 0 0 0 5 12c0 .283.096.521.288.713.192.192.43.288.712.287Zm12 7a.968.968 0 0 0 .713-.288A.964.964 0 0 0 19 19a.968.968 0 0 0-.288-.713A.964.964 0 0 0 18 18a.968.968 0 0 0-.713.288A.964.964 0 0 0 17 19c0 .283.096.521.288.713.192.192.43.288.712.287Z"
-                          fill="#52A8EF"
-                        />
-                      </Svg>
-                    </TouchableOpacity> */}
-                  </View>
-                </View>
-
-                <View
-                  style={{
-                    position: 'relative',
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                    marginTop: 9,
-                    justifyContent: 'space-between',
-                  }}>
-                  <TouchableOpacity
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      width: '60%',
-                      borderRadius: 5,
-                      position: 'relative',
-                      height: 24,
-                      paddingLeft: 5,
-                    }}
-                    onPress={() =>
-                      this.setState({
-                        sOpenCityDropDown: !this.state.sOpenCityDropDown,
-                      })
-                    }>
-                    <Text
-                      style={{
-                        fontFamily: 'Raleway_400Regular',
-                        color: '#333333',
-                      }}>
-                      {this.state.changed}
-                    </Text>
-                    <View style={{position: 'absolute', right: 17, bottom: 6}}>
-                      {!this.state.sOpenCityDropDown && (
-                        <Svg
-                          width="18"
-                          height="10"
-                          viewBox="0 0 18 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <Path
-                            d="M1 1L9 9L17 1"
-                            stroke="#888888"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </Svg>
-                      )}
-                      {this.state.sOpenCityDropDown && (
-                        <Svg
-                          width="18"
-                          height="10"
-                          viewBox="0 0 18 10"
-                          fill="none"
-                          xmlns="http://www.w3.org/2000/svg">
-                          <Path
-                            d="M1 9L9 1L17 9"
-                            stroke="#888888"
-                            stroke-width="2"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                          />
-                        </Svg>
-                      )}
                     </View>
-                  </TouchableOpacity>
-                  <View
-                    style={
-                      this.state.sOpenCityDropDown
-                        ? styles.sOpenCityDropDownActive
-                        : styles.sOpenCityDropDown
-                    }>
-                    <ScrollView nestedScrollEnabled={true}>
-                      {this.state.city_for_sales_user.length ==
-                      this.state.city_count ? (
-                        <TouchableOpacity
+                    <View
+                      style={{
+                        position: 'relative',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width: '100%',
+                        alignSelf: 'center',
+                        // paddingHorizontal: 0,
+                        marginTop: 9,
+                        justifyContent: 'space-between',
+                      }}>
+                      <TouchableOpacity
+                        style={{
+                          borderWidth: 1,
+                          borderColor: '#F5F5F5',
+                          width: '60%',
+                          borderRadius: 5,
+                          position: 'relative',
+                          height: 24,
+                          paddingLeft: 5,
+                        }}
+                        onPress={() =>
+                          this.setState({
+                            sOpenCityDropDown: !this.state.sOpenCityDropDown,
+                          })
+                        }>
+                        <Text
                           style={{
-                            width: '100%',
-                            justifyContent: 'center',
-                            textAlign: 'left',
-                          }}
-                          onPress={() =>
-                            this.setState({
-                              sOpenCityDropDown: false,
-                            })
-                          }>
-                          <Text
-                            style={{
-                              textAlign: 'left',
-                              paddingVertical: 10,
-                              fontFamily: 'Raleway_400Regular',
-                              color: '#333333',
-                            }}>
-                            {this.state.changed}
-                          </Text>
-                        </TouchableOpacity>
-                      ) : (
-                        this.state.city_for_sales_user.map((item, index) => {
-                          return (
+                            fontFamily: 'Raleway_400Regular',
+                            color: '#333333',
+                          }}>
+                          {this.state.changed}
+                        </Text>
+                        <View
+                          style={{position: 'absolute', right: 17, bottom: 6}}>
+                          {!this.state.sOpenCityDropDown && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 1L9 9L17 1"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                          {this.state.sOpenCityDropDown && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 9L9 1L17 9"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={
+                          this.state.sOpenCityDropDown
+                            ? styles.sOpenCityDropDownActive
+                            : styles.sOpenCityDropDown
+                        }>
+                        <ScrollView nestedScrollEnabled={true}>
+                          {this.state.city_for_sales_user.length ==
+                          this.state.city_count ? (
                             <TouchableOpacity
-                              key={index}
                               style={{
                                 width: '100%',
                                 justifyContent: 'center',
@@ -1157,7 +1129,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                               }}
                               onPress={() =>
                                 this.setState({
-                                  changed: item.city_name,
                                   sOpenCityDropDown: false,
                                 })
                               }>
@@ -1165,80 +1136,112 @@ export default class DesignerPageTwoComponent extends React.Component {
                                 style={{
                                   textAlign: 'left',
                                   paddingVertical: 10,
-                                  fontFamily: 'Raleway_400Regular',
+                                  fontFamily: 'Raleway_Regular',
                                   color: '#333333',
                                 }}>
-                                {item.city_name}
+                                {this.state.changed}
                               </Text>
                             </TouchableOpacity>
-                          );
-                        })
-                      )}
-                    </ScrollView>
-                  </View>
-
-                  <View style={styles.checkBox}>
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        alignItems: 'center',
-                      }}>
-                      <Text
-                        style={{
-                          fontSize: 13,
-                          marginRight: 5,
-                          fontFamily: 'Raleway_400Regular',
-                          color: '#333333',
-                        }}>
-                        Шоурум
-                      </Text>
-                      <View>
-                        {this.state.show_room == 'Да' ? (
-                          <Svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <Path
-                              d="M4 11.4L7.52941 15.4L16 5"
-                              stroke="#52A8EF"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                            <Rect
-                              x="0.2"
-                              y="0.2"
-                              width="19.6"
-                              height="19.6"
-                              rx="3.8"
-                              stroke="#52A8EF"
-                              stroke-width="0.4"
-                            />
-                          </Svg>
-                        ) : (
-                          <Svg
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <Rect
-                              x="0.2"
-                              y="0.2"
-                              width="19.6"
-                              height="19.6"
-                              rx="3.8"
-                              stroke="#52A8EF"
-                              stroke-width="0.4"
-                            />
-                          </Svg>
-                        )}
+                          ) : (
+                            this.state.city_for_sales_user.map(
+                              (item, index) => {
+                                return (
+                                  <TouchableOpacity
+                                    key={index}
+                                    style={{
+                                      width: '100%',
+                                      justifyContent: 'center',
+                                      textAlign: 'left',
+                                    }}
+                                    onPress={() =>
+                                      this.setState({
+                                        changed: item.city_name,
+                                        sOpenCityDropDown: false,
+                                      })
+                                    }>
+                                    <Text
+                                      style={{
+                                        textAlign: 'left',
+                                        paddingVertical: 10,
+                                        fontFamily: 'Raleway_400Regular',
+                                        color: '#333333',
+                                      }}>
+                                      {item.city_name}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              },
+                            )
+                          )}
+                        </ScrollView>
                       </View>
+
+                      {this.state.user.length > 0 && (
+                        <View style={styles.checkBox}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: 13,
+                                marginRight: 5,
+                                fontFamily: 'Raleway_400Regular',
+                                color: '#333333',
+                              }}>
+                              Шоурум
+                            </Text>
+                            <View>
+                              {this.state.user[0].show_room == 'Да' ? (
+                                <Svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <Path
+                                    d="M4 11.4L7.52941 15.4L16 5"
+                                    stroke="#52A8EF"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  />
+                                  <Rect
+                                    x="0.2"
+                                    y="0.2"
+                                    width="19.6"
+                                    height="19.6"
+                                    rx="3.8"
+                                    stroke="#52A8EF"
+                                    stroke-width="0.4"
+                                  />
+                                </Svg>
+                              ) : (
+                                <Svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <Rect
+                                    x="0.2"
+                                    y="0.2"
+                                    width="19.6"
+                                    height="19.6"
+                                    rx="3.8"
+                                    stroke="#52A8EF"
+                                    stroke-width="0.4"
+                                  />
+                                </Svg>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      )}
                     </View>
-                  </View>
-                </View>
+                  </>
+                )}
 
                 <View
                   style={{

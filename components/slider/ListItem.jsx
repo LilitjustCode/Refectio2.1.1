@@ -85,16 +85,22 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   listItemLandspace: {
-    resizeMode: 'contain',
+    // resizeMode: 'center',
     height: '100%',
+    width: '100%',
+    alignItems: 'center',
+    // paddingRight:150
+    justifyContent: 'center',
   },
   imageContainer: {
     alignItems: 'center',
     width: '100%',
+    // marginRight: 50,
   },
   landscapeImage: {
-    resizeMode: 'contain',
+    resizeMode: 'center',
     height: '100%',
+    left: -40,
   },
   landscapeImageContainer: {
     justifyContent: 'center',

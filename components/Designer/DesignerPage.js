@@ -102,9 +102,14 @@ export default class CustomerMainPageComponent extends React.Component {
 
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
+              console.log(
+                // data[i].slider_photo[i].user_id,
+                data[i]?.slider_photo[i]?.user_id == data[i].id,
+                'kkkk,mmm',
+              );
               if (
-                data[i].slider_photo.length &&
-                data[i].slider_photo[i].user_id === data[i].id
+                data[i].slider_photo.length > 0 &&
+                data[i].slider_photo[i].user_id == data[i].id
               ) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
@@ -119,6 +124,7 @@ export default class CustomerMainPageComponent extends React.Component {
                 let product_image =
                   data[i].user_product_limit1[0].product_image;
                 product_image.length > 5 ? product_image.splice(5) : null;
+                // console.log(product_image, '');
                 data[i].images = product_image;
               }
             }

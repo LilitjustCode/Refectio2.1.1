@@ -386,7 +386,7 @@ export default class FilterComponent extends React.Component {
               style={{
                 fontSize: 26,
                 color: '#333333',
-                fontFamily: 'Poppins_500Medium',
+                fontWeight: '500',
               }}>
               Фильтр
             </Text>
@@ -410,7 +410,7 @@ export default class FilterComponent extends React.Component {
                 style={{
                   fontSize: 20,
                   color: '#888888',
-                  fontFamily: 'Raleway_500Medium',
+                  fontWeight: '500',
                 }}>
                 Ценовая категория
               </Text>
@@ -438,7 +438,7 @@ export default class FilterComponent extends React.Component {
                 style={{
                   fontSize: 20,
                   color: '#888888',
-                  fontFamily: 'Raleway_500Medium',
+                  fontWeight: '500',
                 }}>
                 Категории
               </Text>
@@ -499,7 +499,7 @@ export default class FilterComponent extends React.Component {
                                       fontSize: item.size,
                                       color: '#888888',
                                       textAlign: 'center',
-                                      fontFamily: 'Poppins_400Regular',
+                                      fontWeight: '400',
                                       lineHeight: item.lineHeight,
                                     }}>
                                     {item.filterName}
@@ -525,7 +525,7 @@ export default class FilterComponent extends React.Component {
                                       fontSize: item.size,
                                       color: '#fff',
                                       textAlign: 'center',
-                                      fontFamily: 'Poppins_400Regular',
+                                      fontWeight: '400',
                                       lineHeight: item.lineHeight,
                                     }}>
                                     {item.filterName}
@@ -555,7 +555,7 @@ export default class FilterComponent extends React.Component {
                           left: '40%',
                           color: '#C6C6C6',
                           backgroundColor: '#fff',
-                          fontFamily: 'Poppins_400Regular',
+                          fontWeight: '400',
                         }}>
                         Коммерческая
                       </Text>
@@ -603,7 +603,7 @@ export default class FilterComponent extends React.Component {
                                       fontSize: item.size,
                                       color: '#888888',
                                       textAlign: 'center',
-                                      fontFamily: 'Poppins_400Regular',
+                                      fontWeight: '400',
                                       lineHeight: item.lineHeight,
                                     }}>
                                     {item.filterName}
@@ -629,7 +629,7 @@ export default class FilterComponent extends React.Component {
                                       fontSize: item.size,
                                       color: '#fff',
                                       textAlign: 'center',
-                                      fontFamily: 'Poppins_400Regular',
+                                      fontWeight: '400',
                                       lineHeight: item.lineHeight,
                                     }}>
                                     {item.filterName}
@@ -654,7 +654,7 @@ export default class FilterComponent extends React.Component {
                   fontSize: 20,
                   color: '#888888',
                   marginBottom: 11,
-                  fontFamily: 'Raleway_500Medium',
+                  fontWeight: '500',
                 }}>
                 Город
               </Text>
@@ -678,7 +678,7 @@ export default class FilterComponent extends React.Component {
                 <Text
                   style={{
                     color: '#FFFFFF',
-                    fontFamily: 'Raleway_600SemiBold',
+                    fontWeight: '600',
                     lineHeight: 18,
                   }}>
                   {this.state.city_name == ''
@@ -759,7 +759,7 @@ export default class FilterComponent extends React.Component {
                 style={{
                   fontSize: 20,
                   color: '#888888',
-                  fontFamily: 'Raleway_500Medium',
+                  fontWeight: '500',
                 }}>
                 Страна производства
               </Text>
@@ -789,7 +789,7 @@ export default class FilterComponent extends React.Component {
                 style={{
                   fontSize: 20,
                   color: '#888888',
-                  fontFamily: 'Raleway_500Medium',
+                  fontWeight: '500',
                 }}>
                 Наличие шоурума
               </Text>
@@ -843,7 +843,7 @@ export default class FilterComponent extends React.Component {
                   style={{
                     fontSize: 18,
                     color: '#FFFFFF',
-                    fontFamily: 'Poppins_500Medium',
+                    fontWeight: '700',
                   }}>
                   Применить
                 </Text>
@@ -865,7 +865,7 @@ export default class FilterComponent extends React.Component {
                   style={{
                     fontSize: 18,
                     color: '#FFFFFF',
-                    fontFamily: 'Poppins_500Medium',
+                    fontWeight: '700',
                   }}>
                   Сбросить
                 </Text>
@@ -936,7 +936,7 @@ const styles = StyleSheet.create({
   stranaButton: {
     color: '#fff',
     fontSize: 15,
-    fontFamily: 'Raleway_600SemiBold',
+    fontWeight: '600',
     padding: 0,
   },
   yesNoFilter: {
