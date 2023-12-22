@@ -98,7 +98,7 @@ const styles = StyleSheet.create({
     // marginRight: 50,
   },
   landscapeImage: {
-    resizeMode: 'center',
+    resizeMode: 'contain',
     height: '100%',
     left: -40,
   },

@@ -102,14 +102,14 @@ export default class CustomerMainPageComponent extends React.Component {
             for (let i = 0; i < data.length; i++) {
               if (
                 data[i].slider_photo.length &&
-                data[i].slider_photo[i].user_id === data[i].id
+                data[i].slider_photo[i].user_id == data[i].id
               ) {
                 let product_image = data[i].slider_photo;
-                product_image.length > 5 ? product_image.splice(5) : null;
+                // product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               } else if (
                 data[i].user_product_limit1.length < 1 &&
-                data[i].id === data[i].user_product_limit1[0].user_id
+                data[i].id == data[i].user_product_limit1[0].user_id
               ) {
                 data[i].images = [];
                 continue;
