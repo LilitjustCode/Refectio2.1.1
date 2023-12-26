@@ -49,6 +49,7 @@ export default class PraductiaComponent extends React.Component {
 
       firstStarModal: false,
       addStarModal: false,
+      parent_name: '',
     };
     this.bottomSheetRef = React.createRef(null);
     this.snapPoints = ['20%'];
@@ -276,10 +277,15 @@ export default class PraductiaComponent extends React.Component {
 
   loadedDataAfterLoadPage = async () => {
     await this.getObjectData();
-    await this.updateProduct(
-      this.state.user_category_for_product[0]?.parent_category_name,
-    );
-    await this.setState({active: 0});
+    {
+      this.state.parent_name
+        ? await this.updateProduct(this.state.parent_name)
+        : await this.updateProduct(
+            this.state.user_category_for_product[0]?.parent_category_name,
+          );
+    }
+
+    // await this.setState({active: 0});
     this.setState({isLoading: false});
   };
 
@@ -299,7 +305,6 @@ export default class PraductiaComponent extends React.Component {
 
   clearAllData = async () => {
     await this.setState({
-      active: 0,
       getAllProducts: [],
 
       user: [],
@@ -690,6 +695,7 @@ export default class PraductiaComponent extends React.Component {
                         );
                         this.bottomSheetRef?.current?.dismiss();
                         this.setState({active: index});
+                        this.setState({parent_name: item.parent_category_name});
                       }}
                       key={index}
                       style={

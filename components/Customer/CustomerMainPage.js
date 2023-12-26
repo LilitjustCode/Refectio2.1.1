@@ -41,7 +41,7 @@ export default class CustomerMainPageComponent extends React.Component {
       countMeshok: 0,
       logo: '',
       name: '',
-
+      filtering: false,
       firstLogin: '',
 
       searchUser: '',
@@ -66,7 +66,7 @@ export default class CustomerMainPageComponent extends React.Component {
       countMeshok: 0,
       logo: '',
       name: '',
-
+      filtering_data_focus: [],
       firstLogin: '',
 
       searchUser: '',
@@ -79,6 +79,8 @@ export default class CustomerMainPageComponent extends React.Component {
   };
 
   getProductsFunction = async () => {
+    // this.clearAllData();
+    // console.log('aaa');
     const {page, getAllProducts, isLastPage} = this.state;
     this.setState({
       searchUserButton: false,
@@ -96,20 +98,21 @@ export default class CustomerMainPageComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
+        // console.log(res, 'res');
         if (res.status === true) {
           let data = res.data.data.data;
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (
                 data[i].slider_photo.length &&
-                data[i].slider_photo[i].user_id == data[i].id
+                data[i].slider_photo[i]?.user_id == data[i].id
               ) {
                 let product_image = data[i].slider_photo;
-                // product_image.length > 5 ? product_image.splice(5) : null;
+                product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               } else if (
                 data[i].user_product_limit1.length < 1 &&
-                data[i].id == data[i].user_product_limit1[0].user_id
+                data[i].id == data[i].user_product_limit1[0]?.user_id
               ) {
                 data[i].images = [];
                 continue;
@@ -211,6 +214,8 @@ export default class CustomerMainPageComponent extends React.Component {
   }
 
   handler(filter_data) {
+    this.setState({filtering_data_focus: filter_data});
+    this.setState({filtering: true});
     let meshok = filter_data.meshok;
     let category_name =
       filter_data?.category_name?.length > 0
@@ -299,10 +304,12 @@ export default class CustomerMainPageComponent extends React.Component {
 
   resetFilterData = async () => {
     await this.clearAllData();
-    await this.getProductsFunction();
+    await this.setState({filtering_data_focus: []});
+
     await this.setState({
       filter: false,
     });
+
     return false;
   };
 
@@ -314,81 +321,29 @@ export default class CustomerMainPageComponent extends React.Component {
 
   formImageData = new FormData();
 
-  async checkForUpdate() {
-    const update = await Updates.checkForUpdateAsync();
-    if (update.isAvailable) {
-      this.setState({updateAvailable: true});
-    }
-  }
-
-  handleUpdate = async () => {
-    try {
-      await Updates.fetchUpdateAsync();
-      Updates.reloadFromCache();
-    } catch (error) {
-      // Handle update error
-    }
-  };
-
   componentDidMount() {
-    const {navigation} = this.props;
-    // console.log("sjanc");
-    this.checkForUpdate();
-    this.focusListener = navigation.addListener('focus', () => {
-      // if (!this.props.route.params?.screen) {
-      //   this.clearAllData();
-      // }
-
-      this.getAuthUserProfile();
-      this.getProductsFunction();
-      handleDeepLink = ({url}) => {
-        // console.log(url, 'llll');
-
-        if (url && url.startsWith('mychat://id/')) {
-          const parts = url.split('/');
-          console.log(parts);
-          const id = parts[parts.length - 1];
-          this.setState({urlLinking: url, id});
-          console.log('Opened chat for user:', id);
-          id
-            ? this.props.navigation.navigate('CustomerPageTwo', {
-                id: id,
-              })
-            : '';
-        }
-
-        if (url && url.startsWith('http://refectio.ru/')) {
-          const parts = url.split('/');
-          console.log(parts);
-          const id = parts[parts.length - 1];
-          this.setState({urlLinking: url, id});
-          console.log('Opened chat for user:', id);
-          id
-            ? this.props.navigation.navigate('CustomerPageTwo', {
-                id: id,
-              })
-            : '';
-        }
-        const handleInitialUrl = async () => {
-          try {
-            const initialUrl = await Linking.getInitialURL();
-            if (initialUrl) {
-              handleDeepLink({url: initialUrl});
-            }
-          } catch (error) {
-            console.error('Error getting initial URL:', error);
-          }
-        };
-
-        // Add event listener for deep linking
-        Linking.addEventListener('url', handleDeepLink);
-
-        // Check for deep link when the app launches
-        handleInitialUrl();
-      };
-
-      // Add event listener for deep linking
-    });
+    this.getAuthUserProfile();
+    this.getProductsFunction();
+    // this.focusListener = this.props.navigation.addListener('focus', () => {
+    //   console.log('Screen focused');
+    //   const update = async () => {
+    //     await this.setState({
+    //       getAllProducts: [],
+    //       page: 1,
+    //     });
+    //     {
+    //       this.state.filtering_data_focus
+    //         ? await this.handler(this.state.filtering_data_focus)
+    //         : await this.getProductsFunction();
+    //     }
+    //     await this.getAuthUserProfile();
+    //   };
+    //   update();
+    // this.clearAllData();
+    // Check if this log appears in the console
+    // this.setState({getAllProducts: []});
+    // if()
+    // });
 
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -403,14 +358,12 @@ export default class CustomerMainPageComponent extends React.Component {
   // componentDidUpdate() {}
 
   componentWillUnmount() {
-    if (this.focusListener) {
-      this.focusListener();
-      // this.clearAllData();
-      console.log(' END');
-    }
+    // this.focusListener();
+    this.clearAllData();
+    this.getAuthUserProfile();
+
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
-    // this.clearAllData();
   }
 
   _keyboardDidShow = event => {
@@ -585,6 +538,7 @@ export default class CustomerMainPageComponent extends React.Component {
 
   render() {
     // const linkTo = useLinkTo();
+    // console.log(this.handler, 'o');
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -670,11 +624,11 @@ export default class CustomerMainPageComponent extends React.Component {
                   onPress={() => {
                     if (Platform.OS === 'ios') {
                       Linking.openURL(
-                        'https://apps.apple.com/us/app/com.JustCode.Refection',
+                        'https://apps.apple.com/us/app/com.JustCode.RefectioApp',
                       );
                     } else {
                       Linking.openURL(
-                        'https://play.google.com/store/apps/details?id=com.JustCode.Refection',
+                        'https://play.google.com/store/apps/details?id=com.JustCode.RefectioApp',
                       );
                     }
                   }}
@@ -813,21 +767,22 @@ export default class CustomerMainPageComponent extends React.Component {
             </TouchableOpacity>
           </View>
           {this.state.getAllProducts.length == 0 &&
-            this.state.isLoading === false && (
-              <Text style={{fontSize: 20, marginTop: 50, textAlign: 'center'}}>
-                Данных не найдено
-              </Text>
-            )}
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            renderItem={this.renderItem}
-            ref={this.ref}
-            data={this.state.getAllProducts}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-          />
+          this.state.isLoading === false ? (
+            <Text style={{fontSize: 20, marginTop: 50, textAlign: 'center'}}>
+              Данных не найдено
+            </Text>
+          ) : (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              renderItem={this.renderItem}
+              ref={this.ref}
+              data={this.state.getAllProducts}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={this.renderFooter}
+            />
+          )}
         </View>
         {this.state.keyboardOpen === false && (
           <CustomerMainPageNavComponent

@@ -13,8 +13,9 @@ import MaskInput from 'react-native-mask-input';
 import Svg, {Path, Rect} from 'react-native-svg';
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import BlueButton from '../Component/Buttons/BlueButton';
+import ImagePicker from 'react-native-image-crop-picker';
 // import * as ImagePicker from "expo-image-picker";
-import {launchImageLibrary} from 'react-native-image-picker';
+// import {launchImageLibrary} from 'react-native-image-picker';
 
 export default class RegistrationManufacturerComponent extends Component {
   constructor(props) {
@@ -319,25 +320,53 @@ export default class RegistrationManufacturerComponent extends Component {
   form_data = new FormData();
 
   pickImage = async () => {
-    const result = await launchImageLibrary({
+    const result = await ImagePicker.openPicker({
       mediaType: 'photo',
-      quality: 1,
-      // includeBase64: true,
+      cropping: true, // Enable cropping
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperStatusBarColor: 'black', // StatusBar color for the cropping UI
+      cropperToolbarColor: 'black', // Toolbar color for the cropping UI
+      cropperToolbarWidgetColor: '#ffffff', // Toolbar icon color for the cropping UI
+      cropperActiveWidgetColor: '#ffffff', // Active cropping handle color
+      cropperCancelText: 'Cancel', // Text for cancel button in cropping UI
+      cropperChooseText: 'Choose', // Text for choose button in cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      width: 300, // Specify width of the cropped image
+      height: 300, // Specify height of the cropped image
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
     });
-    if (!result.canceled) {
+
+    if (!result.didCancel) {
       this.setState({
-        logo: result.assets[0].uri,
+        logo: result.path, // Use cropped image path
         logo_error: false,
+      });
+
+      this.form_data.append('logo', {
+        uri: result.path,
+        type: 'image/jpeg', // Set the correct image type
+        name: 'photo.jpg',
       });
     } else {
       this.setState({logo_error: true, logo: null});
     }
-
-    this.form_data.append('logo', {
-      uri: result.assets[0].uri,
-      type: 'image/jpg',
-      name: 'photo.jpg',
-    });
   };
 
   getCountry = async () => {

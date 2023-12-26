@@ -38,7 +38,7 @@ export default class FilterComponent extends React.Component {
         },
         {
           companyLogo: require('../../assets/image/category3.png'),
-          category_name: 'Мебель для ванной',
+          category_name: 'Ванные комнаты',
           filterName: 'Ванные комнаты',
           size: 8,
           lineHeight: 9.03,
@@ -119,7 +119,7 @@ export default class FilterComponent extends React.Component {
         },
         {
           companyLogo: require('../../assets/image/PNG/category13.png'),
-          category_name: 'Из искусственного камня',
+          category_name: 'Изделия из искусственного камня',
           filterName: 'Из искусственного камня',
           size: 7,
           lineHeight: 9.03,
@@ -143,7 +143,7 @@ export default class FilterComponent extends React.Component {
         },
         {
           companyLogo: require('../../assets/image/PNG/category16.png'),
-          category_name: 'Из натурального камня',
+          category_name: 'Изделия из натурального камня',
           filterName: 'Из натурального камня',
           size: 7,
           lineHeight: 9.03,

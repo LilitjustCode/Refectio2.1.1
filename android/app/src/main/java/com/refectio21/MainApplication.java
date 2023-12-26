@@ -1,4 +1,4 @@
-package com.JustCode.Refection;
+package com.JustCode.RefectioApp;
 
 import android.app.Application;
 import com.facebook.react.PackageList;

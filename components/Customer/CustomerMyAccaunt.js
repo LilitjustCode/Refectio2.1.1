@@ -561,33 +561,61 @@ export default class CustomerMyAccauntComponent extends React.Component {
 
   enterCheckBox = (items, index) => {
     let filterSort = this.state.gorodArray;
-    let find = true;
+    let find = false;
 
     items.city_id = items.id;
     items.city_name = items.name;
 
-    if (items.city_id == 9999) {
+    if (items.city_id === 9999) {
       filterSort = this.state.cityItems
         .filter(el => el.id !== 9999)
-        .map((item, i) => ({city_name: item.name, city_id: item.id}));
+        .map(item => ({city_name: item.name, city_id: item.id}));
       this.setState({
         allCities: true,
         countCity: this.state.cityItems.length - 1,
       });
     } else {
-      filterSort.find(item => {
-        if (item.id == items.city_id) {
-          find = false;
-        }
-      });
-      if (find) {
-        filterSort.push({city_name: items.name, city_id: items.city_id});
-        this.setState({countCity: this.state.countCity + 1});
+      find = filterSort.some(item => item.city_id === items.city_id);
+      if (!find) {
+        filterSort = [
+          ...filterSort,
+          {city_name: items.name, city_id: items.city_id},
+        ];
+        this.setState(prevState => ({countCity: prevState.countCity + 1}));
       }
     }
 
     this.setState({gorodArray: filterSort});
   };
+  // enterCheckBox = (items, index) => {
+  //   let filterSort = this.state.gorodArray;
+  //   let find = true;
+
+  //   items.city_id = items.id;
+  //   items.city_name = items.name;
+
+  //   if (items.city_id == 9999) {
+  //     filterSort = this.state.cityItems
+  //       .filter(el => el.id !== 9999)
+  //       .map((item, i) => ({city_name: item.name, city_id: item.id}));
+  //     this.setState({
+  //       allCities: true,
+  //       countCity: this.state.cityItems.length - 1,
+  //     });
+  //   } else {
+  //     filterSort.find(item => {
+  //       if (item.id == items.city_id) {
+  //         find = false;
+  //       }
+  //     });
+  //     if (find) {
+  //       filterSort.push({city_name: items.name, city_id: items.city_id});
+  //       this.setState({countCity: this.state.countCity + 1});
+  //     }
+  //   }
+
+  //   this.setState({gorodArray: filterSort});
+  // };
 
   verifyCheckBox = items => {
     let filterSort = this.state.gorodArray;
@@ -1129,7 +1157,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     }>
                     <ScrollView nestedScrollEnabled={true}>
                       {this.state.cityItems.map((item, index) => {
-                        console.log(item, 'irteemm');
+                        // console.log(item, 'irteemm');
                         return (
                           <TouchableOpacity
                             key={index}
@@ -1341,7 +1369,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   flex: 1,
                   justifyContent: 'center',
                   alignItems: 'center',
-                  paddingTop: 32,
+                  paddingTop: 22,
                 },
                 this.state.keyboardOpen
                   ? {justifyContent: 'flex-start'}
@@ -1351,11 +1379,12 @@ export default class CustomerMyAccauntComponent extends React.Component {
               <View
                 style={{
                   width: '90%',
-                  height: 500,
+                  height: 600,
                   backgroundColor: '#fff',
                   borderRadius: 20,
                   position: 'relative',
                   paddingHorizontal: 15,
+                  // paddingBottom: 40,
                 }}>
                 <TouchableOpacity
                   style={{
@@ -1373,7 +1402,9 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     }}
                   />
                 </TouchableOpacity>
-                <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+                <KeyboardAwareScrollView
+                  style={{}}
+                  showsVerticalScrollIndicator={false}>
                   <Text
                     style={{
                       marginTop: 70,
@@ -1711,6 +1742,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     <View
                       style={{
                         position: 'relative',
+                        height: 190,
                       }}>
                       <Text
                         style={[

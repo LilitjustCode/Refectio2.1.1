@@ -21,7 +21,7 @@ import Loading from '../Component/Loading';
 import HTML from 'react-native-render-html';
 import {Dimensions} from 'react-native';
 import RichTextEditorComponent from '../Auth/RichTextEditor';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -95,29 +95,29 @@ export default class EditProductComponent extends React.Component {
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
-      selectionLimit:50
+      selectionLimit: 50,
       // includeBase64: true,
     });
     if (!result.canceled) {
-      this.setState({ img: result.assets[0].uri, all_images_error: false });
+      this.setState({img: result.assets[0].uri, all_images_error: false});
     } else {
-      this.setState({ all_images_error: true });
+      this.setState({all_images_error: true});
     }
 
     let all_images = this.state.all_images;
-    if (result.hasOwnProperty("assets")) {
+    if (result.hasOwnProperty('assets')) {
       await result.assets.map((element, index) => {
         all_images.push({
           uri: element.uri,
-          type: "image/jpg",
-          name: "photo.jpg",
+          type: 'image/jpg',
+          name: 'photo.jpg',
         });
       });
     } else {
       all_images.push({
         uri: result.assets[0].uri,
-        type: "image/jpg",
-        name: "photo.jpg",
+        type: 'image/jpg',
+        name: 'photo.jpg',
       });
     }
 
@@ -460,7 +460,7 @@ export default class EditProductComponent extends React.Component {
             categoryName: result.data[0].category_name ?? null,
             parentCategoryName: result.data[0].parent_category_name,
             categoryId: result.data[0].category_id ?? null,
-            parentCategoryId: result.data[0].parent_category_id,
+            parentCategoryId: result.data[0]?.parent_category_id,
             about:
               result.data[0].about == 'null' ||
               result.data[0].about == null ||
@@ -472,8 +472,9 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 30 ||
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
-              result.data[0].parent_category_id == 4 ||
+              // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
+              result.data[0].category_id == 66 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 45 ||
               result.data[0].category_id == 46 ||
@@ -481,14 +482,16 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 51 ||
               result.data[0].category_id == 57 ||
               result.data[0].category_id == 63 ||
+              result.data[0].category_id == 58 ||
               result.data[0].category_id == 65,
             hasFrame:
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||
+              result.data[0].category_id == 57 ||
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
-              result.data[0].parent_category_id == 4 ||
+              // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 94 ||
@@ -515,7 +518,7 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
-              result.data[0].parent_category_id == 4 ||
+              // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 94 ||
@@ -555,7 +558,7 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
-              result.data[0].parent_category_id == 4 ||
+              // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 40 ||
               result.data[0].category_id == 41 ||
               result.data[0].category_id == 42 ||
@@ -574,22 +577,15 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 96 ||
               result.data[0].category_id == 97 ||
               result.data[0].category_id == 98,
+
             hasProfile:
               result.data[0].category_id == 37 ||
-              result.data[0].category_id == 58 ||
-              result.data[0].category_id == 66 ||
               result.data[0].category_id == 94 ||
               result.data[0].category_id == 95 ||
               result.data[0].category_id == 96 ||
               result.data[0].category_id == 97 ||
               result.data[0].category_id == 98,
           });
-
-          // console.log(
-          //   result.data[0].parent_category_id,
-          //   result.data[0].category_id,
-          //   typeof result.data[0].category_name
-          // );
 
           let new_all_images = [];
           result.data[0].product_image.map(item => {

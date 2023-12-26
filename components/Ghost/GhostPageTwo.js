@@ -603,20 +603,23 @@ export default class GhostPageTwoComponent extends React.Component {
               {this.state.user.length > 0 && (
                 <>
                   <View style={styles.infoCompanyMain}>
-                    <Image
-                      source={{
-                        uri: this.state.urlImage + this.state.user[0].logo,
-                      }}
-                      style={{
-                        width: 100,
-                        height: 100,
-                        marginRight: 12,
-                        borderColor: '#C8C8C8',
-                        borderWidth: 1,
-                        resizeMode: 'cover',
-                        borderRadius: 10,
-                      }}
-                    />
+                    <View style={{width: '32%'}}>
+                      <Image
+                        source={{
+                          uri: this.state.urlImage + this.state.user[0].logo,
+                        }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          marginRight: 12,
+                          borderColor: '#C8C8C8',
+                          borderWidth: 1,
+                          resizeMode: 'cover',
+                          borderRadius: 10,
+                        }}
+                      />
+                    </View>
+
                     <View style={styles.infoCompany}>
                       <View
                         style={{
@@ -654,7 +657,7 @@ export default class GhostPageTwoComponent extends React.Component {
                                 height: 21.43,
                                 // marginRight: screenWidth > 393 ? -2 : 1,
                                 marginBottom: 15,
-                                marginRight: 1,
+                                marginRight: 1.5,
                                 // marginTop: 5,
                               }}
                             />
@@ -666,9 +669,8 @@ export default class GhostPageTwoComponent extends React.Component {
                                 width: 24,
                                 height: 21.43,
                                 tintColor: 'red',
-                                marginRight: 1,
-                                // marginTop: 5,
-                                // marginRight: screenWidth > 393 ? -2 : 1,
+                                marginRight: 1.5,
+
                                 marginBottom: 15,
                               }}
                             />
@@ -685,12 +687,12 @@ export default class GhostPageTwoComponent extends React.Component {
                           style={{
                             flexDirection: 'row',
                             marginTop: 4,
-                            width:
-                              screenWidth > 360
-                                ? '62.5%'
-                                : screenWidth > 393
-                                ? '71%'
-                                : '59%',
+                            // width:
+                            //   screenWidth > 360
+                            //     ? '62.5%'
+                            //     : screenWidth > 393
+                            //     ? '71%'
+                            //     : '59%',
                           }}>
                           {`${this.state.user[0].saite}` !== 'null' && (
                             <TouchableOpacity
@@ -778,7 +780,7 @@ export default class GhostPageTwoComponent extends React.Component {
                         <TouchableOpacity
                           style={{
                             marginTop: 4,
-                            // marginLeft: screenWidth > 393 ? 7 : 0,
+                            marginLeft: 1,
                           }}
                           onPress={this.handleShare}>
                           <Image
@@ -1031,7 +1033,7 @@ export default class GhostPageTwoComponent extends React.Component {
                     const number = this.state.whatsapp;
                     const convertedNumber = number.replace(/\D/g, '');
                     Linking.openURL(
-                      `http://wa.me/${convertedNumber}?text=Здравствуйте!Пишу из приложения Refectio`,
+                      `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
                       // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
                     ).catch(err => console.log(err));
                   }}>
@@ -1256,9 +1258,10 @@ const styles = StyleSheet.create({
     overflow: 'visible',
     flexDirection: 'row',
     alignItems: 'center',
+    width: '100%',
   },
   infoCompany: {
-    width: screenWidth > 393 ? '70.7%' : 'auto',
+    width: '68.7%',
     // flexDirection: "row",
     // justifyContent: "space-between",
   },

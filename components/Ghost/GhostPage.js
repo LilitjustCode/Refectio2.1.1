@@ -80,19 +80,18 @@ export default class GhostPageComponent extends React.Component {
       .then(res => {
         if (res.status === true) {
           let data = res.data.data.data;
-
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (
                 data[i].slider_photo.length &&
-                data[i].slider_photo[i].user_id === data[i].id
+                data[i].slider_photo[i]?.user_id == data[i].id
               ) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               } else if (
                 data[i].user_product_limit1.length < 1 &&
-                data[i].id === data[i].user_product_limit1[0].user_id
+                data[i].id == data[i].user_product_limit1[0]?.user_id
               ) {
                 data[i].images = [];
                 continue;
@@ -103,6 +102,7 @@ export default class GhostPageComponent extends React.Component {
                 data[i].images = product_image;
               }
             }
+
             this.setState({
               getAllProducts: [...getAllProducts, ...data],
               page: page + 1,

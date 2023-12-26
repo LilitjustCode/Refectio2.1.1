@@ -320,6 +320,7 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 36 ||
         this.props.category.parent_id == 4 ||
         this.props.category.id == 42 ||
+        this.props.category.id == 66 ||
         this.props.category.id == 43 ||
         this.props.category.id == 45 ||
         this.props.category.id == 46 ||
@@ -332,6 +333,7 @@ export default class AddProductComponent extends React.Component {
       hasFrame:
         this.props.category.id == 28 ||
         this.props.category.id == 30 ||
+        this.props.category.id == 57 ||
         this.props.category.id == 31 ||
         this.props.category.id == 36 ||
         this.props.category.id == 37 ||
@@ -377,7 +379,6 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 63 ||
         this.props.category.id == 97 ||
         this.props.category.id == 65 ||
-        this.props.category.id == 66 ||
         this.props.category.id == 98,
       hasHeight:
         this.props.category.id == 31 ||
@@ -423,7 +424,6 @@ export default class AddProductComponent extends React.Component {
         this.props.category.id == 98,
       hasProfile:
         this.props.category.id == 37 ||
-        this.props.category.id == 66 ||
         this.props.category.id == 94 ||
         this.props.category.id == 95 ||
         this.props.category.id == 96 ||
@@ -469,11 +469,11 @@ export default class AddProductComponent extends React.Component {
   truncateText = (text, maxLength) => {
     if (
       text.length <= maxLength &&
-      this.props.category.parent?.name.length >= 25
+      this.props.category.parent?.name.length >= 30
     ) {
       return text;
     }
-    return text.substring(0, maxLength - 2) + '';
+    return text.substring(0, maxLength - 2);
   };
 
   render() {
@@ -590,7 +590,10 @@ export default class AddProductComponent extends React.Component {
                     {this.props.category.parent &&
                       this.props.category.parent?.name + ' -> '}
                     {/* {this.props.category.name} */}
-                    {truncatedText}
+
+                    {this.props.category.parent?.name.length >= 25
+                      ? `${truncatedText}`
+                      : this.props.category.name}
                   </Text>
                 </View>
               </View>

@@ -60,17 +60,17 @@ export default class DesignerSavedComponent extends React.Component {
     const {navigation} = this.props;
     this.getMySaveds();
 
-    this.focusListener = navigation.addListener('focus', () => {
-      this.getMySaveds();
-    });
+    // this.focusListener = navigation.addListener('focus', () => {
+    //   this.getMySaveds();
+    // });
   }
 
   componentWillUnmount() {
     // Remove the event listener
-    if (this.focusListener) {
-      this.focusListener();
-      console.log(' END');
-    }
+    // if (this.focusListener) {
+    //   this.focusListener();
+    //   console.log(' END');
+    // }
   }
 
   render() {
@@ -95,7 +95,7 @@ export default class DesignerSavedComponent extends React.Component {
                       style={styles.infoCompanyMain}
                       onPress={() => {
                         this.props.navigation.navigate('DesignerPageTwo', {
-                          params: item.proizvoditel_id,
+                          id: item.proizvoditel_id,
                         });
                       }}>
                       <Image

@@ -374,7 +374,7 @@ export default function CategoryScreenDesigner({navigation, category}) {
                   style={{
                     fontSize: 18,
                     color: '#FFFFFF',
-                    fontFamily: 'Poppins_500Medium',
+                    fontWeight: '600',
                   }}>
                   Применить
                 </Text>
@@ -398,7 +398,7 @@ export default function CategoryScreenDesigner({navigation, category}) {
                   style={{
                     fontSize: 18,
                     color: '#FFFFFF',
-                    fontFamily: 'Poppins_500Medium',
+                    fontWeight: '600',
                   }}>
                   Сбросить
                 </Text>

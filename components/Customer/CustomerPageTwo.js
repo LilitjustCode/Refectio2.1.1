@@ -856,20 +856,23 @@ export default class DesignerPageTwoComponent extends React.Component {
                 {this.state.user.length > 0 && (
                   <>
                     <View style={styles.infoCompanyMain}>
-                      <Image
-                        source={{
-                          uri: this.state.urlImage + this.state.user[0].logo,
-                        }}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          marginRight: 12,
-                          borderColor: '#C8C8C8',
-                          borderWidth: 1,
-                          resizeMode: 'cover',
-                          borderRadius: 10,
-                        }}
-                      />
+                      <View style={{width: '32%'}}>
+                        <Image
+                          source={{
+                            uri: this.state.urlImage + this.state.user[0].logo,
+                          }}
+                          style={{
+                            width: 100,
+                            height: 100,
+                            marginRight: 12,
+                            borderColor: '#C8C8C8',
+                            borderWidth: 1,
+                            resizeMode: 'cover',
+                            borderRadius: 10,
+                          }}
+                        />
+                      </View>
+
                       <View style={styles.infoCompany}>
                         <View
                           style={{
@@ -907,7 +910,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                                   height: 21.43,
                                   // marginRight: screenWidth > 393 ? -2 : 1,
                                   marginBottom: 15,
-                                  marginRight: 1,
+                                  marginRight: 1.5,
                                   // marginTop: 5,
                                 }}
                               />
@@ -919,9 +922,8 @@ export default class DesignerPageTwoComponent extends React.Component {
                                   width: 24,
                                   height: 21.43,
                                   tintColor: 'red',
-                                  marginRight: 1,
-                                  // marginTop: 5,
-                                  // marginRight: screenWidth > 393 ? -2 : 1,
+                                  marginRight: 1.5,
+
                                   marginBottom: 15,
                                 }}
                               />
@@ -938,12 +940,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                             style={{
                               flexDirection: 'row',
                               marginTop: 4,
-                              width:
-                                screenWidth > 360
-                                  ? '62.5%'
-                                  : screenWidth > 393
-                                  ? '71%'
-                                  : '59%',
+                              // width:
+                              //   screenWidth > 360
+                              //     ? '62.5%'
+                              //     : screenWidth > 393
+                              //     ? '71%'
+                              //     : '59%',
                             }}>
                             {`${this.state.user[0].saite}` !== 'null' && (
                               <TouchableOpacity
@@ -1032,7 +1034,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                           <TouchableOpacity
                             style={{
                               marginTop: 4,
-                              // marginLeft: screenWidth > 393 ? 7 : 0,
+                              marginLeft: 1,
                             }}
                             onPress={this.handleShare}>
                             <Image
@@ -1288,7 +1290,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                       const convertedNumber = number.replace(/\D/g, '');
                       Linking.openURL(
                         // `wa.me://+79162939496`
-                        `http://wa.me/${convertedNumber}?text=Здравствуйте!Пишу из приложения Refectio`,
+                        `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
                         // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
                       ).catch(err => console.log(err));
                     }}>
@@ -1517,6 +1519,9 @@ const styles = StyleSheet.create({
     // borderColor: '#000',
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  infoCompany: {
+    width: '68.7%',
   },
   // infoCompany: {
   //   width: "67%",
