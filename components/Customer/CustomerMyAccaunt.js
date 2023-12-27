@@ -1,29 +1,29 @@
 import React from 'react';
 import {
-  SafeAreaView,
-  Keyboard,
-  StyleSheet,
-  View,
   Image,
-  Text,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  Modal,
   ImageBackground,
+  Keyboard,
   Linking,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+import ImagePicker from 'react-native-image-crop-picker';
 
-import ArrowGrayComponent from '../../assets/image/ArrowGray';
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
-import Svg, {Path, Rect} from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BlueButton from '../Component/Buttons/BlueButton';
+import Svg, {Path} from 'react-native-svg';
+import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import {AuthContext} from '../AuthContext/context';
+import BlueButton from '../Component/Buttons/BlueButton';
+import CustomerMainPageNavComponent from './CustomerMainPageNav';
 // import * as ImagePicker from "expo-image-picker";
 import {KeyboardAwareScrollView} from 'react-native-keyboard-aware-scroll-view';
 import HTML from 'react-native-render-html';
-import {launchImageLibrary} from 'react-native-image-picker';
 
 export default class CustomerMyAccauntComponent extends React.Component {
   constructor(props) {
@@ -790,14 +790,41 @@ export default class CustomerMyAccauntComponent extends React.Component {
     //   aspect: [4, 4],
     //   quality: 1,
     // });
-    const result = await launchImageLibrary({
+    const result = await ImagePicker.openPicker({
       mediaType: 'photo',
-      quality: 1,
-      selectionLimit: 50,
-      // includeBase64: true,
+      cropping: true, // Enable cropping
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperStatusBarColor: 'black', // StatusBar color for the cropping UI
+      cropperToolbarColor: 'black', // Toolbar color for the cropping UI
+      cropperToolbarWidgetColor: '#ffffff', // Toolbar icon color for the cropping UI
+      cropperActiveWidgetColor: '#ffffff', // Active cropping handle color
+      cropperCancelText: 'Cancel', // Text for cancel button in cropping UI
+      cropperChooseText: 'Choose', // Text for choose button in cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      width: 300, // Specify width of the cropped image
+      height: 300, // Specify height of the cropped image
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
+      cropperChooseText: 'Crop', // Text for crop button in cropping UI
+      cropperToolbarTitle: 'Crop Image', // Title for the cropping UI
+      cropperCircleOverlay: false, // Disable circular crop overlay
     });
+
     if (!result.canceled) {
-      this.setState({logo: result.assets[0].uri});
+      this.setState({logo: result.path});
     }
 
     let myHeaders = new Headers();
@@ -808,7 +835,7 @@ export default class CustomerMyAccauntComponent extends React.Component {
     let formdata = new FormData();
 
     formdata.append('logo', {
-      uri: result.assets[0].uri,
+      uri: result.path,
       type: 'image/jpg',
       name: 'photo.jpg',
     });
