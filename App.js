@@ -468,8 +468,8 @@ export default function App() {
 
   useEffect(() => {
     // setUrlLinking('');
+    console.log('aa')
     const handleDeepLink = ({url}) => {
-      console.log(url, 'llll');
       setIsLoading(true);
       setUrlLinking(url);
       if (url && url.startsWith('mychat://id/')) {
