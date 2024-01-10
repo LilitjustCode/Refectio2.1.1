@@ -16,7 +16,6 @@ import BlueButton from '../Component/Buttons/BlueButton';
 import MaskInput from 'react-native-mask-input';
 // import * as ImagePicker from "expo-image-picker";
 
-import jwtDecode from 'jwt-decode';
 
 export default class RegistrationUserScreenComponent extends Component {
   constructor(props) {
