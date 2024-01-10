@@ -1,9 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
-import {Linking} from 'react-native';
 import * as React from 'react';
-import {useState, useEffect} from 'react';
-import {Dimensions, Image, StatusBar, View} from 'react-native';
+import {useEffect, useState} from 'react';
+import {Dimensions, Image, Linking, StatusBar, View} from 'react-native';
 import AuthScreenComponent from './components/Auth/AuthScreen';
 import ConfirmTelScreenComponent from './components/Auth/ConfirmTelScreen';
 import EditPhoneNumberComponent from './components/Auth/EditPhoneNumber';
@@ -468,11 +467,12 @@ export default function App() {
 
   useEffect(() => {
     // setUrlLinking('');
-    console.log('aa')
-    const handleDeepLink = ({url}) => {
+    console.log('aa');
+
+    const handleDeepLink = async ({url}) => {
       setIsLoading(true);
       setUrlLinking(url);
-      if (url && url.startsWith('mychat://id/')) {
+      if (url) {
         const parts = url.split('/');
         console.log(parts);
         const id = parts[parts.length - 1];
@@ -480,16 +480,6 @@ export default function App() {
         setId(id);
         setIsLoading(false);
         console.log('Opened chat for user useeeg:', id);
-      }
-
-      if (url && url.startsWith('http://refectio.ru/')) {
-        const parts = url.split('/');
-        console.log(parts);
-        const id = parts[parts.length - 1];
-        setUrlLinking(url);
-        setId(id);
-        setIsLoading(false);
-        console.log('Opened chat for user useegg:', id);
       }
     };
 
@@ -633,16 +623,17 @@ export default function App() {
   //   };
   // }, []);
 
-  // const linking = {
-  //   prefixes: ['com.JustCode.Refection://'],
-  //   config: {
-  //     screens: {
-  //       // CatalogCategory: 'CatalogCategory',
-  //       // ThemesCatalogComponent: 'ThemesCatalogComponent',
-  //       // CheckUserLoginOrNot: 'CheckUserLoginOrNot',
-  //     },
-  //   },
-  // };
+  const linking = {
+    prefixes: ['com.JustCode.Refection://', 'refectio.ru://'],
+    // config: {
+    //   screens: {
+    //     CustomerMainPageTwo: ''
+    //     // CatalogCategory: 'CatalogCategory',
+    //     // ThemesCatalogComponent: 'ThemesCatalogComponent',
+    //     // CheckUserLoginOrNot: 'CheckUserLoginOrNot',
+    //   },
+    // },
+  };
 
   getLiveZakaz = async () => {
     let token = await AsyncStorage.getItem('userToken');
@@ -729,7 +720,7 @@ export default function App() {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           {/* {urlLinking.length > 0 && (
             <Stack.Navigator
               initialRouteName="GhostPageTwo"

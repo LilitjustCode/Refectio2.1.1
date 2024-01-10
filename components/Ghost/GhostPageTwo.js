@@ -195,24 +195,26 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleShare = async () => {
+    const shareingStartWith =
+      Platform.OS === 'android' ? 'refectio.ru/' : 'refectio.ru://';
     try {
       {
         this.state.user[0]?.company_name.split(' ').length == 1
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
             }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
             }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
             }/${this.props.route.params.id}`)
-          : (url = `refectio.ru/${
+          : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +

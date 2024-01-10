@@ -1,31 +1,29 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
-  Image,
-  Text,
-  Modal,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  StyleSheet,
-  ImageBackground,
-  Share,
   ActivityIndicator,
-  Platform,
   Dimensions,
+  Image,
+  ImageBackground,
   Linking,
+  Modal,
+  Platform,
+  SafeAreaView,
+  ScrollView,
+  Share,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {ImageSlider} from 'react-native-image-slider-banner';
 // import * as Linking from 'expo-linking';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
-import BlueButton from '../../components/Component/Buttons/BlueButton';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Slider2 from '../slider/Slider2';
-import WebView from 'react-native-webview';
 import {BackHandler} from 'react-native';
+import WebView from 'react-native-webview';
+import BlueButton from '../../components/Component/Buttons/BlueButton';
+import Slider2 from '../slider/Slider2';
+import CustomerMainPageNavComponent from './CustomerMainPageNav';
 // import * as Font from 'expo-font';
 // import {
 //   Poppins_300Light,
@@ -212,24 +210,26 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   handleShare = async () => {
+    const shareingStartWith =
+      Platform.OS === 'android' ? 'refectio.ru/' : 'refectio.ru://';
     try {
       {
         this.state.user[0]?.company_name.split(' ').length == 1
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
             }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
             }/${this.props.route.params.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
-          ? (url = `refectio.ru/${
+          ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
             }/${this.props.route.params.id}`)
-          : (url = `refectio.ru/${
+          : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
@@ -239,7 +239,6 @@ export default class DesignerPageTwoComponent extends React.Component {
 
       if (Platform.OS === 'android') {
         await Share.share({message: url});
-        // Handle the result if needed
       } else {
         await Share.share({message: url});
       }

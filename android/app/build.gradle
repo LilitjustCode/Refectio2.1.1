@@ -75,6 +75,7 @@ android {
 
     namespace 'com.JustCode.RefectioApp'
     defaultConfig {
+        vectorDrawables.useSupportLibrary = true
         applicationId 'com.JustCode.RefectioApp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
