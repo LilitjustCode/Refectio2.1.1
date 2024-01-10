@@ -467,7 +467,6 @@ export default function App() {
 
   useEffect(() => {
     // setUrlLinking('');
-    console.log('aa');
 
     const handleDeepLink = async ({url}) => {
       setIsLoading(true);
@@ -605,36 +604,6 @@ export default function App() {
     [],
   );
 
-  // useEffect(() => {
-  //   const handleDeepLink = async event => {
-  //     const url = event.url;
-  //     if (url) {
-  //       // Handle the deep link URL received
-  //       console.log('Received deep link:', url);
-  //     }
-  //   };
-
-  //   // Add event listener for deep links
-  //   Linking.addEventListener('url', handleDeepLink);
-
-  //   // Remove event listener on component unmount
-  //   return () => {
-  //     Linking.removeEventListener('url', handleDeepLink);
-  //   };
-  // }, []);
-
-  const linking = {
-    prefixes: ['com.JustCode.Refection://', 'refectio.ru://'],
-    // config: {
-    //   screens: {
-    //     CustomerMainPageTwo: ''
-    //     // CatalogCategory: 'CatalogCategory',
-    //     // ThemesCatalogComponent: 'ThemesCatalogComponent',
-    //     // CheckUserLoginOrNot: 'CheckUserLoginOrNot',
-    //   },
-    // },
-  };
-
   getLiveZakaz = async () => {
     let token = await AsyncStorage.getItem('userToken');
     let myHeaders = new Headers();
@@ -720,7 +689,7 @@ export default function App() {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <NavigationContainer linking={linking}>
+        <NavigationContainer>
           {/* {urlLinking.length > 0 && (
             <Stack.Navigator
               initialRouteName="GhostPageTwo"
