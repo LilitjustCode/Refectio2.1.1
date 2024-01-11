@@ -1,26 +1,24 @@
-import React, {Component, useRef} from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import React from 'react';
 import {
-  StyleSheet,
+  ActivityIndicator,
+  Image,
+  ImageBackground,
+  Modal,
+  Pressable,
   SafeAreaView,
   ScrollView,
+  StyleSheet,
   Text,
   TouchableOpacity,
   View,
-  Image,
-  Modal,
-  ImageBackground,
-  ActivityIndicator,
-  Pressable,
 } from 'react-native';
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
-import Slider from '../slider/Slider';
-import {ImageSlider} from 'react-native-image-slider-banner';
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
-import Svg, {Path, Rect} from 'react-native-svg';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import BlueButton from '../Component/Buttons/BlueButton';
+import Slider from '../slider/Slider';
+import CustomerMainPageNavComponent from './CustomerMainPageNav';
 
-import {BottomSheetModalProvider, BottomSheetModal} from '@gorhom/bottom-sheet';
+import {BottomSheetModal, BottomSheetModalProvider} from '@gorhom/bottom-sheet';
 import Loading from '../Component/Loading';
 
 export default class PraductiaComponent extends React.Component {
@@ -755,17 +753,16 @@ export default class PraductiaComponent extends React.Component {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           marginTop: 10,
+                          width: '99%',
                         }}>
-                        <Text
-                          style={{
-                            fontFamily: 'Raleway_600SemiBold',
-                            fontSize: 13,
-                            marginTop: 5,
-                            marginBottom: 4,
-                            width: '90%',
-                          }}>
-                          {item.name}
-                        </Text>
+                        <View style={styles.itemNameBox}>
+                          <Text style={styles.itemType}>
+                            {item.name.substr(0, 6)}
+                          </Text>
+                          <Text style={styles.itemName}>
+                            {item.name.substr(5)}
+                          </Text>
+                        </View>
 
                         <TouchableOpacity
                           onPress={() => {
@@ -782,11 +779,20 @@ export default class PraductiaComponent extends React.Component {
                           </Text>
                         </TouchableOpacity>
                       </View>
-                      {item.facades && <Text>Фасады : {item.facades}</Text>}
+                      {item.facades && (
+                        <Text style={{width: '99%'}}>
+                          Фасады : {item.facades}
+                        </Text>
+                      )}
                       {item.frame && <Text>Корпус: {item.frame}</Text>}
                       {item.profile && <Text>Профиль: {item.profile}</Text>}
                       {item.tabletop && (
-                        <Text>Столешница: {item.tabletop}</Text>
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Столешница: {item.tabletop}
+                        </Text>
                       )}
                       {item.length && <Text>Длина: {item.length} м.</Text>}
 
@@ -888,6 +894,25 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     position: 'relative',
     paddingHorizontal: 15,
+  },
+  itemNameBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: 'auto',
+    marginTop: 5,
+    marginBottom: 4,
+  },
+  itemName: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
+    fontWeight: '700',
+  },
+  itemType: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
   },
   checkBox: {
     position: 'absolute',

@@ -1910,20 +1910,20 @@ export default class DesignerPageTwoComponent extends React.Component {
                   return (
                     <View key={index} style={{marginTop: 18}}>
                       <Slider2 slid={item.product_image} />
-                      <View>
-                        <Text
-                          style={{
-                            fontFamily: 'Raleway_600SemiBold',
-                            fontSize: 13,
-                            marginTop: 5,
-                            marginBottom: 4,
-                            width: '90%',
-                            color: '#333333',
-                          }}>
-                          {item.name}
-                        </Text>
+                      <View
+                        style={{
+                          width: '99%',
+                        }}>
+                        <View style={styles.itemNameBox}>
+                          <Text style={styles.itemType}>
+                            {item.name.substr(0, 6)}
+                          </Text>
+                          <Text style={styles.itemName}>
+                            {item.name.substr(5)}
+                          </Text>
+                        </View>
                         {item.facades && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '99%'}}>
                             Фасады: {item.facades}
                           </Text>
                         )}
@@ -1938,7 +1938,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.tabletop && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Столешница: {item.tabletop}
                           </Text>
                         )}
@@ -2013,6 +2013,25 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     position: 'relative',
+  },
+  itemNameBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: 'auto',
+    marginTop: 5,
+    marginBottom: 4,
+  },
+  itemName: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
+    fontWeight: '700',
+  },
+  itemType: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
   },
   campaign: {
     width: '100%',

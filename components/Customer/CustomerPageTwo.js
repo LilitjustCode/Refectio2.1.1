@@ -1391,20 +1391,17 @@ export default class DesignerPageTwoComponent extends React.Component {
                             height: 270,
                           }}
                         /> */}
-                        <View>
-                          <Text
-                            style={{
-                              fontFamily: 'Raleway_600SemiBold',
-                              fontSize: 13,
-                              marginTop: 5,
-                              marginBottom: 4,
-                              width: '90%',
-                              color: '#333333',
-                            }}>
-                            {item.name}
-                          </Text>
+                        <View style={{width: '99%'}}>
+                          <View style={styles.itemNameBox}>
+                            <Text style={styles.itemName}>
+                              {item.name.substr(0, 6)}
+                            </Text>
+                            <Text style={styles.itemName}>
+                              {item.name.substr(5)}
+                            </Text>
+                          </View>
                           {item.facades && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '99%'}}>
                               Фасады : {item.facades}
                             </Text>
                           )}
@@ -1419,7 +1416,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                             </Text>
                           )}
                           {item.tabletop && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Столешница: {item.tabletop}
                             </Text>
                           )}

@@ -1,27 +1,24 @@
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
-  View,
   Image,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  TextInput,
-  ScrollView,
-  StyleSheet,
   Keyboard,
   Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 // import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Loading from '../Component/Loading';
-import HTML from 'react-native-render-html';
-import {Dimensions} from 'react-native';
-import RichTextEditorComponent from '../Auth/RichTextEditor';
 import {launchImageLibrary} from 'react-native-image-picker';
+import RichTextEditorComponent from '../Auth/RichTextEditor';
+import Loading from '../Component/Loading';
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {

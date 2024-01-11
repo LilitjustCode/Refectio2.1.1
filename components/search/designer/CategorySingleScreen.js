@@ -1,18 +1,19 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Dimensions, FlatList, View} from 'react-native';
-import {SafeAreaView} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  RefreshControl,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Path, Svg} from 'react-native-svg';
-import {StyleSheet} from 'react-native';
-import {Text} from 'react-native';
-import {Image} from 'react-native';
-import {RefreshControl} from 'react-native';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import Slider2 from '../../slider/Slider2';
-import {ImageSlider} from 'react-native-image-slider-banner';
 import Loading from '../../Component/Loading';
-import GhostNavComponent from '../../Ghost/GhostNav';
 import DesignerPageNavComponent from '../../Designer/DesignerPageNav';
+import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
 
 const {WIDTH} = Dimensions.get('screen');
@@ -145,21 +146,32 @@ export default function CategorySingleScreenDesigner({
                         borderRadius: 15,
                       }}
                     />
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: 'Raleway_600SemiBold',
-                          fontSize: 13,
-                          marginTop: 5,
-                          marginBottom: 4,
-                        }}>
-                        {item.name}
-                      </Text>
-                      {item.facades && <Text>Фасады : {item.facades}</Text>}
+                    <View
+                      style={{
+                        width: '99%',
+                      }}>
+                      <View style={styles.itemNameBox}>
+                        <Text style={styles.itemType}>
+                          {item.name.substr(0, 6)}
+                        </Text>
+                        <Text style={styles.itemName}>
+                          {item.name.substr(5)}
+                        </Text>
+                      </View>
+                      {item.facades && (
+                        <Text style={{width: '99%'}}>
+                          Фасады : {item.facades}
+                        </Text>
+                      )}
                       {item.frame && <Text>Корпус: {item.frame}</Text>}
                       {item.profile && <Text>Профиль: {item.profile}</Text>}
                       {item.tabletop && (
-                        <Text>Столешница: {item.tabletop}</Text>
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Столешница: {item.tabletop}
+                        </Text>
                       )}
                       {item.length && <Text>Длина: {item.length} м.</Text>}
                       {item.height && <Text>Высота: {item.height} м.</Text>}
@@ -232,5 +244,24 @@ const styles = StyleSheet.create({
     color: '#94D8F4',
     fontSize: 16,
     marginTop: 5,
+  },
+  itemNameBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: 'auto',
+    marginTop: 5,
+    marginBottom: 4,
+  },
+  itemType: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
+  },
+  itemName: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
+    fontWeight: '700',
   },
 });
