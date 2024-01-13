@@ -379,8 +379,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   // };
 
   handleShare = async () => {
-    const shareingStartWith =
-      Platform.OS === 'android' ? 'refectio.ru/' : 'refectio.ru://';
+    const shareingStartWith = 'refectio.ru/';
     try {
       {
         this.state.user[0]?.company_name.split(' ').length == 1
@@ -1005,6 +1004,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               alignItems: 'center',
               marginTop: 15,
               marginLeft: -10,
+              paddingBottom: 10,
             }}
             onPress={() => this.props.navigation.goBack()}>
             <Svg
@@ -1912,7 +1912,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                       <Slider2 slid={item.product_image} />
                       <View
                         style={{
-                          width: '99%',
+                          width: '95%',
                         }}>
                         <View style={styles.itemNameBox}>
                           <Text style={styles.itemType}>
@@ -1923,7 +1923,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                           </Text>
                         </View>
                         {item.facades && (
-                          <Text style={{color: '#333333', width: '99%'}}>
+                          <Text
+                            style={{
+                              color: '#333333',
+                              width: '95%',
+                              marginTop: Platform.OS === 'ios' ? 10 : 0,
+                            }}>
                             Фасады: {item.facades}
                           </Text>
                         )}
@@ -1944,12 +1949,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                         )}
                         {item.length && (
                           <Text style={{color: '#333333'}}>
-                            Длина: {item.length} м.
+                            Длина: {item.length.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.height && (
                           <Text style={{color: '#333333'}}>
-                            Высота: {item.height} м.
+                            Высота: {item.height.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.material && (

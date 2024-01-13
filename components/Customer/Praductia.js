@@ -753,7 +753,7 @@ export default class PraductiaComponent extends React.Component {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           marginTop: 10,
-                          width: '99%',
+                          width: '90%',
                         }}>
                         <View style={styles.itemNameBox}>
                           <Text style={styles.itemType}>
@@ -780,7 +780,7 @@ export default class PraductiaComponent extends React.Component {
                         </TouchableOpacity>
                       </View>
                       {item.facades && (
-                        <Text style={{width: '99%'}}>
+                        <Text style={{width: '95%'}}>
                           Фасады : {item.facades}
                         </Text>
                       )}
@@ -794,9 +794,12 @@ export default class PraductiaComponent extends React.Component {
                           Столешница: {item.tabletop}
                         </Text>
                       )}
-                      {item.length && <Text>Длина: {item.length} м.</Text>}
-
-                      {item.height && <Text>Высота: {item.height} м.</Text>}
+                      {item.length && (
+                        <Text>Длина: {item.length.replace('.', ',')} м.</Text>
+                      )}
+                      {item.height && (
+                        <Text>Высота: {item.height.replace('.', ',')} м.</Text>
+                      )}
                       {item.material && <Text>Материал: {item.material}</Text>}
 
                       {item.price && (

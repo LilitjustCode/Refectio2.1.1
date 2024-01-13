@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
   FlatList,
@@ -32,17 +32,15 @@ export default function CategorySingleScreenDesigner({
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
   const [nextUrl, setNextUrl] = useState(mynextUrl);
-  const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
   const [isRefreshing, setIsRefreshing] = useState(false);
+  const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
+  const flatListRef = useRef(null);
 
   useEffect(() => {
     setProduct();
   }, []);
 
   function setProduct() {
-    let myProducts = myproducts;
-    let item = myProducts.splice(product, 1);
-    myProducts.unshift(item[0]);
     setProducts(myProducts);
     setLoading(false);
   }
@@ -50,7 +48,6 @@ export default function CategorySingleScreenDesigner({
   async function getProducts(refresh) {
     let formdata = new FormData();
     if (category.parent) {
-      console.log('subcategory');
       formdata.append('parent_category_id', category.parent_id);
       formdata.append('category_id', category.id);
     } else {
@@ -71,7 +68,6 @@ export default function CategorySingleScreenDesigner({
     })
       .then(response => response.json())
       .then(res => {
-        console.log(refresh ? firstPageUrl : nextUrl, res.data.data.length);
         let arr = shuffle(res.data.data);
         refresh ? setProducts(arr) : setProducts([...products, ...arr]);
         setNextUrl(res.data.next_page_url);
@@ -106,6 +102,23 @@ export default function CategorySingleScreenDesigner({
     getProducts('refresh');
   };
 
+  const handleScrollToIndex = useCallback(
+    index => {
+      const wait = new Promise(resolve => setTimeout(resolve, 100));
+      wait.then(() => {
+        flatListRef.current?.scrollToIndex({
+          index,
+          animated: true,
+          viewPosition: 0.45,
+        });
+      });
+    },
+    [product],
+  );
+  useEffect(() => {
+    handleScrollToIndex(product);
+  }, [product]);
+
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -119,8 +132,12 @@ export default function CategorySingleScreenDesigner({
           <Loading />
         ) : (
           <FlatList
+            ref={flatListRef}
+            onScrollToIndexFailed={info => {
+              handleScrollToIndex(info.index);
+            }}
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(_, index) => index}
             data={products}
             renderItem={({item}) => {
               return (
@@ -148,7 +165,7 @@ export default function CategorySingleScreenDesigner({
                     />
                     <View
                       style={{
-                        width: '99%',
+                        width: '90%',
                       }}>
                       <View style={styles.itemNameBox}>
                         <Text style={styles.itemType}>
@@ -159,7 +176,7 @@ export default function CategorySingleScreenDesigner({
                         </Text>
                       </View>
                       {item.facades && (
-                        <Text style={{width: '99%'}}>
+                        <Text style={{width: '95%'}}>
                           Фасады : {item.facades}
                         </Text>
                       )}
@@ -173,8 +190,12 @@ export default function CategorySingleScreenDesigner({
                           Столешница: {item.tabletop}
                         </Text>
                       )}
-                      {item.length && <Text>Длина: {item.length} м.</Text>}
-                      {item.height && <Text>Высота: {item.height} м.</Text>}
+                      {item.length && (
+                        <Text>Длина: {item.length.replace('.', ',')} м.</Text>
+                      )}
+                      {item.height && (
+                        <Text>Высота: {item.height.replace('.', ',')} м.</Text>
+                      )}
                       {item.material && <Text>Материал: {item.material}</Text>}
                       {item.price && (
                         <Text>

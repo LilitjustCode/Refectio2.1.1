@@ -9,6 +9,7 @@ import EditPhoneNumberComponent from './components/Auth/EditPhoneNumber';
 import ForgetPasswordComponent from './components/Auth/ForgetPassword';
 import ForgetPasswordTelComponent from './components/Auth/ForgetPasswordTel';
 import LoginScreenComponent from './components/Auth/LoginScreen';
+
 import NewPasswordComponent from './components/Auth/NewPassword';
 import RegisteredScreenComponent from './components/Auth/RegisteredScreen';
 import RegistrationManufacturerComponent from './components/Auth/RegistrationManufacturer';
@@ -26,6 +27,7 @@ import MyAccauntComponent from './components/Designer/MyAccaunt';
 // import CustomerMyBroniComponent from "./components/Customer/CustomerMyBroni";
 // import CustomerRewardsComponent from "./components/Customer/CustomerRewards";
 import CustomerMyAccauntComponent from './components/Customer/CustomerMyAccaunt';
+
 // import CheckDesignerComponent from "./components/Customer/CheckDesigner";
 // import * as Font from "expo-font";
 // import {
@@ -439,13 +441,12 @@ const tabBarStyle = {
 };
 
 export default function App() {
-  const [isLoading, setIsLoading] = React.useState(true);
   const [userToken, setUserToken] = React.useState(null);
-  const [id, setId] = useState('');
   const [userRole, setUserRole] = React.useState(null);
   const [updateAvailable, setUpdateAvailable] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(true);
+  const [id, setId] = useState('');
   const [urlLinking, setUrlLinking] = useState('');
-
   // useEffect(() => {
   //   const handleDeepLink = ({url}) => {
   //     console.log(url, 'ureeell');
@@ -473,7 +474,6 @@ export default function App() {
       setUrlLinking(url);
       if (url) {
         const parts = url.split('/');
-        console.log(parts);
         const id = parts[parts.length - 1];
         setUrlLinking(url);
         setId(id);
@@ -486,6 +486,7 @@ export default function App() {
       try {
         const initialUrl = await Linking.getInitialURL();
         if (initialUrl) {
+          await Linking.canOpenURL(initialUrl);
           handleDeepLink({url: initialUrl});
         }
       } catch (error) {
@@ -495,13 +496,14 @@ export default function App() {
 
     Linking.addEventListener('url', handleDeepLink);
     handleInitialUrl();
-
     return () => {
       setUrlLinking('');
     };
   }, []);
-
-  console.log(urlLinking, 'kkk');
+  useEffect(() => {
+    console.log('id changed', id);
+  }, [id]);
+  console.log(urlLinking, 'urlLinking');
   // useEffect(() => {
   //   async function checkForUpdate() {
   //     const update = await Updates.checkForUpdateAsync();
@@ -989,12 +991,15 @@ export default function App() {
                 {} */}
                 <Stack.Screen
                   name="GhostPageTwo"
-                  // component={GhostPageTwoFunc}
-                  component={GhostPageTwoComponent}
-                  initialParams={{id}}
-                />
+                  options={{headerShown: false}}>
+                  {props => (
+                    <GhostPageTwoComponent {...props} id={id} setId={setId} />
+                  )}
+                </Stack.Screen>
 
-                <Stack.Screen name="GhostPage" component={GhostPageComponent} />
+                <Stack.Screen name="GhostPage">
+                  {props => <GhostPageComponent {...props} setId={setId} />}
+                </Stack.Screen>
                 <Stack.Screen
                   name="LoginScreen"
                   component={LoginScreenComponent}

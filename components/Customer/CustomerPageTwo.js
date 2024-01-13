@@ -210,8 +210,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   handleShare = async () => {
-    const shareingStartWith =
-      Platform.OS === 'android' ? 'refectio.ru/' : 'refectio.ru://';
+    const shareingStartWith = 'refectio.ru/';
     try {
       {
         this.state.user[0]?.company_name.split(' ').length == 1
@@ -831,6 +830,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               alignItems: 'center',
               marginTop: 15,
               marginLeft: -10,
+              paddingBottom: 10,
             }}
             onPress={this.handleBackButtonClick}>
             <Svg
@@ -1391,7 +1391,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                             height: 270,
                           }}
                         /> */}
-                        <View style={{width: '99%'}}>
+                        <View style={{width: '90%'}}>
                           <View style={styles.itemNameBox}>
                             <Text style={styles.itemName}>
                               {item.name.substr(0, 6)}
@@ -1401,7 +1401,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                             </Text>
                           </View>
                           {item.facades && (
-                            <Text style={{color: '#333333', width: '99%'}}>
+                            <Text
+                              style={{
+                                color: '#333333',
+                                width: '95%',
+                                marginTop: Platform.OS === 'ios' ? 10 : 0,
+                              }}>
                               Фасады : {item.facades}
                             </Text>
                           )}
@@ -1422,13 +1427,13 @@ export default class DesignerPageTwoComponent extends React.Component {
                           )}
                           {item.length && (
                             <Text style={{color: '#333333'}}>
-                              Длина: {item.length} м.
+                              Длина: {item.length.replace('.', ',')} м.
                             </Text>
                           )}
 
                           {item.height && (
                             <Text style={{color: '#333333'}}>
-                              Высота: {item.height} м.
+                              Высота: {item.height.replace('.', ',')} м.
                             </Text>
                           )}
                           {item.material && (
@@ -1496,6 +1501,20 @@ const styles = StyleSheet.create({
     paddingLeft: 2,
     flexDirection: 'row',
     alignItems: 'center',
+  },
+  itemNameBox: {
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    width: 'auto',
+    marginTop: 5,
+    marginBottom: 4,
+  },
+  itemName: {
+    fontFamily: 'Raleway_600SemiBold',
+    fontSize: 13,
+    color: '#333333',
+    fontWeight: '700',
   },
   user: {
     width: 30,

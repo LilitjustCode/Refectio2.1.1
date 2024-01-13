@@ -35,6 +35,8 @@ export default class GhostPageTwoComponent extends React.Component {
       sOpenCityDropDown: false,
       active: 0,
 
+      id: null,
+
       user: [],
       user_category_for_product: [],
       city_for_sales_user: [],
@@ -76,9 +78,9 @@ export default class GhostPageTwoComponent extends React.Component {
     };
   }
 
-  getObjectData = async () => {
-    let userID = this.props.route.params.id;
-    // console.log(this.props.route.params.id, 'ljj');
+  getObjectData = async id => {
+    let userID = id;
+    // console.log(this.props.id, 'ljj');
 
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
@@ -127,12 +129,10 @@ export default class GhostPageTwoComponent extends React.Component {
       });
   };
 
-  updateProduct = async parent_category_name => {
+  updateProduct = async (parent_category_name, id) => {
     await this.setState({
       change_category_loaded: true,
     });
-
-    let userID = this.props.route.params.id;
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
@@ -140,7 +140,7 @@ export default class GhostPageTwoComponent extends React.Component {
 
     let formdata = new FormData();
     formdata.append('parent_category_name', parent_category_name);
-    formdata.append('user_id', userID);
+    formdata.append('user_id', id);
 
     let requestOptions = {
       method: 'POST',
@@ -166,7 +166,6 @@ export default class GhostPageTwoComponent extends React.Component {
         }
 
         let data = res.data;
-        let new_data_result = [];
 
         for (let i = 0; i < data.length; i++) {
           if (data[i].product_image.length < 1) {
@@ -202,24 +201,24 @@ export default class GhostPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.props.route.params.id}`)
+            }/${this.props.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.props.route.params.id}`)
+            }/${this.props.id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.props.route.params.id}`)
+            }/${this.props.id}`)
           : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.props.route.params.id}`);
+            }/${this.props.id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -248,7 +247,7 @@ export default class GhostPageTwoComponent extends React.Component {
         change_category_loaded: true,
       });
 
-      let userID = this.props.route.params.id;
+      let userID = this.props.id;
 
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');
@@ -313,34 +312,66 @@ export default class GhostPageTwoComponent extends React.Component {
 
     // this.setState({ active: index })
   };
-
-  loadedDataAfterLoadPage = async () => {
-    await this.getObjectData();
+  handleClearData = () => {
+    this.setState({
+      user: [],
+      user_category_for_product: [],
+      city_for_sales_user: [],
+      whatsapp: '',
+      city_count: null,
+      about_us: '',
+    });
+  };
+  loadedDataAfterLoadPage = async id => {
+    console.log('id in load data', id);
+    await this.getObjectData(id);
     await this.updateProduct(
       this.state.user_category_for_product[0].parent_category_name,
+      id,
     );
-    await this.setState({
+    this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
           ? 'Все города России'
           : this.state.city_for_sales_user[0].city_name,
     });
-    await this.setState({active: 0});
+    this.setState({active: 0});
   };
 
   componentDidMount() {
     const {navigation} = this.props;
-    console.log(screenWidth, 'width');
-    this.loadedDataAfterLoadPage();
-    // this.focusListener = navigation.addListener("focus", () => {
+    this._unsubscribe = navigation.addListener('focus', () => {
+      const {id, setId} = this.props;
+      console.log(
+        '----------',
+        'id :',
+        id,
+        'this.props.route.params.id:',
+        this.props.route.params?.id,
+        'this.id',
+        this.id,
+        '-------------',
+      );
+      this.id = id ? id : this.props.route.params.id;
+      this.loadedDataAfterLoadPage(this.id);
+      setId(this.id);
+    });
+
+    // this.focusListener = navigation.addListener('focus', () => {
+    //   this.props.setId(null);
     // });
   }
-
+  componentDidUpdate() {
+    const {navigation, setId} = this.props;
+    this._willBlurListener = navigation.addListener('willBlur', () => {
+      console.log('didBlur');
+      setId(null);
+      this.handleClearData();
+    });
+  }
   componentWillUnmount() {
-    // Remove the event listener
-    // if (this.focusListener) {
-    //   this.focusListener();
-    // }
+    // this._unsubscribe();
+    this._willBlurListener();
   }
 
   addProtocol(url) {
@@ -578,541 +609,552 @@ export default class GhostPageTwoComponent extends React.Component {
           </ImageBackground>
         </Modal>
 
-        <View style={styles.main}>
-          <TouchableOpacity
-            style={{
-              flexDirection: 'row',
-              alignItems: 'center',
-              marginTop: 15,
-              marginLeft: -10,
-            }}
-            onPress={() => this.props.navigation.goBack()}>
-            <Svg
-              width={30}
-              height={35}
-              viewBox="0 0 30 30"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg">
-              <Path
-                d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
-                fill="#94D8F4"
-              />
-            </Svg>
-            <Text style={styles.backText}>Назад</Text>
-          </TouchableOpacity>
-          <ScrollView showsVerticalScrollIndicator={false}>
-            <View style={styles.campaign}>
-              {this.state.user.length > 0 && (
-                <>
-                  <View style={styles.infoCompanyMain}>
-                    <View style={{width: '32%'}}>
-                      <Image
-                        source={{
-                          uri: this.state.urlImage + this.state.user[0].logo,
-                        }}
-                        style={{
-                          width: 100,
-                          height: 100,
-                          marginRight: 12,
-                          borderColor: '#C8C8C8',
-                          borderWidth: 1,
-                          resizeMode: 'cover',
-                          borderRadius: 10,
-                        }}
-                      />
-                    </View>
-
-                    <View style={styles.infoCompany}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                          // width: '95%',
-                          // backgroussndColor: 'red',
-                        }}>
-                        <View>
-                          <Text
-                            style={{
-                              fontSize: 20,
-                              // fontFamily: 'Raleway_500Medium',
-                              color: '#333333',
-                              fontWeight: '700',
-                            }}>
-                            {this.state.user[0].company_name}
-                          </Text>
-                          <Text
-                            style={{
-                              fontSize: 16,
-                              color: '#A8A8A8',
-                              fontFamily: 'Raleway_500Medium',
-                            }}>
-                            {this.state.user[0].made_in}
-                          </Text>
-                        </View>
-                        <TouchableOpacity onPress={() => this.favorite()}>
-                          {this.state.favoriteBool == true && (
-                            <Image
-                              source={require('../../assets/image/heartHast.png')}
-                              style={{
-                                width: 24,
-                                height: 21.43,
-                                // marginRight: screenWidth > 393 ? -2 : 1,
-                                marginBottom: 15,
-                                marginRight: 1.5,
-                                // marginTop: 5,
-                              }}
-                            />
-                          )}
-                          {this.state.favoriteBool == false && (
-                            <Image
-                              source={require('../../assets/image/heartSev.png')}
-                              style={{
-                                width: 24,
-                                height: 21.43,
-                                tintColor: 'red',
-                                marginRight: 1.5,
-
-                                marginBottom: 15,
-                              }}
-                            />
-                          )}
-                        </TouchableOpacity>
-                      </View>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}>
-                        <View
-                          style={{
-                            flexDirection: 'row',
-                            marginTop: 4,
-                            // width:
-                            //   screenWidth > 360
-                            //     ? '62.5%'
-                            //     : screenWidth > 393
-                            //     ? '71%'
-                            //     : '59%',
-                          }}>
-                          {`${this.state.user[0].saite}` !== 'null' && (
-                            <TouchableOpacity
-                              onPress={() => {
-                                Linking.openURL(
-                                  this.addProtocol(this.state.user[0].saite),
-                                );
-                              }}>
-                              <Image
-                                source={require('../../assets/image/globus.png')}
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                  marginRight: 14,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-                          {this.state.user[0].saite == null && (
-                            <View style={{height: 24}}></View>
-                          )}
-                          {this.state.user[0].telegram !== null && (
-                            <TouchableOpacity
-                              onPress={() => {
-                                Linking.openURL(
-                                  'https://t.me/' + this.state.user[0].telegram,
-                                );
-                              }}>
-                              <Image
-                                source={require('../../assets/image/telegram.png')}
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                  marginRight: 14,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-
-                          {this.state.user[0].extract !== null && (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.setState({VipiskaModal: true});
-                              }}>
-                              <Image
-                                source={require('../../assets/image/sidebar.png')}
-                                style={{
-                                  width: 18,
-                                  height: 24,
-                                  marginRight: 14,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-                          {this.state.user[0].job_with_designer == 'Да' && (
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.setState({designerModal: true});
-                              }}>
-                              <Image
-                                source={require('../../assets/image/design.png')}
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                  marginRight: 10,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-                          {this.state.user[0].dmodel == 'Да' && (
-                            <TouchableOpacity
-                              onPress={() =>
-                                this.setState({dmodel_popup: true})
-                              }>
-                              <Image
-                                source={require('../../assets/image/cube.png')}
-                                style={{
-                                  width: 24,
-                                  height: 24,
-                                }}
-                              />
-                            </TouchableOpacity>
-                          )}
-                        </View>
-                        <TouchableOpacity
-                          style={{
-                            marginTop: 4,
-                            marginLeft: 1,
+        {this.state.user ? (
+          <View style={styles.main}>
+            <TouchableOpacity
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginTop: 15,
+                marginLeft: -10,
+                paddingBottom: 10,
+              }}
+              onPress={() => {
+                // !this.props.route.params?.id
+                this.props.navigation.navigate('GhostPage');
+                this.id = '';
+                this.props.setId(null);
+                this.handleClearData();
+              }}>
+              <Svg
+                width={30}
+                height={35}
+                viewBox="0 0 30 30"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg">
+                <Path
+                  d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+                  fill="#94D8F4"
+                />
+              </Svg>
+              <Text style={styles.backText}>Назад</Text>
+            </TouchableOpacity>
+            <ScrollView showsVerticalScrollIndicator={false}>
+              <View style={styles.campaign}>
+                {this.state.user.length > 0 && (
+                  <>
+                    <View style={styles.infoCompanyMain}>
+                      <View style={{width: '32%'}}>
+                        <Image
+                          source={{
+                            uri: this.state.urlImage + this.state.user[0].logo,
                           }}
-                          onPress={this.handleShare}>
-                          <Image
-                            style={{width: 25, height: 25}}
-                            source={require('../../assets/image/PNG/share.png')}
-                          />
-                        </TouchableOpacity>
+                          style={{
+                            width: 100,
+                            height: 100,
+                            marginRight: 12,
+                            borderColor: '#C8C8C8',
+                            borderWidth: 1,
+                            resizeMode: 'cover',
+                            borderRadius: 10,
+                          }}
+                        />
                       </View>
-                    </View>
-                  </View>
-                  <View
-                    style={{
-                      position: 'relative',
-                      flexDirection: 'row',
-                      alignItems: 'center',
-                      width: '100%',
-                      alignSelf: 'center',
-                      // paddingHorizontal: 0,
-                      marginTop: 9,
-                      justifyContent: 'space-between',
-                    }}>
-                    <TouchableOpacity
-                      style={{
-                        borderWidth: 1,
-                        borderColor: '#F5F5F5',
-                        width: '60%',
-                        borderRadius: 5,
-                        position: 'relative',
-                        height: 24,
-                        paddingLeft: 5,
-                      }}
-                      onPress={() =>
-                        this.setState({
-                          sOpenCityDropDown: !this.state.sOpenCityDropDown,
-                        })
-                      }>
-                      <Text
-                        style={{
-                          fontFamily: 'Raleway_400Regular',
-                          color: '#333333',
-                        }}>
-                        {this.state.changed}
-                      </Text>
-                      <View
-                        style={{position: 'absolute', right: 17, bottom: 6}}>
-                        {!this.state.sOpenCityDropDown && (
-                          <Svg
-                            width="18"
-                            height="10"
-                            viewBox="0 0 18 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <Path
-                              d="M1 1L9 9L17 1"
-                              stroke="#888888"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </Svg>
-                        )}
-                        {this.state.sOpenCityDropDown && (
-                          <Svg
-                            width="18"
-                            height="10"
-                            viewBox="0 0 18 10"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <Path
-                              d="M1 9L9 1L17 9"
-                              stroke="#888888"
-                              stroke-width="2"
-                              stroke-linecap="round"
-                              stroke-linejoin="round"
-                            />
-                          </Svg>
-                        )}
-                      </View>
-                    </TouchableOpacity>
-                    <View
-                      style={
-                        this.state.sOpenCityDropDown
-                          ? styles.sOpenCityDropDownActive
-                          : styles.sOpenCityDropDown
-                      }>
-                      <ScrollView nestedScrollEnabled={true}>
-                        {this.state.city_for_sales_user.length ==
-                        this.state.city_count ? (
-                          <TouchableOpacity
-                            style={{
-                              width: '100%',
-                              justifyContent: 'center',
-                              textAlign: 'left',
-                            }}
-                            onPress={() =>
-                              this.setState({
-                                sOpenCityDropDown: false,
-                              })
-                            }>
-                            <Text
-                              style={{
-                                textAlign: 'left',
-                                paddingVertical: 10,
-                                fontFamily: 'Raleway_Regular',
-                                color: '#333333',
-                              }}>
-                              {this.state.changed}
-                            </Text>
-                          </TouchableOpacity>
-                        ) : (
-                          this.state.city_for_sales_user.map((item, index) => {
-                            return (
-                              <TouchableOpacity
-                                key={index}
-                                style={{
-                                  width: '100%',
-                                  justifyContent: 'center',
-                                  textAlign: 'left',
-                                }}
-                                onPress={() =>
-                                  this.setState({
-                                    changed: item.city_name,
-                                    sOpenCityDropDown: false,
-                                  })
-                                }>
-                                <Text
-                                  style={{
-                                    textAlign: 'left',
-                                    paddingVertical: 10,
-                                    fontFamily: 'Raleway_400Regular',
-                                    color: '#333333',
-                                  }}>
-                                  {item.city_name}
-                                </Text>
-                              </TouchableOpacity>
-                            );
-                          })
-                        )}
-                      </ScrollView>
-                    </View>
 
-                    {this.state.user.length > 0 && (
-                      <View style={styles.checkBox}>
+                      <View style={styles.infoCompany}>
                         <View
                           style={{
                             flexDirection: 'row',
                             alignItems: 'center',
+                            justifyContent: 'space-between',
+                            // width: '95%',
+                            // backgroussndColor: 'red',
                           }}>
-                          <Text
-                            style={{
-                              fontSize: 13,
-                              marginRight: 5,
-                              fontFamily: 'Raleway_400Regular',
-                              color: '#333333',
-                            }}>
-                            Шоурум
-                          </Text>
                           <View>
-                            {this.state.user[0].show_room == 'Да' ? (
-                              <Svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <Path
-                                  d="M4 11.4L7.52941 15.4L16 5"
-                                  stroke="#52A8EF"
-                                  stroke-width="2"
-                                  stroke-linecap="round"
-                                  stroke-linejoin="round"
+                            <Text
+                              style={{
+                                fontSize: 20,
+                                // fontFamily: 'Raleway_500Medium',
+                                color: '#333333',
+                                fontWeight: '700',
+                              }}>
+                              {this.state.user[0].company_name}
+                            </Text>
+                            <Text
+                              style={{
+                                fontSize: 16,
+                                color: '#A8A8A8',
+                                fontFamily: 'Raleway_500Medium',
+                              }}>
+                              {this.state.user[0].made_in}
+                            </Text>
+                          </View>
+                          <TouchableOpacity onPress={() => this.favorite()}>
+                            {this.state.favoriteBool == true && (
+                              <Image
+                                source={require('../../assets/image/heartHast.png')}
+                                style={{
+                                  width: 24,
+                                  height: 21.43,
+                                  // marginRight: screenWidth > 393 ? -2 : 1,
+                                  marginBottom: 15,
+                                  marginRight: 1.5,
+                                  // marginTop: 5,
+                                }}
+                              />
+                            )}
+                            {this.state.favoriteBool == false && (
+                              <Image
+                                source={require('../../assets/image/heartSev.png')}
+                                style={{
+                                  width: 24,
+                                  height: 21.43,
+                                  tintColor: 'red',
+                                  marginRight: 1.5,
+
+                                  marginBottom: 15,
+                                }}
+                              />
+                            )}
+                          </TouchableOpacity>
+                        </View>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                          }}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              marginTop: 4,
+                              // width:
+                              //   screenWidth > 360
+                              //     ? '62.5%'
+                              //     : screenWidth > 393
+                              //     ? '71%'
+                              //     : '59%',
+                            }}>
+                            {`${this.state.user[0].saite}` !== 'null' && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  Linking.openURL(
+                                    this.addProtocol(this.state.user[0].saite),
+                                  );
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/globus.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
                                 />
-                                <Rect
-                                  x="0.2"
-                                  y="0.2"
-                                  width="19.6"
-                                  height="19.6"
-                                  rx="3.8"
-                                  stroke="#52A8EF"
-                                  stroke-width="0.4"
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].saite == null && (
+                              <View style={{height: 24}}></View>
+                            )}
+                            {this.state.user[0].telegram !== null && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  Linking.openURL(
+                                    'https://t.me/' +
+                                      this.state.user[0].telegram,
+                                  );
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/telegram.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
                                 />
-                              </Svg>
-                            ) : (
-                              <Svg
-                                width="20"
-                                height="20"
-                                viewBox="0 0 20 20"
-                                fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <Rect
-                                  x="0.2"
-                                  y="0.2"
-                                  width="19.6"
-                                  height="19.6"
-                                  rx="3.8"
-                                  stroke="#52A8EF"
-                                  stroke-width="0.4"
+                              </TouchableOpacity>
+                            )}
+
+                            {this.state.user[0].extract !== null && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.setState({VipiskaModal: true});
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/sidebar.png')}
+                                  style={{
+                                    width: 18,
+                                    height: 24,
+                                    marginRight: 14,
+                                  }}
                                 />
-                              </Svg>
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].job_with_designer == 'Да' && (
+                              <TouchableOpacity
+                                onPress={() => {
+                                  this.setState({designerModal: true});
+                                }}>
+                                <Image
+                                  source={require('../../assets/image/design.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 10,
+                                  }}
+                                />
+                              </TouchableOpacity>
+                            )}
+                            {this.state.user[0].dmodel == 'Да' && (
+                              <TouchableOpacity
+                                onPress={() =>
+                                  this.setState({dmodel_popup: true})
+                                }>
+                                <Image
+                                  source={require('../../assets/image/cube.png')}
+                                  style={{
+                                    width: 24,
+                                    height: 24,
+                                  }}
+                                />
+                              </TouchableOpacity>
                             )}
                           </View>
+                          <TouchableOpacity
+                            style={{
+                              marginTop: 4,
+                              marginLeft: 1,
+                            }}
+                            onPress={this.handleShare}>
+                            <Image
+                              style={{width: 25, height: 25}}
+                              source={require('../../assets/image/PNG/share.png')}
+                            />
+                          </TouchableOpacity>
                         </View>
                       </View>
-                    )}
-                  </View>
-                </>
-              )}
-
-              <View
-                style={{
-                  width: '100%',
-                  height: 58,
-                  flexDirection: 'row',
-                  justifyContent: 'space-between',
-                  marginTop: 14,
-                  marginBottom: 19,
-                  zIndex: -1,
-                }}>
-                <TouchableOpacity
-                  style={[
-                    styles.info,
-                    {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
-                  ]}
-                  onPress={() => {
-                    // this.setState({ aboutUsPopup: true })
-                    this.props.navigation.navigate('AboutUsScreen', {
-                      value: this.state.about_us,
-                      hideText: true,
-                    });
-                  }}>
-                  <Image
-                    source={require('../../assets/image/la_percent.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text style={styles.infoText}>Доп. информация</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[
-                    styles.info,
-                    {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
-                  ]}
-                  // onPress={() => {
-                  //   this.props.navigation.navigate("Modal");
-                  // }}
-                  onPress={() => {
-                    const number = this.state.whatsapp;
-                    const convertedNumber = number.replace(/\D/g, '');
-                    Linking.openURL(
-                      `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
-                      // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
-                    ).catch(err => console.log(err));
-                  }}>
-                  <Image
-                    source={require('../../assets/image/whatsapp.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text style={styles.infoText}>Написать в вотсап</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.info}
-                  // onPress={() => {
-                  //   this.props.navigation.navigate("Modal");
-                  // }}
-                >
-                  <Image
-                    source={require('../../assets/image/pcichka.png')}
-                    style={{
-                      width: 30,
-                      height: 30,
-                      resizeMode: 'contain',
-                    }}
-                  />
-                  <Text style={styles.infoText}>Отзывы</Text>
-                </TouchableOpacity>
-              </View>
-
-              <View style={{marginBottom: 15, zIndex: -1, marginTop: 8}}>
-                <ScrollView
-                  horizontal={true}
-                  showsVerticalScrollIndicator={false}
-                  showsHorizontalScrollIndicator={false}>
-                  {this.state.user_category_for_product.map((item, index) => {
-                    return (
+                    </View>
+                    <View
+                      style={{
+                        position: 'relative',
+                        flexDirection: 'row',
+                        alignItems: 'center',
+                        width: '100%',
+                        alignSelf: 'center',
+                        // paddingHorizontal: 0,
+                        marginTop: 9,
+                        justifyContent: 'space-between',
+                      }}>
                       <TouchableOpacity
-                        key={index}
-                        onPress={async () => {
-                          await this.updateProductAfterClickToCategory(
-                            item.parent_category_name,
-                          );
-                          this.setState({active: index});
+                        style={{
+                          borderWidth: 1,
+                          borderColor: '#F5F5F5',
+                          width: '60%',
+                          borderRadius: 5,
+                          position: 'relative',
+                          height: 24,
+                          paddingLeft: 5,
                         }}
-                        style={
-                          this.state.active === index
-                            ? styles.categoriesButtonActive
-                            : styles.categoriesButton
+                        onPress={() =>
+                          this.setState({
+                            sOpenCityDropDown: !this.state.sOpenCityDropDown,
+                          })
                         }>
                         <Text
+                          style={{
+                            fontFamily: 'Raleway_400Regular',
+                            color: '#333333',
+                          }}>
+                          {this.state.changed}
+                        </Text>
+                        <View
+                          style={{position: 'absolute', right: 17, bottom: 6}}>
+                          {!this.state.sOpenCityDropDown && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 1L9 9L17 1"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                          {this.state.sOpenCityDropDown && (
+                            <Svg
+                              width="18"
+                              height="10"
+                              viewBox="0 0 18 10"
+                              fill="none"
+                              xmlns="http://www.w3.org/2000/svg">
+                              <Path
+                                d="M1 9L9 1L17 9"
+                                stroke="#888888"
+                                stroke-width="2"
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                              />
+                            </Svg>
+                          )}
+                        </View>
+                      </TouchableOpacity>
+                      <View
+                        style={
+                          this.state.sOpenCityDropDown
+                            ? styles.sOpenCityDropDownActive
+                            : styles.sOpenCityDropDown
+                        }>
+                        <ScrollView nestedScrollEnabled={true}>
+                          {this.state.city_for_sales_user.length ==
+                          this.state.city_count ? (
+                            <TouchableOpacity
+                              style={{
+                                width: '100%',
+                                justifyContent: 'center',
+                                textAlign: 'left',
+                              }}
+                              onPress={() =>
+                                this.setState({
+                                  sOpenCityDropDown: false,
+                                })
+                              }>
+                              <Text
+                                style={{
+                                  textAlign: 'left',
+                                  paddingVertical: 10,
+                                  fontFamily: 'Raleway_Regular',
+                                  color: '#333333',
+                                }}>
+                                {this.state.changed}
+                              </Text>
+                            </TouchableOpacity>
+                          ) : (
+                            this.state.city_for_sales_user.map(
+                              (item, index) => {
+                                return (
+                                  <TouchableOpacity
+                                    key={index}
+                                    style={{
+                                      width: '100%',
+                                      justifyContent: 'center',
+                                      textAlign: 'left',
+                                    }}
+                                    onPress={() =>
+                                      this.setState({
+                                        changed: item.city_name,
+                                        sOpenCityDropDown: false,
+                                      })
+                                    }>
+                                    <Text
+                                      style={{
+                                        textAlign: 'left',
+                                        paddingVertical: 10,
+                                        fontFamily: 'Raleway_400Regular',
+                                        color: '#333333',
+                                      }}>
+                                      {item.city_name}
+                                    </Text>
+                                  </TouchableOpacity>
+                                );
+                              },
+                            )
+                          )}
+                        </ScrollView>
+                      </View>
+
+                      {this.state.user.length > 0 && (
+                        <View style={styles.checkBox}>
+                          <View
+                            style={{
+                              flexDirection: 'row',
+                              alignItems: 'center',
+                            }}>
+                            <Text
+                              style={{
+                                fontSize: 13,
+                                marginRight: 5,
+                                fontFamily: 'Raleway_400Regular',
+                                color: '#333333',
+                              }}>
+                              Шоурум
+                            </Text>
+                            <View>
+                              {this.state.user[0].show_room == 'Да' ? (
+                                <Svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <Path
+                                    d="M4 11.4L7.52941 15.4L16 5"
+                                    stroke="#52A8EF"
+                                    stroke-width="2"
+                                    stroke-linecap="round"
+                                    stroke-linejoin="round"
+                                  />
+                                  <Rect
+                                    x="0.2"
+                                    y="0.2"
+                                    width="19.6"
+                                    height="19.6"
+                                    rx="3.8"
+                                    stroke="#52A8EF"
+                                    stroke-width="0.4"
+                                  />
+                                </Svg>
+                              ) : (
+                                <Svg
+                                  width="20"
+                                  height="20"
+                                  viewBox="0 0 20 20"
+                                  fill="none"
+                                  xmlns="http://www.w3.org/2000/svg">
+                                  <Rect
+                                    x="0.2"
+                                    y="0.2"
+                                    width="19.6"
+                                    height="19.6"
+                                    rx="3.8"
+                                    stroke="#52A8EF"
+                                    stroke-width="0.4"
+                                  />
+                                </Svg>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      )}
+                    </View>
+                  </>
+                )}
+
+                <View
+                  style={{
+                    width: '100%',
+                    height: 58,
+                    flexDirection: 'row',
+                    justifyContent: 'space-between',
+                    marginTop: 14,
+                    marginBottom: 19,
+                    zIndex: -1,
+                  }}>
+                  <TouchableOpacity
+                    style={[
+                      styles.info,
+                      {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
+                    ]}
+                    onPress={() => {
+                      // this.setState({ aboutUsPopup: true })
+                      this.props.navigation.navigate('AboutUsScreen', {
+                        value: this.state.about_us,
+                        hideText: true,
+                      });
+                    }}>
+                    <Image
+                      source={require('../../assets/image/la_percent.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text style={styles.infoText}>Доп. информация</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={[
+                      styles.info,
+                      {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
+                    ]}
+                    // onPress={() => {
+                    //   this.props.navigation.navigate("Modal");
+                    // }}
+                    onPress={() => {
+                      const number = this.state.whatsapp;
+                      const convertedNumber = number.replace(/\D/g, '');
+                      Linking.openURL(
+                        `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
+                        // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
+                      ).catch(err => console.log(err));
+                    }}>
+                    <Image
+                      source={require('../../assets/image/whatsapp.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text style={styles.infoText}>Написать в вотсап</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={styles.info}
+                    // onPress={() => {
+                    //   this.props.navigation.navigate("Modal");
+                    // }}
+                  >
+                    <Image
+                      source={require('../../assets/image/pcichka.png')}
+                      style={{
+                        width: 30,
+                        height: 30,
+                        resizeMode: 'contain',
+                      }}
+                    />
+                    <Text style={styles.infoText}>Отзывы</Text>
+                  </TouchableOpacity>
+                </View>
+
+                <View style={{marginBottom: 15, zIndex: -1, marginTop: 8}}>
+                  <ScrollView
+                    horizontal={true}
+                    showsVerticalScrollIndicator={false}
+                    showsHorizontalScrollIndicator={false}>
+                    {this.state.user_category_for_product.map((item, index) => {
+                      return (
+                        <TouchableOpacity
+                          key={index}
+                          onPress={async () => {
+                            await this.updateProductAfterClickToCategory(
+                              item.parent_category_name,
+                            );
+                            this.setState({active: index});
+                          }}
                           style={
                             this.state.active === index
-                              ? styles.categoriesNameActive
-                              : styles.categoriesName
+                              ? styles.categoriesButtonActive
+                              : styles.categoriesButton
                           }>
-                          {item.parent_category_name}
-                        </Text>
-                      </TouchableOpacity>
-                    );
-                  })}
-                </ScrollView>
-              </View>
-
-              {this.state.change_category_loaded && (
-                <View style={{marginTop: 200}}>
-                  <ActivityIndicator size={100} color={'#C2C2C2'} />
+                          <Text
+                            style={
+                              this.state.active === index
+                                ? styles.categoriesNameActive
+                                : styles.categoriesName
+                            }>
+                            {item.parent_category_name}
+                          </Text>
+                        </TouchableOpacity>
+                      );
+                    })}
+                  </ScrollView>
                 </View>
-              )}
 
-              {!this.state.change_category_loaded &&
-                this.state.products.map((item, index) => {
-                  return (
-                    <View key={index} style={{marginTop: 18}}>
-                      <Slider2 slid={item.product_image} />
-                      {/* <ImageSlider
+                {this.state.change_category_loaded && (
+                  <View style={{marginTop: 200}}>
+                    <ActivityIndicator size={100} color={'#C2C2C2'} />
+                  </View>
+                )}
+
+                {!this.state.change_category_loaded &&
+                  this.state.products.map((item, index) => {
+                    return (
+                      <View key={index} style={{marginTop: 18}}>
+                        <Slider2 slid={item.product_image} />
+                        {/* <ImageSlider
                         showIndicator
                         indicatorSize={8} // Adjust the size of the indicators
                         indicatorColor="red" // Adjust the color of the indicators
@@ -1143,94 +1185,108 @@ export default class GhostPageTwoComponent extends React.Component {
                           height: 270,
                         }}
                       /> */}
-                      <View
-                        style={{
-                          width: '99%',
-                        }}>
-                        <View style={styles.itemNameBox}>
-                          <Text style={styles.itemType}>
-                            {item.name.substr(0, 6)}
-                          </Text>
-                          <Text style={styles.itemName}>
-                            {item.name.substr(5)}
-                          </Text>
+                        <View
+                          style={{
+                            width: '90%',
+                          }}>
+                          <View style={styles.itemNameBox}>
+                            <Text style={styles.itemType}>
+                              {item.name.substr(0, 6)}
+                            </Text>
+                            <Text style={styles.itemName}>
+                              {item.name.substr(5)}
+                            </Text>
+                          </View>
+                          {item.facades && (
+                            <Text
+                              style={{
+                                color: '#333333',
+                                width: '95%',
+                                marginTop: Platform.OS === 'ios' ? 10 : 0,
+                              }}>
+                              Фасады : {item.facades}
+                              фылтвьт длфыьвдфы вдлфьывдл ьдьылфьвь
+                            </Text>
+                          )}
+                          {item.frame && (
+                            <Text style={{color: '#333333'}}>
+                              Корпус: {item.frame}
+                            </Text>
+                          )}
+                          {item.profile && (
+                            <Text style={{color: '#333333'}}>
+                              Профиль: {item.profile}
+                            </Text>
+                          )}
+                          {item.tabletop && (
+                            <Text style={{color: '#333333', width: '90%'}}>
+                              Столешница: {item.tabletop}
+                            </Text>
+                          )}
+                          {item.length && (
+                            <Text style={{color: '#333333'}}>
+                              Длина: {item.length.replace('.', ',')} м.
+                            </Text>
+                          )}
+                          {item.height && (
+                            <Text style={{color: '#333333'}}>
+                              Высота: {item.height.replace('.', ',')} м.
+                            </Text>
+                          )}
+                          {item.material && (
+                            <Text style={{color: '#333333'}}>
+                              Материал: {item.material}
+                            </Text>
+                          )}
+                          {item.price && (
+                            <Text style={{color: '#333333'}}>
+                              Цена:{' '}
+                              {item.price
+                                .toString()
+                                .split('.')
+                                .join('')
+                                .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
+                              руб.
+                            </Text>
+                          )}
+                          {item.about && item.about != 'null' && (
+                            <TouchableOpacity
+                              style={{
+                                width: 27,
+                                height: 27,
+                                position: 'absolute',
+                                right: 0,
+                                top: 5,
+                              }}
+                              onPress={() =>
+                                this.props.navigation.navigate(
+                                  'AboutUsScreen',
+                                  {
+                                    value: item.about,
+                                    hideText: true,
+                                  },
+                                )
+                              }>
+                              <Image
+                                source={require('../../assets/image/Screenshot_2.png')}
+                                style={{width: 27, height: 27}}
+                                width={27}
+                                height={27}
+                              />
+                            </TouchableOpacity>
+                          )}
                         </View>
-                        {item.facades && (
-                          <Text style={{color: '#333333', width: '99%'}}>
-                            Фасады : {item.facades}
-                          </Text>
-                        )}
-                        {item.frame && (
-                          <Text style={{color: '#333333'}}>
-                            Корпус: {item.frame}
-                          </Text>
-                        )}
-                        {item.profile && (
-                          <Text style={{color: '#333333'}}>
-                            Профиль: {item.profile}
-                          </Text>
-                        )}
-                        {item.tabletop && (
-                          <Text style={{color: '#333333', width: '90%'}}>
-                            Столешница: {item.tabletop}
-                          </Text>
-                        )}
-                        {item.length && (
-                          <Text style={{color: '#333333'}}>
-                            Длина: {item.length} м.
-                          </Text>
-                        )}
-                        {item.height && (
-                          <Text style={{color: '#333333'}}>
-                            Высота: {item.height} м.
-                          </Text>
-                        )}
-                        {item.material && (
-                          <Text style={{color: '#333333'}}>
-                            Материал: {item.material}
-                          </Text>
-                        )}
-                        {item.price && (
-                          <Text style={{color: '#333333'}}>
-                            Цена:{' '}
-                            {item.price
-                              .toString()
-                              .split('.')
-                              .join('')
-                              .replace(/\B(?=(\d{3})+(?!\d))/g, '.')}{' '}
-                            руб.
-                          </Text>
-                        )}
-                        {item.about && item.about != 'null' && (
-                          <TouchableOpacity
-                            style={{
-                              width: 27,
-                              height: 27,
-                              position: 'absolute',
-                              right: 0,
-                              top: 5,
-                            }}
-                            onPress={() =>
-                              this.props.navigation.navigate('AboutUsScreen', {
-                                value: item.about,
-                                hideText: true,
-                              })
-                            }>
-                            <Image
-                              source={require('../../assets/image/Screenshot_2.png')}
-                              style={{width: 27, height: 27}}
-                              width={27}
-                              height={27}
-                            />
-                          </TouchableOpacity>
-                        )}
                       </View>
-                    </View>
-                  );
-                })}
-            </View>
-          </ScrollView>
-        </View>
+                    );
+                  })}
+              </View>
+            </ScrollView>
+          </View>
+        ) : (
+          <View style={styles.loaderBox}>
+            <ActivityIndicator color={'#868686'} size={'large'} />
+          </View>
+        )}
         <GhostNavComponent
           active_page={'Главная'}
           navigation={this.props.navigation}
@@ -1249,6 +1305,11 @@ const styles = StyleSheet.create({
     marginTop: 12,
     paddingLeft: 2,
     flexDirection: 'row',
+    alignItems: 'center',
+  },
+  loaderBox: {
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
   },
   itemNameBox: {

@@ -274,6 +274,8 @@ export default class GhostPageComponent extends React.Component {
     this.focusListener = navigation.addListener('focus', () => {
       this._loadFontsAsync();
       this.getProductsFunction();
+      // console.log('focuuuuus');
+      // this.props.setId(null);
     });
 
     this.keyboardDidShowListener = Keyboard.addListener(

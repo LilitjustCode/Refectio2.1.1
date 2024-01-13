@@ -1,16 +1,22 @@
 import React, {useEffect, useState} from 'react';
-import {Dimensions, FlatList, ScrollView, View, TextInput} from 'react-native';
-import {SafeAreaView} from 'react-native';
-import {TouchableOpacity} from 'react-native';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Keyboard,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import {Path, Svg} from 'react-native-svg';
-import {StyleSheet} from 'react-native';
-import {Text} from 'react-native';
-import {Image} from 'react-native';
-import {RefreshControl} from 'react-native';
 import Loading from '../../Component/Loading';
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 import shuffle from '../shuffle';
-import {Keyboard} from 'react-native';
 
 const {width} = Dimensions.get('screen');
 
