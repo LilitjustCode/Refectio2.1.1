@@ -396,7 +396,7 @@ export default class EditProductComponent extends React.Component {
       .then(result => {
         if (result.status === true) {
           // console.log(result)
-          // console.log("asdasdasdasda", result.data[0]);
+          console.log('asdasdasdasda', result.data[0].category_id);
           this.setState({alldata: result.data[0]});
           this.setState({
             name:
@@ -465,12 +465,14 @@ export default class EditProductComponent extends React.Component {
                 ? null
                 : result.data[0].about,
             hasFacades:
+            result.data[0].category_id == 41 ||
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
+              result.data[0].category_id == 40 ||
               result.data[0].category_id == 66 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 45 ||
@@ -488,8 +490,10 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
-              // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
+              result.data[0].category_id == 41 ||
+              // result.data[0].category_id.parent_category_id == 4 ||
+              result.data[0].category_id == 40 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 94 ||
               result.data[0].category_id == 45 ||
@@ -515,6 +519,8 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
+              result.data[0].category_id == 40 ||
+              result.data[0].category_id == 41 ||
               // result.data[0].category_id.parent_category_id == 4 ||
               result.data[0].category_id == 42 ||
               result.data[0].category_id == 43 ||
@@ -536,6 +542,7 @@ export default class EditProductComponent extends React.Component {
               result.data[0].category_id == 31 ||
               result.data[0].category_id == 36 ||
               result.data[0].category_id == 37 ||
+              // result.data[0].category_id == 40 ||
               result.data[0].category_id == 41 ||
               result.data[0].category_id == 43 ||
               result.data[0].category_id == 94 ||

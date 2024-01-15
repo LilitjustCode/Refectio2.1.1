@@ -102,7 +102,7 @@ export default class PraductiaComponent extends React.Component {
   };
 
   delateProduct = async () => {
-    let myHeaders = new Headers();
+    let myHeaders = new Headers();ad
     let userToken = await AsyncStorage.getItem('userToken');
     myHeaders.append('Content-Type', 'multipart/form-data');
     myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -753,7 +753,7 @@ export default class PraductiaComponent extends React.Component {
                           alignItems: 'center',
                           justifyContent: 'space-between',
                           marginTop: 10,
-                          width: '90%',
+                          width: '100%',
                         }}>
                         <View style={styles.itemNameBox}>
                           <Text style={styles.itemType}>
