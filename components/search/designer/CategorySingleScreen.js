@@ -22,7 +22,7 @@ export default function CategorySingleScreenDesigner({
   navigation,
   category,
   mynextUrl,
-  myproducts,
+  myProducts,
   product,
   cityId,
   startPrice,

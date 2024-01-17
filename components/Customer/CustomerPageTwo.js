@@ -157,39 +157,8 @@ export default class DesignerPageTwoComponent extends React.Component {
     return true;
   }
 
-  // componentDidMount() {
-  //   const { navigation } = this.props;
-  //   this.handleInitialUrl();
-  //   this.loadedDataAfterLoadPage();
-  //   BackHandler.addEventListener(
-  //     "hardwareBackPress",
-  //     this.handleBackButtonClick
-  //   );
-  //   //     this.props.navigation.addListener('beforeRemove', (e) => {
-  //   //       // e.preventDefault()
-  //   //       // this.handleBackButtonClick()
-  //   //       //clear setInterval here and go back
-  //   //       this.props.navigation.navigate('CustomerMainPage', { screen: true })
-  //   // //
-  //   //     })
-  //   // this.focusListener = navigation.addListener("focus", () => {
-  //   //   this.loadedDataAfterLoadPage();
-  //   // });
-  // }
 
   componentDidMount() {
-    // Font.loadAsync({
-    //   Poppins_300Light,
-    //   Poppins_400Regular,
-    //   Poppins_500Medium,
-    //   Poppins_600SemiBold,
-    //   Poppins_700Bold,
-    //   Raleway_400Regular,
-    //   Raleway_500Medium,
-    //   Raleway_600SemiBold,
-    //   Raleway_700Bold,
-    // });
-
     this.setState({fontsLoaded: true});
     this.loadedDataAfterLoadPage();
     BackHandler.addEventListener(
@@ -202,11 +171,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       'hardwareBackPress',
       this.handleBackButtonClick,
     );
-    // Remove the event listener
-    // if (this.focusListener) {
-    //   this.focusListener();
-    //   // console.log(' END')
-    // }
+  
   }
 
   handleShare = async () => {
@@ -1360,37 +1325,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                     return (
                       <View key={index} style={{marginTop: 18}}>
                         <Slider2 slid={item.product_image} />
-                        {/* <ImageSlider
-                          showIndicator
-                          indicatorSize={8} // Adjust the size of the indicators
-                          indicatorColor="red" // Adjust the color of the indicators
-                          inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
-                          indicatorAtBottom={true}
-                          preview={true}
-                          // children
-                          // data={[
-                          //   {
-                          //     img: ՝https://admin.refectio.ru/storage/app/uploads/՝ + item.images,
-                          //   },
-                          // ]}
-                          data={item.product_image.map((value) => {
-                            return { img: ՝https://admin.refectio.ru/storage/app/uploads/՝ + value.image };
-                          })}
-                          // dataSource={item.images.map((item, index) => ({
-                          //   url: ՝https://admin.refectio.ru/storage/app/uploads/՝ + item.image,
-                          //   // title: item.title,
-                          //   // You can add more properties as needed
-                          //   // For example: description: item.description
-                          // }))}
-                          autoPlay={false}
-                          onItemChanged={(item) => console.log(item)}
-                          closeIconColor="#fff"
-                          // showIndicator={false}
-                          caroselImageStyle={{
-                            resizeMode: "cover",
-                            height: 270,
-                          }}
-                        /> */}
                         <View style={{width: '100%'}}>
                           <View style={styles.itemNameBox}>
                             <Text style={styles.itemName}>
@@ -1452,7 +1386,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               руб.
                             </Text>
                           )}
-                          {item.about && item.about != 'null' && (
+                           {item.about && item.about != 'null' && (
                             <TouchableOpacity
                               style={{
                                 width: 27,
@@ -1464,7 +1398,10 @@ export default class DesignerPageTwoComponent extends React.Component {
                               onPress={() =>
                                 this.props.navigation.navigate(
                                   'AboutUsScreen',
-                                  {value: item.about, hideText: true},
+                                  {
+                                    value: item.about,
+                                    hideText: true,
+                                  },
                                 )
                               }>
                               <Image

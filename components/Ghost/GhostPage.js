@@ -324,7 +324,11 @@ export default class GhostPageComponent extends React.Component {
             onPress={async () => {
               this.props.navigation.navigate('GhostPageTwo', {
                 id: item.id,
+                prevroutname: 'name',
               });
+              console.log(item.id, 'iteem');
+              // const {id, setId} = this.props;
+              // setId(item.id);
             }}>
             <View style={styles.infoCompanyMain}>
               <Image

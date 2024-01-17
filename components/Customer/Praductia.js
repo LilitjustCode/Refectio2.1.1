@@ -103,7 +103,7 @@ export default class PraductiaComponent extends React.Component {
 
   delateProduct = async () => {
     let myHeaders = new Headers();
-    ad;
+
     let userToken = await AsyncStorage.getItem('userToken');
     myHeaders.append('Content-Type', 'multipart/form-data');
     myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -125,6 +125,7 @@ export default class PraductiaComponent extends React.Component {
     )
       .then(response => response.json())
       .then(async result => {
+        console.log(result, 'resul delete ');
         if (result.status === true) {
           await this.setState({
             delateProductModal: false,
@@ -448,7 +449,8 @@ export default class PraductiaComponent extends React.Component {
 
                   <TouchableOpacity
                     onPress={async () => {
-                      await this.delateProduct();
+                      this.delateProduct();
+                      console.log('delete');
                     }}
                     style={{alignSelf: 'center', marginTop: 67}}>
                     <BlueButton name="Подтвердить" />

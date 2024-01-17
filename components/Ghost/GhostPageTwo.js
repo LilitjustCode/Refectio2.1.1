@@ -22,12 +22,14 @@ import WebView from 'react-native-webview';
 import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import GhostNavComponent from './GhostNav';
+import {BackHandler} from 'react-native';
 
 const {width: screenWidth} = Dimensions.get('window');
 
 export default class GhostPageTwoComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       bronyModal: false,
 
@@ -338,40 +340,89 @@ export default class GhostPageTwoComponent extends React.Component {
     this.setState({active: 0});
   };
 
-  componentDidMount() {
-    const {navigation} = this.props;
-    this._unsubscribe = navigation.addListener('focus', () => {
-      const {id, setId} = this.props;
-      console.log(
-        '----------',
-        'id :',
-        id,
-        'this.props.route.params.id:',
-        this.props.route.params?.id,
-        'this.id',
-        this.id,
-        '-------------',
-      );
-      this.id = id ? id : this.props.route.params.id;
-      this.loadedDataAfterLoadPage(this.id);
-      setId(this.id);
-    });
-
-    // this.focusListener = navigation.addListener('focus', () => {
-    //   this.props.setId(null);
-    // });
-  }
-  componentDidUpdate() {
-    const {navigation, setId} = this.props;
-    this._willBlurListener = navigation.addListener('willBlur', () => {
-      console.log('didBlur');
+  handleBackButtonClick() {
+    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
+    const {id, setId, setUrlLinking} = this.props;
+    if (this.props.route.params?.prevroutname) {
+      this.props.navigation.goBack();
+      setId(null);
+      setUrlLinking(null);
+      this.handleClearData();
+      return true;
+    } else {
+      this.props.id = null;
+      this.props.navigation.navigate('GhostPage', {screen: true});
+      setUrlLinking(null);
       setId(null);
       this.handleClearData();
+    }
+  }
+
+  componentDidMount() {
+    console.log(this.props, 'props');
+    const {id, setId, navigation} = this.props;
+    console.log(id, 'id');
+    this.setState({fontsLoaded: true});
+    this.loadedDataAfterLoadPage(
+      this.props.route.params?.id ? this.props.route.params?.id : id,
+    );
+    this.focusListener = navigation.addListener('focus', () => {
+      this.loadedDataAfterLoadPage(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      ),
+        console.log('ashxatiii');
     });
+    BackHandler.addEventListener(
+      'hardwareBackPress',
+      this.handleBackButtonClick,
+      this.loadedDataAfterLoadPage(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      ),
+    );
   }
   componentWillUnmount() {
+    BackHandler.removeEventListener(
+      'hardwareBackPress',
+      this.handleClearData,
+      this.handleBackButtonClick,
+    );
+    if (this.focusListener) {
+      this.focusListener();
+      this.handleClearData;
+    }
+  }
+  // componentDidMount() {
+  //   const {navigation} = this.props;
+  //   this._unsubscribe = navigation.addListener('focus', () => {
+  //
+  //     console.log(
+  //       '----------',
+  //       'id :',
+  //       id,
+  //       'this.props.route.params.id:',
+  //       this.props.route.params?.id,
+  //       'this.id',
+  //     );
+  //     this.id = id ? id : this.props.route.params.id;
+  //     this.loadedDataAfterLoadPage(this.id);
+  //     setId(this.id);
+  //   });
+
+  //   // this.focusListener = navigation.addListener('focus', () => {
+  //   //   this.props.setId(null);
+  //   // });
+  // }
+  // componentDidUpdate() {
+  //   const {navigation, setId} = this.props;
+  //   this._willBlurListener = navigation.addListener('willBlur', () => {
+  //     console.log('didBlur');
+  //     setId(null);
+  //     this.handleClearData();
+  //   });
+  // }
+  componentWillUnmount() {
     // this._unsubscribe();
-    this._willBlurListener();
+    // this._willBlurListener();
   }
 
   addProtocol(url) {
@@ -608,37 +659,30 @@ export default class GhostPageTwoComponent extends React.Component {
             </View>
           </ImageBackground>
         </Modal>
-
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginTop: 15,
+            // marginLeft: -10,
+            paddingBottom: 10,
+          }}
+          onPress={this.handleBackButtonClick}>
+          <Svg
+            width={25}
+            height={30}
+            viewBox="0 0 30 30"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg">
+            <Path
+              d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+              fill="#94D8F4"
+            />
+          </Svg>
+          <Text style={styles.backText}>Назад</Text>
+        </TouchableOpacity>
         {this.state.user ? (
           <View style={styles.main}>
-            <TouchableOpacity
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                marginTop: 15,
-                marginLeft: -10,
-                paddingBottom: 10,
-              }}
-              onPress={() => {
-                // !this.props.route.params?.id
-                this.props.navigation.navigate('GhostPage');
-                this.id = '';
-                this.props.setId(null);
-                this.handleClearData();
-              }}>
-              <Svg
-                width={30}
-                height={35}
-                viewBox="0 0 30 30"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg">
-                <Path
-                  d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
-                  fill="#94D8F4"
-                />
-              </Svg>
-              <Text style={styles.backText}>Назад</Text>
-            </TouchableOpacity>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.campaign}>
                 {this.state.user.length > 0 && (
@@ -1109,7 +1153,7 @@ export default class GhostPageTwoComponent extends React.Component {
                   </TouchableOpacity>
                 </View>
 
-                <View style={{marginBottom: 15, zIndex: -1, marginTop: 8}}>
+                <View style={{zIndex: -1}}>
                   <ScrollView
                     horizontal={true}
                     showsVerticalScrollIndicator={false}
@@ -1202,10 +1246,9 @@ export default class GhostPageTwoComponent extends React.Component {
                               style={{
                                 color: '#333333',
                                 width: '95%',
-                                marginTop: Platform.OS === 'ios' ? 2 : 0,
+                                marginTop: Platform.OS === 'ios' ? 5 : 0,
                               }}>
                               Фасады : {item.facades}
-                              фылтвьт длфыьвдфы вдлфьывдл ьдьылфьвь
                             </Text>
                           )}
                           {item.frame && (
@@ -1300,6 +1343,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 15,
     position: 'relative',
+    marginTop: 15,
   },
   nameCompanyParent: {
     marginTop: 12,

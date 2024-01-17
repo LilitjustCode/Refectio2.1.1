@@ -710,7 +710,7 @@ export default function App() {
             loginState.userToken !== null && loginState.userRole == '2' ? (
               <Stack.Navigator
                 initialRouteName={
-                  urlLinking.length > 0 &&
+                  urlLinking?.length > 0 &&
                   loginState.userRole == '2' &&
                   loginState.userToken !== null
                     ? 'DesignerPageTwo'
@@ -828,7 +828,7 @@ export default function App() {
             loginState.userToken !== null && loginState.userRole == '3' ? (
               <Stack.Navigator
                 initialRouteName={
-                  urlLinking.length > 0 &&
+                  urlLinking?.length > 0 &&
                   loginState.userRole == '3' &&
                   loginState.userToken !== null
                     ? 'CustomerMainPageTwo'
@@ -964,7 +964,7 @@ export default function App() {
             loginState.userToken == null ? (
               <Stack.Navigator
                 initialRouteName={
-                  urlLinking.length > 0 && loginState.userToken == null
+                  urlLinking?.length > 0 && loginState.userToken == null
                     ? 'GhostPageTwo'
                     : 'GhostPage'
                 }
@@ -993,7 +993,12 @@ export default function App() {
                   name="GhostPageTwo"
                   options={{headerShown: false}}>
                   {props => (
-                    <GhostPageTwoComponent {...props} id={id} setId={setId} />
+                    <GhostPageTwoComponent
+                      {...props}
+                      id={id}
+                      setId={setId}
+                      setUrlLinking={setUrlLinking}
+                    />
                   )}
                 </Stack.Screen>
 
