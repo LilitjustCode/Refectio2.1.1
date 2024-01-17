@@ -102,7 +102,8 @@ export default class PraductiaComponent extends React.Component {
   };
 
   delateProduct = async () => {
-    let myHeaders = new Headers();ad
+    let myHeaders = new Headers();
+    ad;
     let userToken = await AsyncStorage.getItem('userToken');
     myHeaders.append('Content-Type', 'multipart/form-data');
     myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -916,6 +917,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway_600SemiBold',
     fontSize: 13,
     color: '#333333',
+    fontWeight: '700',
   },
   checkBox: {
     position: 'absolute',

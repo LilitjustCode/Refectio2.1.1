@@ -1391,7 +1391,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                             height: 270,
                           }}
                         /> */}
-                        <View style={{width: '90%'}}>
+                        <View style={{width: '100%'}}>
                           <View style={styles.itemNameBox}>
                             <Text style={styles.itemName}>
                               {item.name.substr(0, 6)}
@@ -1405,7 +1405,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               style={{
                                 color: '#333333',
                                 width: '95%',
-                                marginTop: Platform.OS === 'ios' ? 10 : 0,
+                                marginTop: Platform.OS === 'ios' ? 2 : 0,
                               }}>
                               Фасады : {item.facades}
                             </Text>

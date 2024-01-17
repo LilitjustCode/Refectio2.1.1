@@ -1187,7 +1187,7 @@ export default class GhostPageTwoComponent extends React.Component {
                       /> */}
                         <View
                           style={{
-                            width: '90%',
+                            width: '100%',
                           }}>
                           <View style={styles.itemNameBox}>
                             <Text style={styles.itemType}>
@@ -1202,7 +1202,7 @@ export default class GhostPageTwoComponent extends React.Component {
                               style={{
                                 color: '#333333',
                                 width: '95%',
-                                marginTop: Platform.OS === 'ios' ? 10 : 0,
+                                marginTop: Platform.OS === 'ios' ? 2 : 0,
                               }}>
                               Фасады : {item.facades}
                               фылтвьт длфыьвдфы вдлфьывдл ьдьылфьвь
@@ -1330,6 +1330,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway_600SemiBold',
     fontSize: 13,
     color: '#333333',
+    fontWeight: '700',
   },
   campaign: {
     width: '100%',

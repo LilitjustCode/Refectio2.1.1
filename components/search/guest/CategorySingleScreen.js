@@ -172,7 +172,7 @@ export default function CategorySingleScreenGuest({
                         </Text>
                       </View>
                       {item.facades && (
-                        <Text style={{width: '95%'}}>
+                        <Text style={{width: '92%'}}>
                           Фасады : {item.facades}
                         </Text>
                       )}
@@ -280,5 +280,6 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway_600SemiBold',
     fontSize: 13,
     color: '#333333',
+    fontWeight: '700',
   },
 });

@@ -1912,7 +1912,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                       <Slider2 slid={item.product_image} />
                       <View
                         style={{
-                          width: '95%',
+                          width: '100%',
                         }}>
                         <View style={styles.itemNameBox}>
                           <Text style={styles.itemType}>
@@ -1927,7 +1927,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                             style={{
                               color: '#333333',
                               width: '95%',
-                              marginTop: Platform.OS === 'ios' ? 10 : 0,
+                              marginTop: Platform.OS === 'ios' ? 2 : 0,
                             }}>
                             Фасады: {item.facades}
                           </Text>
@@ -2037,6 +2037,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Raleway_600SemiBold',
     fontSize: 13,
     color: '#333333',
+    fontWeight: '700',
   },
   campaign: {
     width: '100%',

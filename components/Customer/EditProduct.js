@@ -465,7 +465,7 @@ export default class EditProductComponent extends React.Component {
                 ? null
                 : result.data[0].about,
             hasFacades:
-            result.data[0].category_id == 41 ||
+              result.data[0].category_id == 41 ||
               result.data[0].category_id == 28 ||
               result.data[0].category_id == 30 ||
               result.data[0].category_id == 31 ||
