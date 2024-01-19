@@ -2,31 +2,31 @@ import React, {useEffect, useState} from 'react';
 import {
   Dimensions,
   FlatList,
-  View,
-  ScrollView,
-  TextInput,
+  Image,
   Keyboard,
+  RefreshControl,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {SafeAreaView} from 'react-native';
-import {TouchableOpacity} from 'react-native';
-import {Path, Svg} from 'react-native-svg';
-import {StyleSheet} from 'react-native';
-import {Text} from 'react-native';
-import {Image} from 'react-native';
-import {RefreshControl} from 'react-native';
-import GhostNavComponent from '../../Ghost/GhostNav';
 import Loading from '../../Component/Loading';
-import shuffle from '../shuffle';
+import GhostNavComponent from '../../Ghost/GhostNav';
 import {
   BackBtn,
   CloseIcon,
   FilterIcon,
   OpenIcon,
 } from '../customer/CategoryScreen';
+import shuffle from '../shuffle';
 
 const {width} = Dimensions.get('screen');
 
-export default function CategoryScreenGuest({navigation, category}) {
+export default function CategoryScreenGuest(props) {
+  const {category, navigation, prevRoute, route} = props;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -67,12 +67,10 @@ export default function CategoryScreenGuest({navigation, category}) {
   async function getProducts(refresh, clear) {
     let formdata = new FormData();
     if (category.parent) {
-      console.log('subcategory');
       formdata.append('parent_category_id', category.parent_id);
       formdata.append('category_id', category.id);
     } else {
       formdata.append('parent_category_id', category.id);
-      console.log('category');
     }
 
     !clear &&
@@ -89,7 +87,6 @@ export default function CategoryScreenGuest({navigation, category}) {
     })
       .then(response => response.json())
       .then(res => {
-        console.log(refresh ? firstPageUrl : nextUrl, res.data.data.length);
         let arr = shuffle(res.data.data);
         refresh ? setProducts(arr) : setProducts([...products, ...arr]);
         setNextUrl(res.data.next_page_url);
@@ -106,7 +103,6 @@ export default function CategoryScreenGuest({navigation, category}) {
 
   const handleLoadMore = () => {
     if (nextUrl && !moreLoading) {
-      console.log('handleLoadMore');
       setMoreLoading(true);
       getProducts();
     }
@@ -162,9 +158,16 @@ export default function CategoryScreenGuest({navigation, category}) {
           paddingHorizontal: 15,
         }}>
         <BackBtn
-          onPressBack={() =>
-            filterMode ? setFilterMode(false) : navigation.goBack()
-          }
+          onPressBack={() => {
+            const routes = navigation.getState()?.routes;
+            const prevRoute =
+              routes[routes.length - 2].name === 'GhostPageTwo'
+                ? 'SubCategoryScreen'
+                : routes[routes.length - 2].name;
+            return filterMode
+              ? setFilterMode(false)
+              : navigation.navigate(prevRoute, {category});
+          }}
         />
         {loading ? (
           <Loading />

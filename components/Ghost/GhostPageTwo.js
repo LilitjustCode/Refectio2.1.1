@@ -17,12 +17,11 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Linking} from 'react-native';
+import {BackHandler, Linking} from 'react-native';
 import WebView from 'react-native-webview';
 import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import GhostNavComponent from './GhostNav';
-import {BackHandler} from 'react-native';
 
 const {width: screenWidth} = Dimensions.get('window');
 
@@ -37,6 +36,7 @@ export default class GhostPageTwoComponent extends React.Component {
       sOpenCityDropDown: false,
       active: 0,
 
+      loading: false,
       id: null,
 
       user: [],
@@ -81,6 +81,7 @@ export default class GhostPageTwoComponent extends React.Component {
   }
 
   getObjectData = async id => {
+    this.setState({loading: true});
     let userID = id;
     // console.log(this.props.id, 'ljj');
 
@@ -120,6 +121,8 @@ export default class GhostPageTwoComponent extends React.Component {
           arr.push(myItem[0]);
         }
         console.log(res.data.user[0].about_us);
+        this.setState({loading: false});
+        console.log(this.state.loading);
         this.setState({
           user: res.data.user,
           user_category_for_product: arr,
@@ -191,6 +194,7 @@ export default class GhostPageTwoComponent extends React.Component {
           // whatsapp: res.data.user[0].watsap_phone
           change_category_loaded: false,
         });
+        this.setState({loading: false});
       })
       .catch(error => console.log('error', error));
   };
@@ -320,6 +324,7 @@ export default class GhostPageTwoComponent extends React.Component {
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
+      products: [],
       city_count: null,
       about_us: '',
     });
@@ -327,6 +332,7 @@ export default class GhostPageTwoComponent extends React.Component {
   loadedDataAfterLoadPage = async id => {
     console.log('id in load data', id);
     await this.getObjectData(id);
+
     await this.updateProduct(
       this.state.user_category_for_product[0].parent_category_name,
       id,
@@ -343,25 +349,24 @@ export default class GhostPageTwoComponent extends React.Component {
   handleBackButtonClick() {
     // this.props.navigation.navigate("CustomerMainPage", { screen: true });
     const {id, setId, setUrlLinking} = this.props;
-    if (this.props.route.params?.prevroutname) {
-      this.props.navigation.goBack();
-      setId(null);
-      setUrlLinking(null);
-      this.handleClearData();
-      return true;
-    } else {
+
+    if (this.props.route.params?.fromSearch === true) {
+      this.props.navigation.navigate(this.props.route.params.prevRoute);
       this.props.id = null;
+    } else if (
+      this.props.route.params?.id ||
+      (this.props.id && !this.props.route.params?.fromSearch)
+    ) {
       this.props.navigation.navigate('GhostPage', {screen: true});
-      setUrlLinking(null);
-      setId(null);
-      this.handleClearData();
     }
+    setId(null);
+    setUrlLinking(null);
+    this.handleClearData();
   }
 
   componentDidMount() {
-    console.log(this.props, 'props');
-    const {id, setId, navigation} = this.props;
-    console.log(id, 'id');
+    const {id, navigation} = this.props;
+
     this.setState({fontsLoaded: true});
     this.loadedDataAfterLoadPage(
       this.props.route.params?.id ? this.props.route.params?.id : id,
@@ -369,8 +374,7 @@ export default class GhostPageTwoComponent extends React.Component {
     this.focusListener = navigation.addListener('focus', () => {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
-      ),
-        console.log('ashxatiii');
+      );
     });
     BackHandler.addEventListener(
       'hardwareBackPress',
@@ -681,7 +685,7 @@ export default class GhostPageTwoComponent extends React.Component {
           </Svg>
           <Text style={styles.backText}>Назад</Text>
         </TouchableOpacity>
-        {this.state.user ? (
+        {this.state.loading === false ? (
           <View style={styles.main}>
             <ScrollView showsVerticalScrollIndicator={false}>
               <View style={styles.campaign}>

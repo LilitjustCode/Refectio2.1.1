@@ -22,7 +22,7 @@ export default function CategorySingleScreenDesigner({
   navigation,
   category,
   mynextUrl,
-  myProducts,
+  myproducts,
   product,
   cityId,
   startPrice,
@@ -41,7 +41,7 @@ export default function CategorySingleScreenDesigner({
   }, []);
 
   function setProduct() {
-    setProducts(myProducts);
+    setProducts(myproducts);
     setLoading(false);
   }
 

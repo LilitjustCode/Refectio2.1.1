@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
@@ -19,10 +20,9 @@ import shuffle from '../shuffle';
 const {WIDTH} = Dimensions.get('screen');
 
 export default function CategorySingleScreenGuest({
-  navigation,
   category,
   mynextUrl,
-  myProducts,
+  myproducts,
   product,
   cityId,
   startPrice,
@@ -35,13 +35,14 @@ export default function CategorySingleScreenGuest({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
   const flatListRef = useRef(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     setProduct();
   }, []);
 
   function setProduct() {
-    setProducts(myProducts);
+    setProducts(myproducts);
     setLoading(false);
   }
 
@@ -126,7 +127,11 @@ export default function CategorySingleScreenGuest({
           paddingHorizontal: 15,
           position: 'relative',
         }}>
-        <BackBtn onPressBack={() => navigation.goBack()} />
+        <BackBtn
+          onPressBack={() => {
+            navigation.goBack();
+          }}
+        />
         {loading ? (
           <Loading />
         ) : (
@@ -144,11 +149,15 @@ export default function CategorySingleScreenGuest({
                   <Slider2 slid={item.product_image} searchMode />
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
-                    onPress={() =>
+                    onPress={() => {
+                      const routes = navigation.getState()?.routes;
+                      const prevRoute = routes[routes.length - 2];
                       navigation.navigate('GhostPageTwo', {
                         id: item.user_product.id,
-                      })
-                    }>
+                        fromSearch: true,
+                        prevRoute,
+                      });
+                    }}>
                     <Image
                       source={{
                         uri:
