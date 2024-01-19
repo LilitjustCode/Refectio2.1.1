@@ -253,7 +253,7 @@ export default class GhostPageTwoComponent extends React.Component {
         change_category_loaded: true,
       });
 
-      let userID = this.props.id;
+      let userID = this.props.route.params.id;
 
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');
@@ -313,7 +313,6 @@ export default class GhostPageTwoComponent extends React.Component {
             pressCategory: true,
           });
         });
-      // }
     }
 
     // this.setState({ active: index })

@@ -338,121 +338,70 @@ export default class DesignerPageTwoComponent extends React.Component {
         active: index,
       });
 
+      await this.setState({
+        change_category_loaded: true,
+      });
+
       let userID = this.props.route.params.id;
 
-      if (userID == this.state.user_id_for_search) {
-        let myHeaders = new Headers();
-        let userToken = await AsyncStorage.getItem('userToken');
-        myHeaders.append('Authorization', 'Bearer ' + userToken);
+      let myHeaders = new Headers();
+      let userToken = await AsyncStorage.getItem('userToken');
+      myHeaders.append('Authorization', 'Bearer ' + userToken);
 
-        let formdata = new FormData();
-        formdata.append('parent_category_name', parent_category_name);
-        formdata.append('user_id', userID);
+      let formdata = new FormData();
+      formdata.append('parent_category_name', parent_category_name);
+      formdata.append('user_id', userID);
 
-        let requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: formdata,
-          redirect: 'follow',
-        };
+      let requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: formdata,
+        redirect: 'follow',
+      };
 
-        fetch(
-          `https://admin.refectio.ru/public/api/filtergetOneProizvoditel`,
-          requestOptions,
-        )
-          .then(response => response.json())
-          .then(res => {
-            if (res.status === false) {
-              this.setState({
-                products: [],
-                // show_plus_button: false
-                change_category_loaded: false,
-                pressCategory: true,
-              });
-              return false;
-            }
-
-            let data = res.data;
-
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].product_image.length < 1) {
-                data[i].images = [];
-                continue;
-              }
-
-              let product_image = data[i].product_image;
-
-              data[i].images = product_image;
-            }
-
+      fetch(
+        `https://admin.refectio.ru/public/api/filtergetOneProizvoditel`,
+        requestOptions,
+      )
+        .then(response => response.json())
+        .then(res => {
+          if (res.status === false) {
             this.setState({
-              products: data.products,
-              change_category_loaded: false,
-              pressCategory: true,
-            });
-          })
-          .catch(error => console.log('error', error));
-      } else {
-        let myHeaders = new Headers();
-        let userToken = await AsyncStorage.getItem('userToken');
-        myHeaders.append('Authorization', 'Bearer ' + userToken);
-
-        let formdata = new FormData();
-        formdata.append('parent_category_name', parent_category_name);
-
-        let requestOptions = {
-          method: 'POST',
-          headers: myHeaders,
-          body: formdata,
-          redirect: 'follow',
-        };
-
-        fetch(
-          `https://admin.refectio.ru/public/api/GetcategoryOneuserprduct`,
-          requestOptions,
-        )
-          .then(response => response.json())
-          .then(res => {
-            // console.log(res, 'GetcategoryOneuserprduct');
-
-            if (res.status === false) {
-              this.setState({
-                products: [],
-                change_category_loaded: false,
-                pressCategory: true,
-                // show_plus_button: false
-              });
-
-              return false;
-            }
-
-            let data = res.data.data;
-            let new_data_result = [];
-
-            for (let i = 0; i < data.length; i++) {
-              if (data[i].product_image.length < 1) {
-                data[i].images = [];
-                continue;
-              }
-
-              let product_image = data[i].product_image;
-
-              data[i].images = product_image;
-            }
-
-            this.setState({
-              // user: data,
-              user_bonus_for_designer: res.data.data.user_bonus_for_designer,
-              // user_category_for_product: res.data.user_category_for_product,
-              // city_for_sales_user: res.data.data.city_for_sales_user,
-              products: data,
-              change_category_loaded: false,
-              pressCategory: true,
+              products: [],
               // show_plus_button: false
+              change_category_loaded: false,
             });
-          })
-          .catch(error => console.log('error', error));
-      }
+
+            return false;
+          }
+
+          let data = res.data;
+          let new_data_result = [];
+
+          for (let i = 0; i < data.length; i++) {
+            if (data[i].product_image.length < 1) {
+              data[i].images = [];
+              continue;
+            }
+
+            let product_image = data[i].product_image;
+
+            data[i].images = product_image;
+          }
+
+          this.setState({
+            // user: data.user,
+            // user_bonus_for_designer: res.data.user_bonus_for_designer,
+            // user_category_for_product: res.data.user_category_for_product,
+            // city_for_sales_user: res.data.city_for_sales_user,
+            products: data.products,
+            // show_plus_button: false,
+            // extract: data.user[0].extract,
+            // whatsapp: res.data.user[0].watsap_phone
+            change_category_loaded: false,
+            pressCategory: true,
+          });
+        });
     }
 
     // this.setState({ active: index })
