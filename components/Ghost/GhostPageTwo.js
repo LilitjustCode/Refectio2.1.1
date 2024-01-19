@@ -200,31 +200,31 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleShare = async () => {
-    const shareingStartWith =
-      Platform.OS === 'android' ? 'refectio.ru/' : 'refectio.ru://';
+    console.log(this.state.user[0].id, 'user');
+    const shareingStartWith = 'refectio.ru/';
     try {
       {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.props.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.props.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.props.id}`)
+            }/${this.state.user[0].id}`)
           : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.props.id}`);
+            }/${this.state.user[0].id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -376,54 +376,26 @@ export default class GhostPageTwoComponent extends React.Component {
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
     });
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-      this.loadedDataAfterLoadPage(
-        this.props.route.params?.id ? this.props.route.params?.id : id,
-      ),
-    );
+    // BackHandler.addEventListener(
+    //   'hardwareBackPress',
+    // this.handleBackButtonClick;
+    // this.loadedDataAfterLoadPage(
+    //   this.props.route.params?.id ? this.props.route.params?.id : id,
+    // );
+    // );
   }
   componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleClearData,
-      this.handleBackButtonClick,
-    );
+    // BackHandler.removeEventListener(
+    //   'hardwareBackPress',
+    //   this.handleClearData,
+    //   this.handleBackButtonClick,
+    // );
     if (this.focusListener) {
       this.focusListener();
-      this.handleClearData;
+      this.handleClearData();
     }
   }
-  // componentDidMount() {
-  //   const {navigation} = this.props;
-  //   this._unsubscribe = navigation.addListener('focus', () => {
-  //
-  //     console.log(
-  //       '----------',
-  //       'id :',
-  //       id,
-  //       'this.props.route.params.id:',
-  //       this.props.route.params?.id,
-  //       'this.id',
-  //     );
-  //     this.id = id ? id : this.props.route.params.id;
-  //     this.loadedDataAfterLoadPage(this.id);
-  //     setId(this.id);
-  //   });
 
-  //   // this.focusListener = navigation.addListener('focus', () => {
-  //   //   this.props.setId(null);
-  //   // });
-  // }
-  // componentDidUpdate() {
-  //   const {navigation, setId} = this.props;
-  //   this._willBlurListener = navigation.addListener('willBlur', () => {
-  //     console.log('didBlur');
-  //     setId(null);
-  //     this.handleClearData();
-  //   });
-  // }
   componentWillUnmount() {
     // this._unsubscribe();
     // this._willBlurListener();

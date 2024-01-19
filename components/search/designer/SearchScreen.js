@@ -62,9 +62,17 @@ export default function SearchScreenDesigner({navigation}) {
                 }}
                 key={i}
                 onPress={() => {
+                  const routes = navigation.getState()?.routes;
+                  const prevRoute = routes[routes.length - 2].name;
                   el.childrens.length
-                    ? navigation.navigate('SubCategoryScreen', {category: el})
-                    : navigation.navigate('CategoryScreen', {category: el});
+                    ? navigation.navigate('SubCategoryScreen', {
+                        category: el,
+                        prevRoute,
+                      })
+                    : navigation.navigate('CategoryScreen', {
+                        category: el,
+                        prevRoute,
+                      });
                 }}>
                 <View style={{flexDirection: 'row', flexShrink: 1}}>
                   <Image

@@ -26,7 +26,8 @@ import {
 
 const {width} = Dimensions.get('screen');
 
-export default function CategoryScreenDesigner({navigation, category}) {
+export default function CategoryScreenDesigner(props) {
+  const {category, navigation, prevRoute, route} = props;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -35,7 +36,6 @@ export default function CategoryScreenDesigner({navigation, category}) {
   );
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
   const [isRefreshing, setIsRefreshing] = useState(false);
-
   const [filterMode, setFilterMode] = useState(false);
   const [openCityDropDown, setOpenCityDropDown] = useState(false);
   const [cities, setCities] = useState([]);
@@ -68,19 +68,17 @@ export default function CategoryScreenDesigner({navigation, category}) {
   async function getProducts(refresh, clear) {
     let formdata = new FormData();
     if (category.parent) {
-      console.log('subcategory');
       formdata.append('parent_category_id', category.parent_id);
       formdata.append('category_id', category.id);
     } else {
       formdata.append('parent_category_id', category.id);
-      console.log('category');
     }
+
     !clear &&
       (cityId && formdata.append('city_id', cityId.id),
       startPrice &&
         formdata.append('start_price', startPrice.replaceAll('.', '')),
       endPrice && formdata.append('end_price', endPrice.replaceAll('.', '')));
-
     await fetch(refresh ? firstPageUrl : nextUrl, {
       method: 'POST',
       headers: {
@@ -90,7 +88,6 @@ export default function CategoryScreenDesigner({navigation, category}) {
     })
       .then(response => response.json())
       .then(res => {
-        console.log(refresh ? firstPageUrl : nextUrl, res.data.data.length);
         let arr = shuffle(res.data.data);
         refresh ? setProducts(arr) : setProducts([...products, ...arr]);
         setNextUrl(res.data.next_page_url);
@@ -107,7 +104,6 @@ export default function CategoryScreenDesigner({navigation, category}) {
 
   const handleLoadMore = () => {
     if (nextUrl && !moreLoading) {
-      console.log('handleLoadMore');
       setMoreLoading(true);
       getProducts();
     }
@@ -161,12 +157,18 @@ export default function CategoryScreenDesigner({navigation, category}) {
         style={{
           flex: 1,
           paddingHorizontal: 15,
-          position: 'relative',
         }}>
         <BackBtn
-          onPressBack={() =>
-            filterMode ? setFilterMode(false) : navigation.goBack()
-          }
+          onPressBack={() => {
+            const routes = navigation.getState()?.routes;
+            const prevRoute =
+              routes[routes.length - 2].name === 'DesignerPageTwo'
+                ? 'SubCategoryScreen'
+                : routes[routes.length - 2].name;
+            return filterMode
+              ? setFilterMode(false)
+              : navigation.navigate(prevRoute, {category});
+          }}
         />
         {loading ? (
           <Loading />
@@ -479,7 +481,6 @@ export default function CategoryScreenDesigner({navigation, category}) {
     </SafeAreaView>
   );
 }
-
 const styles = StyleSheet.create({
   backText: {
     color: '#94D8F4',

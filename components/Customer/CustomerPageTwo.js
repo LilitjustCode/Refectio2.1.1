@@ -46,6 +46,7 @@ export default class DesignerPageTwoComponent extends React.Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
+      loading: false,
       fontsLoaded: false,
       RewardModal: false,
       paramsFromLinking: null,
@@ -88,8 +89,11 @@ export default class DesignerPageTwoComponent extends React.Component {
     };
   }
 
-  getObjectData = async () => {
-    let userID = this.props.route.params.id;
+  getObjectData = async id => {
+    this.setState({loading: true});
+    let userID = id;
+    // console.log(this.props.id, 'ljj');
+
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
         userID,
@@ -98,16 +102,18 @@ export default class DesignerPageTwoComponent extends React.Component {
       },
     )
       .then(response => response.json())
-      .then(async res => {
+      .then(res => {
         let arr = res.data.user_category_for_product;
         const isFound = res.data.user_category_for_product.findIndex(
           element => +element.parent_category_id == 10,
         );
         if (isFound == 0) {
+          arr = res.data.user_category_for_product;
           let lastItem = res.data.user_category_for_product[0];
-          arr.push(lastItem);
           arr.shift(res.data.user_category_for_product[0]);
+          arr.push(lastItem);
         }
+
         const isFoundKitchen = arr.findIndex(
           element => +element.parent_category_id == 2,
         );
@@ -123,55 +129,100 @@ export default class DesignerPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1);
           arr.push(myItem[0]);
         }
-        // console.log(res.data.user[0].extract);
+        console.log(res.data.user[0].about_us);
+        this.setState({loading: false});
+        console.log(this.state.loading);
         this.setState({
           user: res.data.user,
-          user_bonus_for_designer: res.data.user_bonus_for_designer,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
-          user_id_for_search: userID,
-          changed:
-            res.data.city_for_sales_user.length == res.data.city_count
-              ? 'Все города России'
-              : res.data.city_for_sales_user[0].city_name,
-          show_room: res.data.user[0].show_room,
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
           about_us: res.data.user[0].about_us,
-          extract: res.data.user[0].extract,
         });
       });
   };
 
-  loadedDataAfterLoadPage = async () => {
-    await this.getObjectData();
+  handleClearData = () => {
+    this.setState({
+      user: [],
+      user_category_for_product: [],
+      city_for_sales_user: [],
+      whatsapp: '',
+      products: [],
+      city_count: null,
+      about_us: '',
+    });
+  };
+
+  loadedDataAfterLoadPage = async id => {
+    console.log('id in load data', id);
+    await this.getObjectData(id);
+
     await this.updateProduct(
       this.state.user_category_for_product[0].parent_category_name,
+      id,
     );
+    this.setState({
+      changed:
+        this.state.city_for_sales_user.length == this.state.city_count
+          ? 'Все города России'
+          : this.state.city_for_sales_user[0].city_name,
+    });
     this.setState({active: 0});
   };
 
   handleBackButtonClick() {
     // this.props.navigation.navigate("CustomerMainPage", { screen: true });
-    this.props.navigation.goBack();
-    return true;
-  }
+    const {id, setId, setUrlLinking} = this.props;
 
+    if (this.props.route.params?.fromSearch === true) {
+      this.props.navigation.navigate(this.props.route.params.prevRoute);
+      this.props.id = null;
+    } else if (
+      this.props.route.params?.id ||
+      (this.props.id && !this.props.route.params?.fromSearch)
+    ) {
+      this.props.navigation.navigate('CustomerMainPage', {screen: true});
+    }
+    setId(null);
+    setUrlLinking(null);
+    this.handleClearData();
+  }
 
   componentDidMount() {
-    this.setState({fontsLoaded: true});
-    this.loadedDataAfterLoadPage();
-    BackHandler.addEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
+    const {id, navigation} = this.props;
+
+    // this.setState({fontsLoaded: true});
+    this.loadedDataAfterLoadPage(
+      this.props.route.params?.id ? this.props.route.params?.id : id,
     );
+
+    console.log(id, 'id');
+    this.focusListener = navigation.addListener('focus', () => {
+      this.loadedDataAfterLoadPage(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    });
+    // BackHandler.addEventListener(
+    //   'hardwareBackPress',
+    //   this.handleBackButtonClick,
+    //   this.loadedDataAfterLoadPage(
+    //     this.props.route.params?.id ? this.props.route.params?.id : id,
+    //   ),
+    // );
   }
+
   componentWillUnmount() {
-    BackHandler.removeEventListener(
-      'hardwareBackPress',
-      this.handleBackButtonClick,
-    );
-  
+    // BackHandler.removeEventListener(
+    //   'hardwareBackPress',
+    //   this.handleClearData,
+    //   this.handleBackButtonClick,
+    // );
+    if (this.focusListener) {
+      this.focusListener();
+      this.handleClearData();
+    }
   }
 
   handleShare = async () => {
@@ -181,24 +232,24 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.props.route.params.id}`);
+            }/${this.state.user[0].id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -211,125 +262,69 @@ export default class DesignerPageTwoComponent extends React.Component {
     }
   };
 
-  updateProduct = async parent_category_name => {
+  updateProduct = async (parent_category_name, id) => {
     await this.setState({
       change_category_loaded: true,
     });
 
-    let userID = this.props.route.params.id;
+    let myHeaders = new Headers();
+    let userToken = await AsyncStorage.getItem('userToken');
+    myHeaders.append('Authorization', 'Bearer ' + userToken);
 
-    if (userID == this.state.user_id_for_search) {
-      let myHeaders = new Headers();
-      let userToken = await AsyncStorage.getItem('userToken');
-      myHeaders.append('Authorization', 'Bearer ' + userToken);
+    let formdata = new FormData();
+    formdata.append('parent_category_name', parent_category_name);
+    formdata.append('user_id', id);
 
-      let formdata = new FormData();
-      formdata.append('parent_category_name', parent_category_name);
-      formdata.append('user_id', userID);
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: formdata,
+      redirect: 'follow',
+    };
 
-      let requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: formdata,
-        redirect: 'follow',
-      };
-
-      fetch(
-        `https://admin.refectio.ru/public/api/filtergetOneProizvoditel`,
-        requestOptions,
-      )
-        .then(response => response.json())
-        .then(res => {
-          if (res.status === false) {
-            this.setState({
-              products: [],
-              // show_plus_button: false
-              change_category_loaded: false,
-            });
-
-            return false;
-          }
-
-          let data = res.data;
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].product_image.length < 1) {
-              data[i].images = [];
-              continue;
-            }
-            let product_image = data[i].product_image;
-            data[i].images = product_image;
-          }
-
+    fetch(
+      `https://admin.refectio.ru/public/api/filtergetOneProizvoditel`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(res => {
+        if (res.status === false) {
           this.setState({
-            // user: data.user,
-            // user_bonus_for_designer: res.data.user_bonus_for_designer,
-            // user_category_for_product: res.data.user_category_for_product,
-            // city_for_sales_user: res.data.city_for_sales_user,
-            products: data.products,
-            // show_plus_button: false,
-            // extract: data.user[0].extract,
-            whatsapp: res.data.user[0].watsap_phone,
+            products: [],
+            // show_plus_button: false
             change_category_loaded: false,
           });
-        })
-        .catch(error => console.log('error', error));
-    } else {
-      let myHeaders = new Headers();
-      let userToken = await AsyncStorage.getItem('userToken');
-      myHeaders.append('Authorization', 'Bearer ' + userToken);
 
-      let formdata = new FormData();
-      formdata.append('parent_category_name', parent_category_name);
+          return false;
+        }
 
-      let requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        body: formdata,
-        redirect: 'follow',
-      };
+        let data = res.data;
 
-      fetch(
-        `https://admin.refectio.ru/public/api/GetcategoryOneuserprduct`,
-        requestOptions,
-      )
-        .then(response => response.json())
-        .then(res => {
-          // console.log(res, 'GetcategoryOneuserprduct');
-
-          if (res.status === false) {
-            this.setState({
-              products: [],
-              // show_plus_button: false
-            });
-
-            return false;
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].product_image.length < 1) {
+            data[i].images = [];
+            continue;
           }
 
-          let data = res.data.data;
-          let new_data_result = [];
+          let product_image = data[i].product_image;
 
-          for (let i = 0; i < data.length; i++) {
-            if (data[i].product_image.length < 1) {
-              data[i].images = [];
-              continue;
-            }
+          data[i].images = product_image;
+        }
 
-            let product_image = data[i].product_image;
-
-            data[i].images = product_image;
-          }
-
-          this.setState({
-            // user: data,
-            user_bonus_for_designer: res.data.data.user_bonus_for_designer,
-            // user_category_for_product: res.data.user_category_for_product,
-            // city_for_sales_user: res.data.data.city_for_sales_user,
-            products: data,
-            // show_plus_button: false
-          });
-        })
-        .catch(error => console.log('error', error));
-    }
+        this.setState({
+          // user: data.user,
+          // user_bonus_for_designer: res.data.user_bonus_for_designer,
+          // user_category_for_product: res.data.user_category_for_product,
+          // city_for_sales_user: res.data.city_for_sales_user,
+          products: data.products,
+          // show_plus_button: false,
+          // extract: data.user[0].extract,
+          // whatsapp: res.data.user[0].watsap_phone
+          change_category_loaded: false,
+        });
+        this.setState({loading: false});
+      })
+      .catch(error => console.log('error', error));
   };
 
   updateProductAfterClickToCategory = async (parent_category_name, index) => {
@@ -391,14 +386,7 @@ export default class DesignerPageTwoComponent extends React.Component {
             }
 
             this.setState({
-              // user: data.user,
-              // user_bonus_for_designer: res.data.user_bonus_for_designer,
-              // user_category_for_product: res.data.user_category_for_product,
-              // city_for_sales_user: res.data.city_for_sales_user,
               products: data.products,
-              // show_plus_button: false,
-              // extract: data.user[0].extract,
-              // whatsapp: res.data.user[0].watsap_phone
               change_category_loaded: false,
               pressCategory: true,
             });
@@ -812,7 +800,7 @@ export default class DesignerPageTwoComponent extends React.Component {
             <Text style={styles.backText}>Назад</Text>
           </TouchableOpacity>
 
-          {this.state.user.length > 0 && (
+          {this.state.loading === false && (
             <ScrollView
               showsVerticalScrollIndicator={false}
               style={{marginTop: 15}}>
@@ -1386,7 +1374,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               руб.
                             </Text>
                           )}
-                           {item.about && item.about != 'null' && (
+                          {item.about && item.about != 'null' && (
                             <TouchableOpacity
                               style={{
                                 width: 27,

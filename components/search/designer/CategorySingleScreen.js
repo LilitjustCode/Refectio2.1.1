@@ -15,11 +15,11 @@ import Loading from '../../Component/Loading';
 import DesignerPageNavComponent from '../../Designer/DesignerPageNav';
 import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
+import {useNavigation} from '@react-navigation/native';
 
 const {WIDTH} = Dimensions.get('screen');
 
 export default function CategorySingleScreenDesigner({
-  navigation,
   category,
   mynextUrl,
   myproducts,
@@ -28,6 +28,7 @@ export default function CategorySingleScreenDesigner({
   startPrice,
   endPrice,
 }) {
+  const navigation = useNavigation();
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -145,11 +146,15 @@ export default function CategorySingleScreenDesigner({
                   <Slider2 slid={item.product_image} searchMode />
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
-                    onPress={() =>
+                    onPress={() => {
+                      const routes = navigation.getState()?.routes;
+                      const prevRoute = routes[routes.length - 2];
                       navigation.navigate('DesignerPageTwo', {
                         id: item.user_product.id,
-                      })
-                    }>
+                        fromSearch: true,
+                        prevRoute,
+                      });
+                    }}>
                     <Image
                       source={{
                         uri:

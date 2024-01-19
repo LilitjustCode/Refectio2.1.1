@@ -124,9 +124,9 @@ function ConfirmTelScreenFunction({route, navigation}) {
   return <ConfirmTelScreenComponent token={params} navigation={navigation} />;
 }
 
-function CustomerMainPage({navigation}) {
-  return <CustomerMainPageComponent navigation={navigation} />;
-}
+// function CustomerMainPage({navigation}) {
+//   return <CustomerMainPageComponent navigation={navigation} />;
+// }
 
 function GhostPage({navigation}) {
   return <GhostPageComponent navigation={navigation} />;
@@ -185,11 +185,11 @@ function DesignerPageTwo({route, navigation}) {
   return <DesignerPageTwoComponent user_id={params} navigation={navigation} />;
 }
 
-function CustomerPageTwo({route, navigation}) {
-  const {params} = route.params;
+// function CustomerPageTwo({route, navigation}) {
+//   const {params} = route.params;
 
-  return <CustomerPageTwoComponent userID={params} navigation={navigation} />;
-}
+//   return <CustomerPageTwoComponent userID={params} navigation={navigation} />;
+// }
 
 function SearchScreenComponentGuest({navigation}) {
   return <SearchScreenGuest navigation={navigation} />;
@@ -723,39 +723,50 @@ export default function App() {
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
-                {urlLinking.length > 0 &&
+                {urlLinking?.length > 0 &&
                 loginState.userRole == '2' &&
                 loginState.userToken !== null ? (
                   <Stack.Screen
                     name="DesignerPageTwo"
-                    component={DesignerPageTwoComponent}
-                    initialParams={{id}}
-                  />
+                    options={{headerShown: false}}>
+                    {props => (
+                      <DesignerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                      />
+                    )}
+                  </Stack.Screen>
                 ) : (
-                  <Stack.Screen
-                    name="DesignerPage"
-                    component={DesignerPageComponent}
-                  />
+                  <Stack.Screen name="DesignerPage">
+                    {props => (
+                      <DesignerPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
                 )}
-                {urlLinking.length > 0 &&
+                {urlLinking?.length > 0 &&
                 loginState.userRole == '2' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen
-                    name="DesignerPage"
-                    component={DesignerPageComponent}
-                  />
+                  <Stack.Screen name="DesignerPage">
+                    {props => (
+                      <DesignerPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
                 ) : (
                   <Stack.Screen
                     name="DesignerPageTwo"
-                    component={DesignerPageTwoComponent}
-                    initialParams={{id}}
-                  />
+                    options={{headerShown: false}}>
+                    {props => (
+                      <DesignerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                      />
+                    )}
+                  </Stack.Screen>
                 )}
-                {/* <Stack.Screen
-                  name="DesignerMyBroni"
-    
-                  component={DesignerMyBroniComponent}
-                /> */}
 
                 <Stack.Screen
                   name="DesignerSaved"
@@ -841,33 +852,49 @@ export default function App() {
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
-                {urlLinking.length > 0 &&
+                {urlLinking?.length > 0 &&
                 loginState.userRole == '3' &&
                 loginState.userToken !== null ? (
                   <Stack.Screen
-                    name="CustomerMainPageTwo"
-                    component={CustomerPageTwoComponent}
-                    initialParams={{id}}
-                  />
+                    name="CustomerPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <CustomerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                      />
+                    )}
+                  </Stack.Screen>
                 ) : (
-                  <Stack.Screen
-                    name="CustomerMainPage"
-                    component={CustomerMainPageComponent}
-                  />
+                  <Stack.Screen name="CustomerMainPage">
+                    {props => (
+                      <CustomerMainPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
                 )}
-                {urlLinking.length > 0 &&
+                {urlLinking?.length > 0 &&
                 loginState.userRole == '3' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen
-                    name="CustomerMainPage"
-                    component={CustomerMainPageComponent}
-                  />
+                  <Stack.Screen name="CustomerMainPage">
+                    {props => (
+                      <CustomerMainPageComponent {...props} setId={setId} />
+                    )}
+                  </Stack.Screen>
                 ) : (
                   <Stack.Screen
-                    name="CustomerMainPageTwo"
-                    component={CustomerPageTwoComponent}
-                    initialParams={{id}}
-                  />
+                    name="CustomerPageTwo"
+                    options={{headerShown: false}}>
+                    {props => (
+                      <CustomerPageTwoComponent
+                        {...props}
+                        id={id}
+                        setId={setId}
+                        setUrlLinking={setUrlLinking}
+                      />
+                    )}
+                  </Stack.Screen>
                 )}
 
                 <Stack.Screen
@@ -901,11 +928,7 @@ export default function App() {
                   name="SelectSubCategoryScreen"
                   component={SelectSubCategoryScreenComponent}
                 />
-                <Stack.Screen
-                  name="CustomerPageTwo"
-                  component={CustomerPageTwoComponent}
-                  initialParams={{id}}
-                />
+
                 <Stack.Screen
                   name="SelectCategoryScreen"
                   component={SelectCategoryScreenComponent}

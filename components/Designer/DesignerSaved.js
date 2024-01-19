@@ -46,10 +46,8 @@ export default class DesignerSavedComponent extends React.Component {
     )
       .then(response => response.json())
       .then(result => {
-        // console.log('ressssssssssssss', result, 'ressssssssssssss')
         this.setState({
           saveds: result.data,
-          // categories: result.data.favorit_users.user_category_product
         });
       })
       .catch(error => console.log('error', error));
@@ -94,9 +92,16 @@ export default class DesignerSavedComponent extends React.Component {
                     <TouchableOpacity
                       style={styles.infoCompanyMain}
                       onPress={() => {
-                        this.props.navigation.navigate('DesignerPageTwo', {
-                          id: item.proizvoditel_id,
-                        });
+                        const routes = this.props.navigation.getState()?.routes;
+                        const prevRoute = routes[routes.length - 1];
+                        console.log(prevRoute, 'lll');
+                        return this.props.navigation.navigate(
+                          'DesignerPageTwo',
+                          {
+                            id: item.proizvoditel_id,
+                            prevRoute: prevRoute.name,
+                          },
+                        );
                       }}>
                       <Image
                         source={{
@@ -118,6 +123,8 @@ export default class DesignerSavedComponent extends React.Component {
                               fontSize: 20,
                               fontFamily: 'Raleway_700Bold',
                               marginBottom: 6,
+                              fontWeight: '700',
+                              color: '#333333',
                             }}>
                             {item.favorit_users.company_name}
                           </Text>
@@ -143,6 +150,7 @@ export default class DesignerSavedComponent extends React.Component {
                             color: '#A8A8A8',
                             fontFamily: 'Raleway_500Medium',
                             paddingTop: 5,
+                            marginRight: 2,
                           }}>
                           {item.favorit_users.made_in}
                         </Text>
@@ -263,5 +271,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 3,
     paddingVertical: 5,
     marginRight: 11,
+    color: '#333333',
   },
 });

@@ -5,7 +5,6 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -18,6 +17,7 @@ import {
   View,
 } from 'react-native';
 import MaskInput from 'react-native-mask-input';
+import {BackHandler, Linking} from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';
@@ -29,9 +29,10 @@ const {width: screenWidth} = Dimensions.get('window');
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
     super(props);
+    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       RewardModal: false,
-
+      loading: false,
       bronyModal: false,
 
       changed: '',
@@ -65,7 +66,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       valid_error: false,
 
       categoryItems: [],
-
+      loading: false,
       phone: '',
       phone_error: false,
       name: '',
@@ -159,19 +160,16 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   // stexic sharunakel
-  getObjectData = async () => {
-    let userID = this.props.route.params.id;
-    let myHeaders = new Headers();
-    let userToken = await AsyncStorage.getItem('userToken');
-    let AuthStr = 'Bearer ' + userToken;
-    myHeaders.append('Authorization', AuthStr);
+  getObjectData = async id => {
+    this.setState({loading: true});
+    let userID = id;
+    // console.log(this.props.id, 'ljj');
 
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
         userID,
       {
         method: 'GET',
-        headers: myHeaders,
       },
     )
       .then(response => response.json())
@@ -183,9 +181,10 @@ export default class DesignerPageTwoComponent extends React.Component {
         if (isFound == 0) {
           arr = res.data.user_category_for_product;
           let lastItem = res.data.user_category_for_product[0];
-          arr.push(lastItem);
           arr.shift(res.data.user_category_for_product[0]);
+          arr.push(lastItem);
         }
+
         const isFoundKitchen = arr.findIndex(
           element => +element.parent_category_id == 2,
         );
@@ -201,18 +200,13 @@ export default class DesignerPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1);
           arr.push(myItem[0]);
         }
-        console.log(
-          `https://admin.refectio.ru/storage/app/uploads/` +
-            res.data.user[0].extract,
-        );
-
+        console.log(res.data.user[0].about_us);
+        this.setState({loading: false});
+        console.log(this.state.loading);
         this.setState({
           user: res.data.user,
-          user_bonus_for_designer: res.data.user_bonus_for_designer,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
-          favoriteBool: res.data.Favorit_button,
-          extract: res.data.user[0].extract,
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
           about_us: res.data.user[0].about_us,
@@ -276,12 +270,10 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   // updatei apin poxel
 
-  updateProduct = async parent_category_name => {
+  updateProduct = async (parent_category_name, id) => {
     await this.setState({
       change_category_loaded: true,
     });
-
-    let userID = this.props.route.params.id;
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
@@ -289,7 +281,7 @@ export default class DesignerPageTwoComponent extends React.Component {
 
     let formdata = new FormData();
     formdata.append('parent_category_name', parent_category_name);
-    formdata.append('user_id', userID);
+    formdata.append('user_id', id);
 
     let requestOptions = {
       method: 'POST',
@@ -315,7 +307,6 @@ export default class DesignerPageTwoComponent extends React.Component {
         }
 
         let data = res.data;
-        let new_data_result = [];
 
         for (let i = 0; i < data.length; i++) {
           if (data[i].product_image.length < 1) {
@@ -339,44 +330,22 @@ export default class DesignerPageTwoComponent extends React.Component {
           // whatsapp: res.data.user[0].watsap_phone
           change_category_loaded: false,
         });
+        this.setState({loading: false});
       })
       .catch(error => console.log('error', error));
   };
 
-  // downloadVipiska = () => {
-
-  //   const URL = ''
-  //   const DEST = RNFS.DocumentDirectoryPath
-  //   const fileName = 'выписка'
-  //   const headers = {
-  //     'Accept-Language': 'en-US'
-  //   }
-
-  //   FileDownload.download(URL, DEST, fileName, headers)
-  //     .then((response) => {
-  //       console.log(response);
-  //       console.log(`downloaded! file saved to: ${response}`)
-  //     })
-  //     .catch((error) => {
-  //       console.log(error)
-  //     })
-
-  // }
-
-  // handleShare = async () => {
-  //   try {
-  //     const shareOptions = {
-  //       url: `https://refectio.ru/${
-  //         this.state.user[0]?.company_name.split(" ")[0] +
-  //         this.state.user[0]?.company_name.split(" ")[1]
-  //       }`,
-  //     };
-
-  //     await Share.share(shareOptions);
-  //   } catch (error) {
-  //     console.error("Error sharing:", error);
-  //   }
-  // };
+  handleClearData = () => {
+    this.setState({
+      user: [],
+      user_category_for_product: [],
+      city_for_sales_user: [],
+      whatsapp: '',
+      products: [],
+      city_count: null,
+      about_us: '',
+    });
+  };
 
   handleShare = async () => {
     const shareingStartWith = 'refectio.ru/';
@@ -385,24 +354,24 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.state.user[0]?.company_name.split(' ').length == 1
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 2
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : this.state.user[0]?.company_name.split(' ').length == 3
           ? (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.props.route.params.id}`)
+            }/${this.state.user[0].id}`)
           : (url = `${shareingStartWith}${
               this.state.user[0]?.company_name.split(' ')[0] +
               this.state.user[0]?.company_name.split(' ')[1] +
               this.state.user[0]?.company_name.split(' ')[2] +
               this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.props.route.params.id}`);
+            }/${this.state.user[0].id}`);
       }
 
       if (Platform.OS === 'android') {
@@ -508,40 +477,95 @@ export default class DesignerPageTwoComponent extends React.Component {
     return 'http://' + url;
   }
 
-  loadedDataAfterLoadPage = async () => {
-    await this.getCategory();
-    await this.getObjectData();
+  loadedDataAfterLoadPage = async id => {
+    console.log('id in load data', id);
+    await this.getObjectData(id);
+
     await this.updateProduct(
       this.state.user_category_for_product[0].parent_category_name,
+      id,
     );
-    await this.setState({
+    this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
           ? 'Все города России'
           : this.state.city_for_sales_user[0].city_name,
     });
-    await this.setState({active: 0});
+    this.setState({active: 0});
   };
 
-  componentDidMount() {
-    const {navigation} = this.props;
-    // this.getCategory()
-    // this.getObjectData()
+  handleBackButtonClick() {
+    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
+    const {id, setId, setUrlLinking} = this.props;
+    console.log(
+      this.props.route.params?.id ||
+        (this.props.id &&
+          !this.props.route.params?.fromSearch &&
+          this.props.route.params?.prevRoute != 'DesignerSaved'),
+      'k,mlk',
+    );
+    if (this.props.route.params?.fromSearch === true) {
+      this.props.navigation.navigate(this.props.route.params.prevRoute);
+      this.props.id = null;
+    } else if (
+      this.props.route.params?.id ||
+      (this.props.id &&
+        !this.props.route.params?.fromSearch &&
+        this.props.route.params?.prevRoute != 'DesignerSaved')
+    ) {
+      this.props.navigation.navigate('DesignerPage', {screen: true});
+    } else if (
+      this.props.route.params?.id ||
+      (this.props.id &&
+        !this.props.route.params?.fromSearch &&
+        this.props.route.params.prevRoute == 'DesignerSaved')
+    ) {
+      console.log('aaayyyy');
+      this.props.navigation.navigate(this.props.route.params.prevRoute);
+    }
 
-    this.loadedDataAfterLoadPage();
-    // this.focusListener = navigation.addListener("focus", () => {
-    // });
+    setId(null);
+    setUrlLinking(null);
+    this.handleClearData();
+  }
+
+  componentDidMount() {
+    const {id, navigation} = this.props;
+
+    // this.setState({fontsLoaded: true});
+    this.loadedDataAfterLoadPage(
+      this.props.route.params?.id ? this.props.route.params?.id : id,
+    );
+
+    console.log(id, 'id');
+    this.focusListener = navigation.addListener('focus', () => {
+      this.loadedDataAfterLoadPage(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    });
+    // BackHandler.addEventListener(
+    //   'hardwareBackPress',
+    //   this.handleBackButtonClick,
+    //   this.loadedDataAfterLoadPage(
+    //     this.props.route.params?.id ? this.props.route.params?.id : id,
+    //   ),
+    // );
   }
 
   componentWillUnmount() {
-    // Remove the event listener
-    // if (this.focusListener) {
-    //   this.focusListener();
-    // }
+    // BackHandler.removeEventListener(
+    //   'hardwareBackPress',
+    //   this.handleClearData,
+    //   this.handleBackButtonClick,
+    // );
+    if (this.focusListener) {
+      this.focusListener();
+      this.handleClearData();
+    }
   }
 
   render() {
-    console.log(this.props.route.params.id, 'id');
+    // console.log(this.props.route.params?.id, 'id');
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -1006,7 +1030,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={() => this.props.navigation.goBack()}>
+            onPress={this.handleBackButtonClick}>
             <Svg
               width={25}
               height={30}

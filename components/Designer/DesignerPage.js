@@ -411,8 +411,9 @@ export default class CustomerMainPageComponent extends React.Component {
                       fontSize: 20,
                       fontFamily: 'Raleway_700Bold',
                       fontWeight: '700',
-                      marginBottom: 6,
                       color: '#333333',
+                      marginBottom: 6,
+                     
                     }}>
                     {item.company_name}
                   </Text>

@@ -34,9 +34,14 @@ export default function SubCategoryScreen({navigation, category}) {
               borderColor: 'lightgray',
               marginBottom: 10,
             }}
-            onPress={() =>
-              navigation.navigate('CategoryScreen', {category: category})
-            }>
+            onPress={() => {
+              const routes = navigation.getState()?.routes;
+              const prevRoute = routes[routes.length - 2];
+              return navigation.navigate('CategoryScreen', {
+                category: category,
+                prevRoute: prevRoute,
+              });
+            }}>
             <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
               {renderSwitch(category.id)}
             </Text>

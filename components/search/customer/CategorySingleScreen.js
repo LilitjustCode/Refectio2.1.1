@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   FlatList,
@@ -16,7 +17,6 @@ import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
 
 export default function CategorySingleScreenCustomer({
-  navigation,
   category,
   mynextUrl,
   myproducts,
@@ -32,6 +32,7 @@ export default function CategorySingleScreenCustomer({
   const [isRefreshing, setIsRefreshing] = useState(false);
   const firstPageUrl = 'https://admin.refectio.ru/public/api/photo_filter';
   const flatListRef = useRef(null);
+  const navigation = useNavigation();
 
   useEffect(() => {
     setProduct();
@@ -147,8 +148,12 @@ export default function CategorySingleScreenCustomer({
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
+                      const routes = navigation.getState()?.routes;
+                      const prevRoute = routes[routes.length - 2];
                       navigation.navigate('CustomerPageTwo', {
                         id: item.user_product.id,
+                        fromSearch: true,
+                        prevRoute,
                       });
                     }}>
                     <Image

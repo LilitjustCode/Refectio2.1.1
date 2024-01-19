@@ -20,7 +20,8 @@ import shuffle from '../shuffle';
 
 const {width} = Dimensions.get('screen');
 
-export default function CategoryScreenCustomer({navigation, category}) {
+export default function CategoryScreenCustomer(props) {
+  const {category, navigation, prevRoute, route} = props;
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -61,7 +62,6 @@ export default function CategoryScreenCustomer({navigation, category}) {
   async function getProducts(refresh, clear) {
     let formdata = new FormData();
     if (category.parent) {
-      console.log('subcategory');
       formdata.append('parent_category_id', category.parent_id);
       formdata.append('category_id', category.id);
     } else {
@@ -82,7 +82,6 @@ export default function CategoryScreenCustomer({navigation, category}) {
     })
       .then(response => response.json())
       .then(res => {
-        console.log(refresh ? firstPageUrl : nextUrl, res.data.data.length);
         let arr = shuffle(res.data.data);
         refresh ? setProducts(arr) : setProducts([...products, ...arr]);
         setNextUrl(res.data.next_page_url);
@@ -99,7 +98,6 @@ export default function CategoryScreenCustomer({navigation, category}) {
 
   const handleLoadMore = () => {
     if (nextUrl && !moreLoading) {
-      console.log('handleLoadMore');
       setMoreLoading(true);
       getProducts();
     }
@@ -155,11 +153,17 @@ export default function CategoryScreenCustomer({navigation, category}) {
           paddingHorizontal: 15,
         }}>
         <BackBtn
-          onPressBack={() =>
-            filterMode ? setFilterMode(false) : navigation.goBack()
-          }
+          onPressBack={() => {
+            const routes = navigation.getState()?.routes;
+            const prevRoute =
+              routes[routes.length - 2].name === 'CustomerPageTwo'
+                ? 'SubCategoryScreen'
+                : routes[routes.length - 2].name;
+            return filterMode
+              ? setFilterMode(false)
+              : navigation.navigate(prevRoute, {category});
+          }}
         />
-
         {loading ? (
           <Loading />
         ) : filterMode ? (
@@ -366,7 +370,6 @@ export default function CategoryScreenCustomer({navigation, category}) {
                   style={{
                     fontSize: 18,
                     color: '#FFFFFF',
-                    // fontFamily: 'Poppins_500Medium',
                     fontWeight: '600',
                   }}>
                   Применить
