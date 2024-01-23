@@ -1323,7 +1323,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               руб.
                             </Text>
                           )}
-                          {item.about && item.about != 'null' && (
+                          {item.about && item.about != 'null'  &&  item.about !== `<p><br></p>`  && (
                             <TouchableOpacity
                               style={{
                                 width: 27,

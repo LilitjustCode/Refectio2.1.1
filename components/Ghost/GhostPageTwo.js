@@ -1170,40 +1170,11 @@ export default class GhostPageTwoComponent extends React.Component {
 
                 {!this.state.change_category_loaded &&
                   this.state.products.map((item, index) => {
+                    console.log(item.about, 'llll about');
                     return (
                       <View key={index} style={{marginTop: 18}}>
                         <Slider2 slid={item.product_image} />
-                        {/* <ImageSlider
-                        showIndicator
-                        indicatorSize={8} // Adjust the size of the indicators
-                        indicatorColor="red" // Adjust the color of the indicators
-                        inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
-                        indicatorAtBottom={true}
-                        preview={true}
-                        // children
-                        // data={[
-                        //   {
-                        //     img: `https://admin.refectio.ru/storage/app/uploads/` + item.images,
-                        //   },
-                        // ]}
-                        data={item.product_image.map((value) => {
-                          return { img: `https://admin.refectio.ru/storage/app/uploads/` + value.image };
-                        })}
-                        // dataSource={item.images.map((item, index) => ({
-                        //   url: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
-                        //   // title: item.title,
-                        //   // You can add more properties as needed
-                        //   // For example: description: item.description
-                        // }))}
-                        autoPlay={false}
-                        onItemChanged={(item) => console.log(item)}
-                        closeIconColor="#fff"
-                        // showIndicator={false}
-                        caroselImageStyle={{
-                          resizeMode: "cover",
-                          height: 270,
-                        }}
-                      /> */}
+
                         <View
                           style={{
                             width: '100%',
@@ -1267,32 +1238,34 @@ export default class GhostPageTwoComponent extends React.Component {
                               руб.
                             </Text>
                           )}
-                          {item.about && item.about != 'null' && (
-                            <TouchableOpacity
-                              style={{
-                                width: 27,
-                                height: 27,
-                                position: 'absolute',
-                                right: 0,
-                                top: 5,
-                              }}
-                              onPress={() =>
-                                this.props.navigation.navigate(
-                                  'AboutUsScreen',
-                                  {
-                                    value: item.about,
-                                    hideText: true,
-                                  },
-                                )
-                              }>
-                              <Image
-                                source={require('../../assets/image/Screenshot_2.png')}
-                                style={{width: 27, height: 27}}
-                                width={27}
-                                height={27}
-                              />
-                            </TouchableOpacity>
-                          )}
+                          {item.about &&
+                            item.about != 'null' &&
+                            item.about !== `<p><br></p>`  && (
+                              <TouchableOpacity
+                                style={{
+                                  width: 27,
+                                  height: 27,
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 5,
+                                }}
+                                onPress={() =>
+                                  this.props.navigation.navigate(
+                                    'AboutUsScreen',
+                                    {
+                                      value: item.about,
+                                      hideText: true,
+                                    },
+                                  )
+                                }>
+                                <Image
+                                  source={require('../../assets/image/Screenshot_2.png')}
+                                  style={{width: 27, height: 27}}
+                                  width={27}
+                                  height={27}
+                                />
+                              </TouchableOpacity>
+                            )}
                         </View>
                       </View>
                     );
