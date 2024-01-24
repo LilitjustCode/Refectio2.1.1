@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   Dimensions,
@@ -15,7 +16,6 @@ import Loading from '../../Component/Loading';
 import DesignerPageNavComponent from '../../Designer/DesignerPageNav';
 import Slider2 from '../../slider/Slider2';
 import shuffle from '../shuffle';
-import {useNavigation} from '@react-navigation/native';
 
 const {WIDTH} = Dimensions.get('screen');
 
@@ -26,6 +26,7 @@ export default function CategorySingleScreenDesigner({
   product,
   cityId,
   startPrice,
+  params,
   endPrice,
 }) {
   const navigation = useNavigation();
@@ -104,15 +105,11 @@ export default function CategorySingleScreenDesigner({
   };
 
   const handleScrollToIndex = useCallback(
-    index => {
-      const wait = new Promise(resolve => setTimeout(resolve, 100));
-      wait.then(() => {
-        flatListRef.current?.scrollToIndex({
-          index,
-          animated: true,
-          viewPosition: 0.45,
-        });
-      });
+    product => {
+      setProducts([
+        params.clickedItem,
+        ...myproducts.filter((_, i) => i !== product),
+      ]);
     },
     [product],
   );

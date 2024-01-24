@@ -22,6 +22,7 @@ export default function CategorySingleScreenCustomer({
   myproducts,
   product,
   cityId,
+  params,
   startPrice,
   endPrice,
 }) {
@@ -102,15 +103,11 @@ export default function CategorySingleScreenCustomer({
   };
 
   const handleScrollToIndex = useCallback(
-    index => {
-      const wait = new Promise(resolve => setTimeout(resolve, 100));
-      wait.then(() => {
-        flatListRef.current?.scrollToIndex({
-          index,
-          animated: true,
-          viewPosition: 0.45,
-        });
-      });
+    product => {
+      setProducts([
+        params.clickedItem,
+        ...myproducts.filter((_, i) => i !== product),
+      ]);
     },
     [product],
   );

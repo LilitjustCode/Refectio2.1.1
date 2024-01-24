@@ -25,6 +25,7 @@ export default function CategorySingleScreenGuest({
   myproducts,
   product,
   cityId,
+  params,
   startPrice,
   endPrice,
 }) {
@@ -103,15 +104,11 @@ export default function CategorySingleScreenGuest({
   };
 
   const handleScrollToIndex = useCallback(
-    index => {
-      const wait = new Promise(resolve => setTimeout(resolve, 100));
-      wait.then(() => {
-        flatListRef.current?.scrollToIndex({
-          index,
-          animated: true,
-          viewPosition: 0.45,
-        });
-      });
+    product => {
+      setProducts([
+        params.clickedItem,
+        ...myproducts.filter((_, i) => i !== product),
+      ]);
     },
     [product],
   );
@@ -146,7 +143,7 @@ export default function CategorySingleScreenGuest({
             renderItem={({item}) => {
               return (
                 <View style={{marginTop: 15}}>
-                  <Slider2 slid={item.product_image} searchMode />
+                  <Slider2 slid={item?.product_image} searchMode />
                   <TouchableOpacity
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
@@ -162,7 +159,7 @@ export default function CategorySingleScreenGuest({
                       source={{
                         uri:
                           `https://admin.refectio.ru/storage/app/uploads/` +
-                          item.user_product.logo,
+                          item?.user_product.logo,
                       }}
                       style={{
                         width: 50,
@@ -174,13 +171,13 @@ export default function CategorySingleScreenGuest({
                     <View style={{width: '90%'}}>
                       <View style={styles.itemNameBox}>
                         <Text style={styles.itemType}>
-                          {item.name.substr(0, 6)}
+                          {item?.name.substr(0, 6)}
                         </Text>
                         <Text style={styles.itemName}>
-                          {item.name.substr(5)}
+                          {item?.name.substr(5)}
                         </Text>
                       </View>
-                      {item.facades && (
+                      {item?.facades && (
                         <Text style={{width: '92%'}}>
                           Фасады : {item.facades}
                         </Text>

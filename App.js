@@ -214,6 +214,7 @@ function CategorySingleScreenComponentGuest({navigation, route}) {
       cityId={route.params.cityId}
       startPrice={route.params.startPrice}
       endPrice={route.params.endPrice}
+      params={route.params}
     />
   );
 }
@@ -241,6 +242,7 @@ function CategorySingleScreenComponentDesigner({navigation, route}) {
       cityId={route.params.cityId}
       startPrice={route.params.startPrice}
       endPrice={route.params.endPrice}
+      params={route.params}
     />
   );
 }
@@ -268,6 +270,7 @@ function CategorySingleScreenComponentCustomer({navigation, route}) {
       cityId={route.params.cityId}
       startPrice={route.params.startPrice}
       endPrice={route.params.endPrice}
+      params={route.params}
     />
   );
 }
