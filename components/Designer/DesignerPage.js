@@ -97,7 +97,7 @@ export default class CustomerMainPageComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res.data, 'kk');
+      
         if (res.status === true) {
           let data = res.data.data.data;
           if (data?.length > 0) {

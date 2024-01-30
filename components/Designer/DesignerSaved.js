@@ -53,7 +53,6 @@ export default class DesignerSavedComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res.new_data.data, 'kk');
         if (res.status === true) {
           let data = res.new_data.data;
           if (data?.length > 0) {

@@ -189,6 +189,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           arr.shift(res.data.user_category_for_product[0]);
           arr.push(lastItem);
         }
+        console.log(res.data.Favorit_button, 'favorite');
         if (res.data.Favorit_button === true) {
           this.setState({favoriteBool: true});
         } else {
@@ -219,7 +220,6 @@ export default class DesignerPageTwoComponent extends React.Component {
           whatsapp: res.data.user[0].watsap_phone,
           city_count: res.data.city_count,
           about_us: res.data.user[0].about_us,
-          favoriteBool: res.data.Favorit_button,
         });
       });
   };
@@ -242,7 +242,8 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   favorite = async () => {
-    let userID = this.props.route.params.id;
+    const {id, navigation} = this.props;
+    let userID = this.props.route.params.id ? this.props.route.params.id : id;
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     let AuthStr = 'Bearer ' + userToken;
@@ -262,7 +263,9 @@ export default class DesignerPageTwoComponent extends React.Component {
       fetch(`https://admin.refectio.ru/public/api/addtoFavorit`, requestOptions)
         .then(response => response.json())
         .then(result => {
+          console.log(result, 'add');
           this.setState({favoriteBool: false});
+          this.getObjectData(userID);
         })
         .catch(error => console.log('error', error));
     } else if (this.state.favoriteBool == false) {
@@ -272,7 +275,9 @@ export default class DesignerPageTwoComponent extends React.Component {
       )
         .then(response => response.json())
         .then(result => {
-          // this.setState({favoriteBool: true});
+          console.log(result, 'delete');
+          this.setState({favoriteBool: true});
+          this.getObjectData(userID);
         })
         .catch(error => console.log('error', error));
     }
@@ -488,11 +493,6 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
-    console.log(
-      this.state.parent_name,
-
-      'parent category name ',
-    );
     await this.updateProduct(
       this.state.parent_name.length > 0
         ? this.state.parent_name
