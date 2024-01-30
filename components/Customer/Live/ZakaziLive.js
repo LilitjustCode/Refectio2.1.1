@@ -99,6 +99,7 @@ export default class ZakaziLiveComponent extends React.Component {
   }
 
   renderItem = ({item, index}) => {
+    // console.log(item.photo, 'photo');
     return (
       <TouchableOpacity
         style={styles.clounParnt}
@@ -111,9 +112,7 @@ export default class ZakaziLiveComponent extends React.Component {
         <View style={{flexDirection: 'row'}}>
           <Image
             source={{
-              uri:
-                `https://admin.refectio.ru/public/api/uploads/UnicodeIcon/` +
-                item.photo,
+              uri: `https://admin.refectio.ru/public/uploads/UnicodeIcon/${item.photo}`,
             }}
             style={styles.clounImg}
             resizeMode="contain"

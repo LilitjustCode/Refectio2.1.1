@@ -121,7 +121,7 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
         <View style={styles.mebelTypeBox}>
           <Image
             source={{
-              uri: `https://admin.refectio.ru/public/api/uploads/` + photo,
+              uri: `https://admin.refectio.ru/api/uploads/` + photo,
             }}
             style={styles.imageMebel}
           />

@@ -798,6 +798,7 @@ export default class EditProductComponent extends React.Component {
                   onChangeText={text => {
                     this.setState({name: text, name_error: false});
                   }}
+                  maxLength={42}
                 />
               </View>
 

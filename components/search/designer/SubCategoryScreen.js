@@ -47,7 +47,7 @@ export default function SubCategoryScreen({navigation, category}) {
               {renderSwitch(category.id)}
             </Text>
           </TouchableOpacity>
-          {category.childrens.length ? (
+          {category.childrens?.length ? (
             category.childrens.map((el, i) => (
               <TouchableOpacity
                 style={{

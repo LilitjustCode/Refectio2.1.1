@@ -328,9 +328,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                               }}>
                               <Image
                                 source={{
-                                  uri:
-                                    `https://admin.refectio.ru/public/api/uploads/UnicodeIcon/` +
-                                    icon.photo,
+                                  uri: `https://admin.refectio.ru/public/uploads/UnicodeIcon/${icon.photo}`,
                                 }}
                                 style={{width: 72.77, height: 62.78}}
                                 resizeMode={'contain'}
@@ -379,7 +377,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                 <Image
                   source={{
                     uri:
-                      `https://admin.refectio.ru/public/api/uploads/UnicodeIcon/` +
+                      `https://admin.refectio.ru/public/uploads/UnicodeIcon/` +
                       this.state.photo,
                   }}
                   resizeMode={'contain'}
@@ -569,7 +567,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                   <Image
                     source={{
                       uri:
-                        `https://admin.refectio.ru/storage/app/uploads/` +
+                        `https://admin.refectio.ru/public/app/uploads/` +
                         item.logo,
                     }}
                     style={styles.userLogo}

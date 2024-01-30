@@ -150,7 +150,7 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
         <Image
           source={{
             uri:
-              `https://admin.refectio.ru/public/api/uploads/UnicodeIcon/` +
+              `https://admin.refectio.ru/public/uploads/UnicodeIcon/` +
               item.photo,
           }}
           style={styles.clounImg}

@@ -759,11 +759,8 @@ export default class PraductiaComponent extends React.Component {
                           width: '100%',
                         }}>
                         <View style={styles.itemNameBox}>
-                          <Text style={styles.itemType}>
-                            {item.name.substr(0, 6)}
-                          </Text>
                           <Text style={styles.itemName}>
-                            {item.name.substr(5)}
+                            {item.name}
                           </Text>
                         </View>
 

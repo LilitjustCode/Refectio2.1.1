@@ -206,11 +206,7 @@ export default class AddProductComponent extends React.Component {
     myHeaders.append('Authorization', AuthStr);
     myHeaders.append('Content-Type', 'multipart/form-data');
 
-    console.log(
-      this.props.category.id,
-      this.props.category.name,
-      this.props.category.parent,
-    );
+    console.log(this.state.name, 'name, update');
 
     if (this.props.category.parent) {
       console.log('if');
@@ -223,7 +219,7 @@ export default class AddProductComponent extends React.Component {
       this.formdata.append('category_id', this.props.category.id);
       this.formdata.append('category_name', this.props.category.name);
     } else {
-      console.log(123123);
+      // console.log(123123);
       this.formdata.append('parent_category_id', this.props.category.id);
       this.formdata.append('parent_category_name', this.props.category.name);
     }
@@ -621,6 +617,7 @@ export default class AddProductComponent extends React.Component {
                 placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
                 numberOfLines={1}
                 keyboardType="default"
+                
                 style={[
                   {
                     borderWidth: 1,
@@ -636,8 +633,10 @@ export default class AddProductComponent extends React.Component {
                 ]}
                 value={this.state.name}
                 onChangeText={text => {
+                  console.log(text, 'lll');
                   this.setState({name: text, name_error: false});
                 }}
+                maxLength={42}
               />
             </View>
 

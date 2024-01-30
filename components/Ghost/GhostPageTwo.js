@@ -35,7 +35,7 @@ export default class GhostPageTwoComponent extends React.Component {
       changed: '',
       sOpenCityDropDown: false,
       active: 0,
-
+      parent_name: '',
       loading: false,
       id: null,
 
@@ -239,6 +239,7 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   updateProductAfterClickToCategory = async (parent_category_name, index) => {
+    const {id} = this.props;
     await this.setState({
       change_category_loaded: true,
     });
@@ -253,7 +254,9 @@ export default class GhostPageTwoComponent extends React.Component {
         change_category_loaded: true,
       });
 
-      let userID = this.props.route.params.id;
+      let userID = this.props.route.params?.id
+        ? this.props.route.params?.id
+        : id;
 
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');
@@ -329,11 +332,12 @@ export default class GhostPageTwoComponent extends React.Component {
     });
   };
   loadedDataAfterLoadPage = async id => {
-    console.log('id in load data', id);
     await this.getObjectData(id);
 
     await this.updateProduct(
-      this.state.user_category_for_product[0].parent_category_name,
+      this.state.parent_name
+        ? this.state.parent_name
+        : this.state.user_category_for_product[0].parent_category_name,
       id,
     );
     this.setState({
@@ -342,7 +346,6 @@ export default class GhostPageTwoComponent extends React.Component {
           ? 'Все города России'
           : this.state.city_for_sales_user[0].city_name,
     });
-    this.setState({active: 0});
   };
 
   handleBackButtonClick() {
@@ -375,20 +378,8 @@ export default class GhostPageTwoComponent extends React.Component {
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
     });
-    // BackHandler.addEventListener(
-    //   'hardwareBackPress',
-    // this.handleBackButtonClick;
-    // this.loadedDataAfterLoadPage(
-    //   this.props.route.params?.id ? this.props.route.params?.id : id,
-    // );
-    // );
   }
   componentWillUnmount() {
-    // BackHandler.removeEventListener(
-    //   'hardwareBackPress',
-    //   this.handleClearData,
-    //   this.handleBackButtonClick,
-    // );
     if (this.focusListener) {
       this.focusListener();
       this.handleClearData();
@@ -1142,6 +1133,9 @@ export default class GhostPageTwoComponent extends React.Component {
                               item.parent_category_name,
                             );
                             this.setState({active: index});
+                            this.setState({
+                              parent_name: item.parent_category_name,
+                            });
                           }}
                           style={
                             this.state.active === index
@@ -1180,21 +1174,16 @@ export default class GhostPageTwoComponent extends React.Component {
                             width: '100%',
                           }}>
                           <View style={styles.itemNameBox}>
-                            <Text style={styles.itemType}>
-                              {item.name.substr(0, 6)}
-                            </Text>
-                            <Text style={styles.itemName}>
-                              {item.name.substr(5)}
-                            </Text>
+                            <Text style={styles.itemName}>{item.name}</Text>
                           </View>
                           {item.facades && (
                             <Text
                               style={{
                                 color: '#333333',
-                                width: '95%',
+                                width: '90%',
                                 marginTop: Platform.OS === 'ios' ? 5 : 0,
                               }}>
-                              Фасады : {item.facades}
+                              Фасады: {item.facades}
                             </Text>
                           )}
                           {item.frame && (
@@ -1240,7 +1229,8 @@ export default class GhostPageTwoComponent extends React.Component {
                           )}
                           {item.about &&
                             item.about != 'null' &&
-                            item.about !== `<p><br></p>`  && (
+                            item.about != 'undefined' &&
+                            item.about !== `<p><br></p>` && (
                               <TouchableOpacity
                                 style={{
                                   width: 27,

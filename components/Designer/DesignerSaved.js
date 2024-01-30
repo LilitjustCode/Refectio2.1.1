@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import React, {Component} from 'react';
 import {
   SafeAreaView,
+  FlatList,
   View,
   Image,
   Text,
@@ -11,6 +12,7 @@ import {
   ScrollView,
   StyleSheet,
   Pressable,
+  ActivityIndicator,
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 
@@ -22,13 +24,18 @@ export default class DesignerSavedComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      page: 1,
+      isLoading: false,
+      isLastPage: false,
       filter: false,
       saveds: [],
       urlImage: `https://admin.refectio.ru/storage/app/uploads/`,
     };
+    this.ref = React.createRef();
   }
 
   getMySaveds = async () => {
+    const {page, saveds, isLastPage} = this.state;
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     let AuthStr = 'Bearer ' + userToken;
@@ -41,35 +48,176 @@ export default class DesignerSavedComponent extends React.Component {
     };
 
     await fetch(
-      `https://admin.refectio.ru/public/api/MyFavoritUser`,
+      `https://admin.refectio.ru/public/api/MyFavoritUser?page=${page}`,
       requestOptions,
     )
       .then(response => response.json())
-      .then(result => {
-        this.setState({
-          saveds: result.data,
-        });
+      .then(res => {
+        console.log(res.new_data.data, 'kk');
+        if (res.status === true) {
+          let data = res.new_data.data;
+          if (data?.length > 0) {
+            for (let i = 0; i < data.length; i++) {
+              if (
+                data[i].slider_photo?.length &&
+                data[i].slider_photo[i]?.user_id == data[i].id
+              ) {
+                let product_image = data[i].slider_photo;
+                product_image.length > 5 ? product_image.splice(5) : null;
+                data[i].images = product_image;
+              } else if (
+                data[i].user_product_limit1?.length < 1 &&
+                data[i].id == data[i].user_product_limit1[0]?.user_id
+              ) {
+                data[i].images = [];
+                continue;
+              } else {
+                let product_image =
+                  data[i].user_product_limit1[0].product_image;
+                product_image.length > 5 ? product_image.splice(5) : null;
+                data[i].images = product_image;
+              }
+            }
+
+            // this.setState({
+            //   saveds: data,
+            //   isLoading: false,
+            // });
+
+            this.setState({
+              page: page + 1,
+              saveds: [...saveds, ...data],
+              isLoading: false,
+            });
+            console.log(page, 'pagee')
+          } else {
+            this.setState({
+              isLastPage: true,
+              isLoading: false,
+            });
+          }
+        } else {
+          this.setState({
+            isLastPage: true,
+            isLoading: false,
+          });
+        }
       })
       .catch(error => console.log('error', error));
     // console.log(this.state.categories)
   };
 
+  handleLoadMore = () => {
+    this.getMySaveds();
+  };
+
   componentDidMount() {
     const {navigation} = this.props;
     this.getMySaveds();
-
-    // this.focusListener = navigation.addListener('focus', () => {
-    //   this.getMySaveds();
-    // });
   }
 
-  componentWillUnmount() {
-    // Remove the event listener
-    // if (this.focusListener) {
-    //   this.focusListener();
-    //   console.log(' END');
-    // }
-  }
+  componentWillUnmount() {}
+
+  renderFooter = () => {
+    if (!this.state.isLoading) return null;
+    return (
+      <View style={{marginVertical: 10}}>
+        <ActivityIndicator size={50} color={'#C2C2C2'} />
+      </View>
+    );
+  };
+
+  renderItem = ({item, index}) => {
+    let count = item.meshok;
+    return (
+      item.user_product_limit1?.length !== 0 && (
+        <View key={index} style={styles.campaign}>
+          <TouchableOpacity
+            onPress={async () => {
+              await this.props.navigation.navigate('DesignerPageTwo', {
+                id: item.id,
+              });
+            }}>
+            <View style={styles.infoCompanyMain}>
+              <Image
+                source={{
+                  uri:
+                    `https://admin.refectio.ru/storage/app/uploads/` +
+                    item.logo,
+                }}
+                style={{
+                  width: 70,
+                  height: 70,
+                  marginRight: 12,
+                  borderColor: '#C8C8C8',
+                  borderWidth: 1,
+                  borderRadius: 10,
+                }}
+              />
+              <View style={styles.infoCompany}>
+                <View style={{width: '70%'}}>
+                  <Text
+                    numberOfLines={1}
+                    style={{
+                      fontSize: 20,
+                      fontFamily: 'Raleway_700Bold',
+                      fontWeight: '700',
+                      color: '#333333',
+                      marginBottom: 6,
+                    }}>
+                    {item.company_name}
+                  </Text>
+                  {count !== null ? (
+                    <View style={{flexDirection: 'row'}}>
+                      {[...new Array(Number(count))].map((value, i) => (
+                        <Image
+                          key={i}
+                          source={require('../../assets/image/meshok.png')}
+                          style={{
+                            width: 15,
+                            height: 20.5,
+                            marginRight: 3,
+                          }}
+                        />
+                      ))}
+                    </View>
+                  ) : (
+                    <View style={{width: 15, height: 20.5}}></View>
+                  )}
+                </View>
+
+                <Text
+                  key={index}
+                  style={{
+                    fontSize: 16,
+                    color: '#A8A8A8',
+                    paddingTop: 5,
+                    fontWeight: '400',
+                  }}>
+                  {item.made_in}
+                </Text>
+              </View>
+            </View>
+          </TouchableOpacity>
+          <View>
+            <ScrollView
+              horizontal={true}
+              showsVerticalScrollIndicator={false}
+              showsHorizontalScrollIndicator={false}>
+              {item.parent_category.map((item, ind) => {
+                return (
+                  <Text key={ind} style={styles.categoriesName}>
+                    {item.parent_category_name}
+                  </Text>
+                );
+              })}
+            </ScrollView>
+          </View>
+          <Slider2 slid={item.images} />
+        </View>
+      )
+    );
+  };
 
   render() {
     return (
@@ -78,144 +226,16 @@ export default class DesignerSavedComponent extends React.Component {
           <View style={styles.nameCompanyParent}>
             <Text style={styles.componyName}>Избранное</Text>
           </View>
-
-          <ScrollView showsVerticalScrollIndicator={false}>
-            {this.state.saveds.length == 0 ? (
-              <Text style={{textAlign: 'center', marginTop: 40, fontSize: 18}}>
-                Нет избранных
-              </Text>
-            ) : (
-              this.state.saveds.map((item, index) => {
-                let count = item.favorit_users.meshok;
-                return (
-                  <View key={index} style={styles.campaign}>
-                    <TouchableOpacity
-                      style={styles.infoCompanyMain}
-                      onPress={() => {
-                        const routes = this.props.navigation.getState()?.routes;
-                        const prevRoute = routes[routes.length - 1];
-                        console.log(prevRoute, 'lll');
-                        return this.props.navigation.navigate(
-                          'DesignerPageTwo',
-                          {
-                            id: item.proizvoditel_id,
-                            prevRoute: prevRoute.name,
-                          },
-                        );
-                      }}>
-                      <Image
-                        source={{
-                          uri: this.state.urlImage + item.favorit_users.logo,
-                        }}
-                        style={{
-                          width: 70,
-                          height: 70,
-                          marginRight: 12,
-                          borderColor: '#C8C8C8',
-                          borderWidth: 1,
-                          borderRadius: 10,
-                        }}
-                      />
-                      <View style={styles.infoCompany}>
-                        <View>
-                          <Text
-                            style={{
-                              fontSize: 20,
-                              fontFamily: 'Raleway_700Bold',
-                              marginBottom: 6,
-                              fontWeight: '700',
-                              color: '#333333',
-                            }}>
-                            {item.favorit_users.company_name}
-                          </Text>
-                          <View style={{flexDirection: 'row'}}>
-                            {[...new Array(Number(count))].map((value, i) => (
-                              <Image
-                                key={i}
-                                source={require('../../assets/image/meshok.png')}
-                                style={{
-                                  width: 15,
-                                  height: 20.5,
-                                  marginRight: 3,
-                                }}
-                              />
-                            ))}
-                          </View>
-                        </View>
-
-                        <Text
-                          key={index}
-                          style={{
-                            fontSize: 16,
-                            color: '#A8A8A8',
-                            fontFamily: 'Raleway_500Medium',
-                            paddingTop: 5,
-                            marginRight: 2,
-                          }}>
-                          {item.favorit_users.made_in}
-                        </Text>
-                      </View>
-                    </TouchableOpacity>
-
-                    <View>
-                      <ScrollView
-                        horizontal={true}
-                        showsVerticalScrollIndicator={false}
-                        showsHorizontalScrollIndicator={false}>
-                        {item.favorit_users.user_category_product.map(
-                          (category, index) => {
-                            return (
-                              <Text key={index} style={styles.categoriesName}>
-                                {category.category_name}
-                              </Text>
-                            );
-                          },
-                        )}
-                      </ScrollView>
-                    </View>
-                    <Slider2
-                      slid={
-                        item.favorit_users.user_product_limit1[0].product_image
-                      }
-                    />
-                    {/* <ImageSlider
-                      showIndicator
-                      indicatorSize={8} // Adjust the size of the indicators
-                      indicatorColor="red" // Adjust the color of the indicators
-                      inactiveIndicatorColor="gray" // Adjust the color of inactive indicators
-                      indicatorAtBottom={true}
-                      preview={true}
-                      // children
-                      // data={[
-                      //   {
-                      //     img:`https://admin.refectio.ru/storage/app/uploads/` + item.images,
-                      //   },
-                      // ]}
-                      data={item.favorit_users.user_product_limit1[0].product_image.map(
-                        (value) => {
-                          return { img: `https://admin.refectio.ru/storage/app/uploads/` + value.image };
-                        }
-                      )}
-                      // dataSource={item.images.map((item, index) => ({
-                      //   url: `https://admin.refectio.ru/storage/app/uploads/` + item.image,
-                      //   // title: item.title,
-                      //   // You can add more properties as needed
-                      //   // For example: description: item.description
-                      // }))}
-                      autoPlay={false}
-                      onItemChanged={(item) => console.log(item)}
-                      closeIconColor="#fff"
-                      // showIndicator={false}
-                      caroselImageStyle={{
-                        resizeMode: "cover",
-                        height: 270,
-                      }}
-                    /> */}
-                  </View>
-                );
-              })
-            )}
-          </ScrollView>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            renderItem={this.renderItem}
+            ref={this.ref}
+            data={this.state.saveds}
+            keyExtractor={(item, index) => index.toString()}
+            onEndReached={this.handleLoadMore}
+            onEndReachedThreshold={0.5}
+            ListFooterComponent={this.renderFooter}
+          />
         </View>
         <DesignerPageNavComponent
           active_page={'Избранное'}

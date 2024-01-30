@@ -335,7 +335,7 @@ export default class EditZakaziComponent extends React.Component {
                       source={{
                         uri: !this.state.photo_bool
                           ? this.state.photo
-                          : `https://admin.refectio.ru/public/api/uploads/` +
+                          : `https://admin.refectio.ru/public/uploads/` +
                             this.state.photo,
                       }}
                       style={styles.userIcon}

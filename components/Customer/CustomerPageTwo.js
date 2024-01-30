@@ -15,7 +15,6 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-// import * as Linking from 'expo-linking';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -24,22 +23,7 @@ import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
-// import * as Font from 'expo-font';
-// import {
-//   Poppins_300Light,
-//   Poppins_400Regular,
-//   Poppins_500Medium,
-//   Poppins_600SemiBold,
-//   Poppins_700Bold,
-// } from '@expo-google-fonts/poppins';
 
-// import {
-//   Raleway_400Regular,
-//   Raleway_500Medium,
-//   Raleway_600SemiBold,
-//   Raleway_700Bold,
-// } from '@expo-google-fonts/raleway';
-// import { withNavigation } from "react-navigation";
 const {width: screenWidth} = Dimensions.get('window');
 export default class DesignerPageTwoComponent extends React.Component {
   constructor(props) {
@@ -52,6 +36,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       paramsFromLinking: null,
       changed: '',
       sOpenCityDropDown: false,
+      parent_name: '',
       active: 0,
       user: [],
       user_bonus_for_designer: [],
@@ -156,11 +141,12 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   loadedDataAfterLoadPage = async id => {
-    console.log('id in load data', id);
     await this.getObjectData(id);
 
     await this.updateProduct(
-      this.state.user_category_for_product[0].parent_category_name,
+      this.state.parent_name
+        ? this.state.parent_name
+        : this.state.user_category_for_product[0].parent_category_name,
       id,
     );
     this.setState({
@@ -169,7 +155,6 @@ export default class DesignerPageTwoComponent extends React.Component {
           ? 'Все города России'
           : this.state.city_for_sales_user[0].city_name,
     });
-    this.setState({active: 0});
   };
 
   handleBackButtonClick() {
@@ -204,21 +189,11 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
     });
-    // BackHandler.addEventListener(
-    //   'hardwareBackPress',
-    //   this.handleBackButtonClick,
-    //   this.loadedDataAfterLoadPage(
-    //     this.props.route.params?.id ? this.props.route.params?.id : id,
-    //   ),
-    // );
+
   }
 
   componentWillUnmount() {
-    // BackHandler.removeEventListener(
-    //   'hardwareBackPress',
-    //   this.handleClearData,
-    //   this.handleBackButtonClick,
-    // );
+
     if (this.focusListener) {
       this.focusListener();
       this.handleClearData();
@@ -328,6 +303,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   updateProductAfterClickToCategory = async (parent_category_name, index) => {
+    const {id} = this.props;
     await this.setState({
       change_category_loaded: true,
     });
@@ -342,8 +318,9 @@ export default class DesignerPageTwoComponent extends React.Component {
         change_category_loaded: true,
       });
 
-      let userID = this.props.route.params.id;
-
+      let userID = this.props.route.params?.id
+        ? this.props.route.params?.id
+        : id;
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');
       myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -1231,6 +1208,10 @@ export default class DesignerPageTwoComponent extends React.Component {
                               item.parent_category_name,
                               index,
                             );
+                            this.setState({active: index});
+                            this.setState({
+                              parent_name: item.parent_category_name,
+                            });
                           }}
                           style={
                             this.state.active == index
@@ -1264,21 +1245,16 @@ export default class DesignerPageTwoComponent extends React.Component {
                         <Slider2 slid={item.product_image} />
                         <View style={{width: '100%'}}>
                           <View style={styles.itemNameBox}>
-                            <Text style={styles.itemName}>
-                              {item.name.substr(0, 6)}
-                            </Text>
-                            <Text style={styles.itemName}>
-                              {item.name.substr(5)}
-                            </Text>
+                            <Text style={styles.itemName}>{item.name}</Text>
                           </View>
                           {item.facades && (
                             <Text
                               style={{
                                 color: '#333333',
-                                width: '95%',
+                                width: '90%',
                                 marginTop: Platform.OS === 'ios' ? 2 : 0,
                               }}>
-                              Фасады : {item.facades}
+                              Фасады: {item.facades}
                             </Text>
                           )}
                           {item.frame && (
@@ -1323,32 +1299,35 @@ export default class DesignerPageTwoComponent extends React.Component {
                               руб.
                             </Text>
                           )}
-                          {item.about && item.about != 'null'  &&  item.about !== `<p><br></p>`  && (
-                            <TouchableOpacity
-                              style={{
-                                width: 27,
-                                height: 27,
-                                position: 'absolute',
-                                right: 0,
-                                top: 5,
-                              }}
-                              onPress={() =>
-                                this.props.navigation.navigate(
-                                  'AboutUsScreen',
-                                  {
-                                    value: item.about,
-                                    hideText: true,
-                                  },
-                                )
-                              }>
-                              <Image
-                                source={require('../../assets/image/Screenshot_2.png')}
-                                style={{width: 27, height: 27}}
-                                width={27}
-                                height={27}
-                              />
-                            </TouchableOpacity>
-                          )}
+                          {item.about &&
+                            item.about != 'null' &&
+                            item.about != 'undefined' &&
+                            item.about !== `<p><br></p>` && (
+                              <TouchableOpacity
+                                style={{
+                                  width: 27,
+                                  height: 27,
+                                  position: 'absolute',
+                                  right: 0,
+                                  top: 5,
+                                }}
+                                onPress={() =>
+                                  this.props.navigation.navigate(
+                                    'AboutUsScreen',
+                                    {
+                                      value: item.about,
+                                      hideText: true,
+                                    },
+                                  )
+                                }>
+                                <Image
+                                  source={require('../../assets/image/Screenshot_2.png')}
+                                  style={{width: 27, height: 27}}
+                                  width={27}
+                                  height={27}
+                                />
+                              </TouchableOpacity>
+                            )}
                         </View>
                       </View>
                     );

@@ -191,7 +191,7 @@ export default class LiveZakazchikSinglComponent extends React.Component {
         <View style={styles.mebelTypeBox}>
           <Image
             source={{
-              uri: `https://admin.refectio.ru/public/api/uploads/` + photo,
+              uri: `https://admin.refectio.ru/public/uploads/` + photo,
             }}
             style={styles.imageMebel}
             resizeMode={'contain'}
@@ -267,7 +267,7 @@ export default class LiveZakazchikSinglComponent extends React.Component {
             <Image
               source={{
                 uri:
-                  `https://admin.refectio.ru/public/api/uploads/UnicodeIcon/` +
+                  `https://admin.refectio.ru/public/uploads/UnicodeIcon/` +
                   this.state.photo,
               }}
               style={styles.userIcon}

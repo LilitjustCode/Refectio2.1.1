@@ -170,11 +170,8 @@ export default function CategorySingleScreenGuest({
                     />
                     <View style={{width: '90%'}}>
                       <View style={styles.itemNameBox}>
-                        <Text style={styles.itemType}>
-                          {item?.name.substr(0, 6)}
-                        </Text>
                         <Text style={styles.itemName}>
-                          {item?.name.substr(5)}
+                          {item?.name}
                         </Text>
                       </View>
                       {item?.facades && (
