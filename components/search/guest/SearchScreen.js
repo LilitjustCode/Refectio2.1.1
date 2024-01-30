@@ -10,7 +10,7 @@ import {
 import Loading from '../../Component/Loading';
 import GhostNavComponent from '../../Ghost/GhostNav';
 
-export default function SearchScreenGuest({navigation}) {
+export default function SearchScreenGuest({navigation, category}) {
   const [categories, setCategories] = useState([]);
 
   async function getCategories() {
@@ -64,7 +64,7 @@ export default function SearchScreenGuest({navigation}) {
                 key={i}
                 onPress={() => {
                   const routes = navigation.getState()?.routes;
-                  const prevRoute = routes[routes.length - 2].name;
+                  const prevRoute = routes[routes.length - 2]?.name;
                   el.childrens.length
                     ? navigation.navigate('SubCategoryScreen', {
                         category: el,
@@ -73,6 +73,7 @@ export default function SearchScreenGuest({navigation}) {
                     : navigation.navigate('CategoryScreen', {
                         category: el,
                         prevRoute,
+                        parentCategoryType: category,
                       });
                 }}>
                 <View style={{flexDirection: 'row', flexShrink: 1}}>

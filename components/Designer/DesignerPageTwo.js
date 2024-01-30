@@ -5,6 +5,7 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -17,7 +18,6 @@ import {
   View,
 } from 'react-native';
 import MaskInput from 'react-native-mask-input';
-import {BackHandler, Linking} from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';

@@ -126,6 +126,8 @@ export default function CategorySingleScreenGuest({
         }}>
         <BackBtn
           onPressBack={() => {
+            console.log('back');
+
             navigation.goBack();
           }}
         />

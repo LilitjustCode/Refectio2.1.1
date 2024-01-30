@@ -17,7 +17,7 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BackHandler, Linking} from 'react-native';
+import {Linking} from 'react-native';
 import WebView from 'react-native-webview';
 import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
@@ -1229,7 +1229,6 @@ export default class GhostPageTwoComponent extends React.Component {
                           )}
                           {item.about &&
                             item.about != 'null' &&
-                            item.about != 'undefined' &&
                             item.about !== `<p><br></p>` && (
                               <TouchableOpacity
                                 style={{

@@ -1,11 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native';
-import {SafeAreaView} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Loading from '../../Component/Loading';
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 
-export default function SearchScreenCustomer({navigation}) {
+export default function SearchScreenCustomer({navigation, category}) {
   const [categories, setCategories] = useState([]);
 
   async function getCategories() {
@@ -62,7 +67,7 @@ export default function SearchScreenCustomer({navigation}) {
                 key={i}
                 onPress={() => {
                   const routes = navigation.getState()?.routes;
-                  const prevRoute = routes[routes.length - 2].name;
+                  const prevRoute = routes[routes.length - 2]?.name;
                   el.childrens.length
                     ? navigation.navigate('SubCategoryScreen', {
                         category: el,
@@ -71,6 +76,7 @@ export default function SearchScreenCustomer({navigation}) {
                     : navigation.navigate('CategoryScreen', {
                         category: el,
                         prevRoute,
+                        parentCategoryType: category,
                       });
                 }}>
                 <View style={{flexDirection: 'row', flexShrink: 1}}>

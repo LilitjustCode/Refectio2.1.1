@@ -1,12 +1,15 @@
 import React from 'react';
-import {ScrollView, TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native';
-import {SafeAreaView} from 'react-native';
+import {
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 import {BackBtn} from './CategoryScreen';
 
 export default function SubCategoryScreen({navigation, category}) {
-  console.log(category.id, 'jjj');
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -40,6 +43,7 @@ export default function SubCategoryScreen({navigation, category}) {
               return navigation.navigate('CategoryScreen', {
                 category: category,
                 prevRoute: prevRoute,
+                parentCategoryType: category,
               });
             }}>
             <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
@@ -56,7 +60,10 @@ export default function SubCategoryScreen({navigation, category}) {
                 }}
                 key={i}
                 onPress={() =>
-                  navigation.navigate('CategoryScreen', {category: el})
+                  navigation.navigate('CategoryScreen', {
+                    category: el,
+                    parentCategoryType: category,
+                  })
                 }>
                 <Text style={{color: 'black', fontSize: 20, marginBottom: 10}}>
                   {el.name}

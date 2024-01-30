@@ -18,7 +18,6 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {BackHandler} from 'react-native';
 import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
@@ -189,11 +188,9 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
     });
-
   }
 
   componentWillUnmount() {
-
     if (this.focusListener) {
       this.focusListener();
       this.handleClearData();
@@ -1301,7 +1298,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                           )}
                           {item.about &&
                             item.about != 'null' &&
-                            item.about != 'undefined' &&
                             item.about !== `<p><br></p>` && (
                               <TouchableOpacity
                                 style={{

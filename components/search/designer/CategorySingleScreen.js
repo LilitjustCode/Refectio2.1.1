@@ -125,7 +125,13 @@ export default function CategorySingleScreenDesigner({
           paddingHorizontal: 15,
           position: 'relative',
         }}>
-        <BackBtn onPressBack={() => navigation.goBack()} />
+        <BackBtn
+          onPressBack={() => {
+            console.log('back');
+
+            navigation.goBack();
+          }}
+        />
         {loading ? (
           <Loading />
         ) : (

@@ -199,6 +199,7 @@ function CategoryScreenComponentGuest({navigation, route}) {
     <CategoryScreenGuest
       navigation={navigation}
       category={route.params.category}
+      parentCategoryType={route.params?.parentCategoryType}
     />
   );
 }
@@ -227,6 +228,7 @@ function CategoryScreenComponentDesigner({navigation, route}) {
     <CategoryScreenDesigner
       navigation={navigation}
       category={route.params.category}
+      parentCategoryType={route.params?.parentCategoryType}
     />
   );
 }
@@ -255,6 +257,7 @@ function CategoryScreenComponentCustomer({navigation, route}) {
     <CategoryScreenCustomer
       navigation={navigation}
       category={route.params.category}
+      parentCategoryType={route.params?.parentCategoryType}
     />
   );
 }

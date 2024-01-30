@@ -391,9 +391,9 @@ export default class CustomerMainPageComponent extends React.Component {
       .then(response => response.json())
       .then(res => {
         this.setState({
-          logo: res?.data[0].logo,
-          name: res?.data[0].company_name,
-          firstLogin: res?.data[0].firstLogin,
+          logo: res?.data?.[0].logo,
+          name: res?.data?.[0].company_name,
+          firstLogin: res?.data?.[0].firstLogin,
         });
       });
   };
