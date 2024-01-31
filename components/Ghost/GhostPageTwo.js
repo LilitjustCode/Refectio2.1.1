@@ -326,7 +326,7 @@ export default class GhostPageTwoComponent extends React.Component {
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
-      products: [],
+      // products: [],
       city_count: null,
       about_us: '',
     });
@@ -334,12 +334,12 @@ export default class GhostPageTwoComponent extends React.Component {
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
 
-    await this.updateProduct(
-      this.state.parent_name
-        ? this.state.parent_name
-        : this.state.user_category_for_product[0].parent_category_name,
-      id,
-    );
+    // await this.updateProduct(
+    //   this.state.parent_name
+    //     ? this.state.parent_name
+    //     : this.state.user_category_for_product[0].parent_category_name,
+    //   id,
+    // );
     this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
@@ -368,6 +368,24 @@ export default class GhostPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
+
+    loadedDataAfterLoadPageOne = async () => {
+      console.log('dddd');
+      await this.getObjectData(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+      console.log(
+        this.state.user_category_for_product[0].parent_category_name,
+        'dddname',
+      );
+      await this.updateProduct(
+        this.state.parent_name.length > 0
+          ? this.state.parent_name
+          : this.state.user_category_for_product[0].parent_category_name,
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    };
+    loadedDataAfterLoadPageOne();
 
     this.setState({fontsLoaded: true});
     this.loadedDataAfterLoadPage(
@@ -1192,7 +1210,7 @@ export default class GhostPageTwoComponent extends React.Component {
                             </Text>
                           )}
                           {item.profile && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Профиль: {item.profile}
                             </Text>
                           )}
@@ -1202,22 +1220,22 @@ export default class GhostPageTwoComponent extends React.Component {
                             </Text>
                           )}
                           {item.length && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Длина: {item.length.replace('.', ',')} м.
                             </Text>
                           )}
                           {item.height && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Высота: {item.height.replace('.', ',')} м.
                             </Text>
                           )}
                           {item.material && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Материал: {item.material}
                             </Text>
                           )}
                           {item.price && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Цена:{' '}
                               {item.price
                                 .toString()
@@ -1301,6 +1319,7 @@ const styles = StyleSheet.create({
     width: 'auto',
     marginTop: 5,
     marginBottom: 4,
+    width: '90%',
   },
   itemName: {
     fontFamily: 'Raleway_600SemiBold',

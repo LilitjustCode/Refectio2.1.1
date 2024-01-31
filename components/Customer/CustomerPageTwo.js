@@ -134,7 +134,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
-      products: [],
+      // products: [],
       city_count: null,
       about_us: '',
     });
@@ -143,12 +143,12 @@ export default class DesignerPageTwoComponent extends React.Component {
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
 
-    await this.updateProduct(
-      this.state.parent_name
-        ? this.state.parent_name
-        : this.state.user_category_for_product[0].parent_category_name,
-      id,
-    );
+    // await this.updateProduct(
+    //   this.state.parent_name
+    //     ? this.state.parent_name
+    //     : this.state.user_category_for_product[0].parent_category_name,
+    //   id,
+    // );
     this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
@@ -177,8 +177,23 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-
-    // this.setState({fontsLoaded: true});
+    loadedDataAfterLoadPageOne = async () => {
+      console.log('dddd');
+      await this.getObjectData(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+      console.log(
+        this.state.user_category_for_product[0].parent_category_name,
+        'dddname',
+      );
+      await this.updateProduct(
+        this.state.parent_name.length > 0
+          ? this.state.parent_name
+          : this.state.user_category_for_product[0].parent_category_name,
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    };
+    loadedDataAfterLoadPageOne();
     this.loadedDataAfterLoadPage(
       this.props.route.params?.id ? this.props.route.params?.id : id,
     );
@@ -189,11 +204,9 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
     });
-
   }
 
   componentWillUnmount() {
-
     if (this.focusListener) {
       this.focusListener();
       this.handleClearData();
@@ -1258,12 +1271,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                             </Text>
                           )}
                           {item.frame && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Корпус: {item.frame}
                             </Text>
                           )}
                           {item.profile && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Профиль: {item.profile}
                             </Text>
                           )}
@@ -1273,23 +1286,23 @@ export default class DesignerPageTwoComponent extends React.Component {
                             </Text>
                           )}
                           {item.length && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Длина: {item.length.replace('.', ',')} м.
                             </Text>
                           )}
 
                           {item.height && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Высота: {item.height.replace('.', ',')} м.
                             </Text>
                           )}
                           {item.material && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Материал: {item.material}
                             </Text>
                           )}
                           {item.price && (
-                            <Text style={{color: '#333333'}}>
+                            <Text style={{color: '#333333', width: '90%'}}>
                               Цена:{' '}
                               {item.price
                                 .toString()
@@ -1368,6 +1381,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
+    width: '90%',
   },
   user: {
     width: 30,
