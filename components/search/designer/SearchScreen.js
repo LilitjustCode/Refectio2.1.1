@@ -1,14 +1,16 @@
 import React, {useEffect, useState} from 'react';
-import GhostNavComponent from '../../Ghost/GhostNav';
-import {TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native';
-import {SafeAreaView} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Loading from '../../Component/Loading';
 import DesignerPageNavComponent from '../../Designer/DesignerPageNav';
-import {ScrollView} from 'react-native';
-import {Image} from 'react-native';
 
-export default function SearchScreenDesigner({navigation}) {
+export default function SearchScreenDesigner({navigation, category}) {
   const [categories, setCategories] = useState([]);
 
   async function getCategories() {
@@ -72,6 +74,7 @@ export default function SearchScreenDesigner({navigation}) {
                     : navigation.navigate('CategoryScreen', {
                         category: el,
                         prevRoute,
+                        parentCategoryType: category,
                       });
                 }}>
                 <View style={{flexDirection: 'row', flexShrink: 1}}>

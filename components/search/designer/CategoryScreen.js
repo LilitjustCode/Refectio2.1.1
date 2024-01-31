@@ -26,7 +26,8 @@ import shuffle from '../shuffle';
 const {width} = Dimensions.get('screen');
 
 export default function CategoryScreenDesigner(props) {
-  const {category, navigation, prevRoute, route} = props;
+  const {category, parentCategoryType, navigation, prevRoute, route} = props;
+
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [moreLoading, setMoreLoading] = useState();
@@ -166,7 +167,7 @@ export default function CategoryScreenDesigner(props) {
                 : routes[routes.length - 2].name;
             return filterMode
               ? setFilterMode(false)
-              : navigation.navigate(prevRoute, {category});
+              : navigation.navigate(prevRoute, {category: parentCategoryType});
           }}
         />
         {loading ? (
