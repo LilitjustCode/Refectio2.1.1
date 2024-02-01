@@ -163,7 +163,9 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
     if (section.company_name === data[data.length - 1].company_name) {
       // Render a button for the last section
       return (
-        <TouchableOpacity style={styles.plusPraizvaditel}>
+        <TouchableOpacity 
+        
+        style={styles.plusPraizvaditel}>
           <Text style={styles.plusPraizvaditelText}>+ Производитель</Text>
         </TouchableOpacity>
       );
