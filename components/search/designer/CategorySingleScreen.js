@@ -176,9 +176,10 @@ export default function CategorySingleScreenDesigner({
                         width: '90%',
                       }}>
                       <View style={styles.itemNameBox}>
-                       
                         <Text style={styles.itemName}>
-                          {item.name}
+                          {item.name.length > 35
+                            ? item.name.substring(0, 35 - 3) + '...'
+                            : item.name}
                         </Text>
                       </View>
                       {item.facades && (
