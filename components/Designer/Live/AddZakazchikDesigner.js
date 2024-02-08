@@ -567,7 +567,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                   <Image
                     source={{
                       uri:
-                        `https://admin.refectio.ru/public/app/uploads/` +
+                        `https://admin.refectio.ru/storage/app/uploads/` +
                         item.logo,
                     }}
                     style={styles.userLogo}
@@ -584,6 +584,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                         : {backgroundColor: '#F5F5F5'},
                     ]}
                     onPress={() => {
+                      console.log(item.logo, 'logo');
                       this.enterCheckBox(item);
                     }}>
                     <Text

@@ -315,6 +315,7 @@ export default class EditProductComponent extends React.Component {
       )
         .then(response => response.json())
         .then(async result => {
+          console.log(result, 'res');
           if (result.status === true) {
             (await this.setState({
               buttonSend: false,
@@ -396,7 +397,7 @@ export default class EditProductComponent extends React.Component {
       .then(result => {
         if (result.status === true) {
           // console.log(result)
-          console.log('asdasdasdasda', result.data[0].category_id);
+          console.log('asdasdasdasda', result);
           this.setState({alldata: result.data[0]});
           this.setState({
             name:
@@ -622,7 +623,7 @@ export default class EditProductComponent extends React.Component {
   componentWillUnmount() {
     if (this.focusListener) {
       this.focusListener();
-      console.log(' END');
+      // console.log(' END');
     }
     this.keyboardDidShowListener.remove();
     this.keyboardDidHideListener.remove();
@@ -683,7 +684,7 @@ export default class EditProductComponent extends React.Component {
 
           <TouchableOpacity
             onPress={async () => {
-              console.log(this.props);
+              // console.log(this.props);
               await this.props.navigation.navigate('Praductia', {
                 params: this.props.user_id.user_id,
               });
@@ -1253,15 +1254,16 @@ export default class EditProductComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                  {
-                    this.state.alldata.facades == this.state.facades &&
-                    this.state.name == this.state.alldata.name &&
-                    this.state.frame == this.state.alldata.frame &&
-                    this.state.tabletop == this.state.alldata.tabletop &&
-                    this.state.alldata.length == this.state.length
-                      ? ''
-                      : this.sendProduct();
-                  }
+                this.sendProduct()
+                  // {
+                  //   this.state.alldata.facades == this.state.facades &&
+                  //   this.state.name == this.state.alldata.name &&
+                  //   this.state.frame == this.state.alldata.frame &&
+                  //   this.state.tabletop == this.state.alldata.tabletop &&
+                  //   this.state.alldata.length == this.state.length
+                  //     ? ''
+                  //     : this.sendProduct();
+                  // }
                 }}
                 style={{
                   alignSelf: 'center',

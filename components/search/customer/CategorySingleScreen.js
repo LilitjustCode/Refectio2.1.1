@@ -169,9 +169,10 @@ export default function CategorySingleScreenCustomer({
                         width: '90%',
                       }}>
                       <View style={styles.itemNameBox}>
-                       
                         <Text style={styles.itemName}>
-                          {item.name}
+                          {item.name.length > 35
+                            ? item.name.substring(0, 35 - 3) + '...'
+                            : item.name}
                         </Text>
                       </View>
                       {item.facades && (
@@ -281,6 +282,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
+    // width:'86%'
   },
   itemType: {
     fontFamily: 'Raleway_600SemiBold',

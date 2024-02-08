@@ -171,13 +171,10 @@ export default function CategorySingleScreenGuest({
                     <View style={{width: '90%'}}>
                       <View style={styles.itemNameBox}>
                         <Text style={styles.itemName}>
-<<<<<<< Updated upstream
-                          {item?.name}
-=======
-                          {item.name.length > 35
+
+                        {item.name.length > 35
                             ? item.name.substring(0, 35 - 3) + '...'
                             : item.name}
->>>>>>> Stashed changes
                         </Text>
                       </View>
                       {item?.facades && (

@@ -64,8 +64,8 @@ export default class CustomerMainPageComponent extends React.Component {
       keyboardOpen: false,
       getAllProducts: [],
       countMeshok: 0,
-      logo: '',
-      name: '',
+      // logo: '',
+      // name: '',
       filtering_data_focus: [],
       firstLogin: '',
 
@@ -303,13 +303,12 @@ export default class CustomerMainPageComponent extends React.Component {
   }
 
   resetFilterData = async () => {
+    await this.getAuthUserProfile();
     await this.clearAllData();
-    await this.setState({filtering_data_focus: []});
-
+    await this.getProductsFunction();
     await this.setState({
       filter: false,
     });
-
     return false;
   };
 
@@ -324,26 +323,6 @@ export default class CustomerMainPageComponent extends React.Component {
   componentDidMount() {
     this.getAuthUserProfile();
     this.getProductsFunction();
-    // this.focusListener = this.props.navigation.addListener('focus', () => {
-    //   console.log('Screen focused');
-    //   const update = async () => {
-    //     await this.setState({
-    //       getAllProducts: [],
-    //       page: 1,
-    //     });
-    //     {
-    //       this.state.filtering_data_focus
-    //         ? await this.handler(this.state.filtering_data_focus)
-    //         : await this.getProductsFunction();
-    //     }
-    //     await this.getAuthUserProfile();
-    //   };
-    //   update();
-    // this.clearAllData();
-    // Check if this log appears in the console
-    // this.setState({getAllProducts: []});
-    // if()
-    // });
 
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -390,6 +369,7 @@ export default class CustomerMainPageComponent extends React.Component {
     })
       .then(response => response.json())
       .then(res => {
+        console.log(res, 'result');
         this.setState({
           logo: res?.data?.[0].logo,
           name: res?.data?.[0].company_name,
