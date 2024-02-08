@@ -4,6 +4,7 @@ import {
   Dimensions,
   Image,
   ImageBackground,
+  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -17,8 +18,8 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Linking} from 'react-native';
 import WebView from 'react-native-webview';
+import {storeVersionChecker} from '../../utils/versionCheck/AppStoreVersionChecker';
 import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import GhostNavComponent from './GhostNav';
@@ -355,6 +356,8 @@ export default class GhostPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
+    storeVersionChecker(this.props.navigation.navigate);
+    this.setState({fontsLoaded: true});
     loadedDataAfterLoadPageOne = async () => {
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
@@ -386,7 +389,12 @@ export default class GhostPageTwoComponent extends React.Component {
     }
   }
 
- 
+  componentDidUpdate() {
+    // this._unsubscribe();
+    // this._willBlurListener();
+  }
+
+
   addProtocol(url) {
     const protocolRegex = /^https?:\/\//i;
     if (protocolRegex.test(url)) {
