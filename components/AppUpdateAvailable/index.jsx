@@ -12,13 +12,19 @@ import CloseIcon from '../slider/CloseIcon';
 
 const AppUpdateAvailable = ({navigation, path}) => {
   const pathName = path.path;
+
   return (
     <>
       <SafeAreaView style={{backgroundColor: '#fff'}} />
       <View style={{flex: 1, backgroundColor: '#fff'}}>
         <View style={{alignSelf: 'flex-end', paddingTop: 20, paddingRight: 20}}>
           <CloseIcon
-            onPress={() => navigation.navigate(pathName)}
+            onPress={() =>
+              navigation.canGoBack()
+                ? navigation.goBack()
+                : navigation.navigate(pathName)
+            }
+
             color={'#7e7e7e'}
           />
         </View>
