@@ -24,6 +24,7 @@ const AppUpdateAvailable = ({navigation, path}) => {
                 ? navigation.goBack()
                 : navigation.navigate(pathName)
             }
+
             color={'#7e7e7e'}
           />
         </View>

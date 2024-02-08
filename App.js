@@ -66,6 +66,7 @@ import LiveZakazchikSinglDesignerComponent from './components/Designer/Live/Live
 import ZakaziLiveDesignerComponent from './components/Designer/Live/ZakaziLiveDesigner';
 import ModalComponent from './components/Ghost/Modal';
 
+import AppUpdateAvailable from './components/AppUpdateAvailable';
 import AboutUsScreen from './components/Customer/AboutUsScreen';
 import SelectCategoryScreen from './components/Customer/SelectCategoryScreen';
 import SelectSubCategoryScreen from './components/Customer/SelectSubCategoryScreen';
@@ -82,7 +83,6 @@ import CategorySingleScreenGuest from './components/search/guest/CategorySingleS
 import SearchScreenGuest from './components/search/guest/SearchScreen';
 import SubCategoryScreenGuest from './components/search/guest/SubCategoryScreen';
 import Carousel from './components/slider/SliderNew';
-
 // const customFonts = {
 //   Poppins_300Light,
 //   Poppins_400Regular,
@@ -178,6 +178,9 @@ function EditPhoneNumberDesignerConfirm({route, navigation}) {
 
 function EditPasswordCustomer({navigation}) {
   return <EditPasswordCustomerCompnent navigation={navigation} />;
+}
+function AppUpdateAvailableScreen({navigation, route}) {
+  return <AppUpdateAvailable navigation={navigation} path={route.params} />;
 }
 
 function DesignerPageTwo({route, navigation}) {
@@ -453,6 +456,7 @@ export default function App() {
   const [isLoading, setIsLoading] = React.useState(true);
   const [id, setId] = useState('');
   const [urlLinking, setUrlLinking] = useState('');
+
   // useEffect(() => {
   //   const handleDeepLink = ({url}) => {
   //     console.log(url, 'ureeell');
@@ -500,15 +504,21 @@ export default function App() {
       }
     };
 
+    // let checkerr = new VersionCheck();
+    // checkerr.getVersion();
+    // alert(DeviceInfo.getVersion());
     Linking.addEventListener('url', handleDeepLink);
     handleInitialUrl();
+
     return () => {
       setUrlLinking('');
     };
   }, []);
+
   useEffect(() => {
     console.log('id changed', id);
   }, [id]);
+
   console.log(urlLinking, 'urlLinking');
   // useEffect(() => {
   //   async function checkForUpdate() {
@@ -608,6 +618,8 @@ export default function App() {
         // setIsLoading(false);
       },
       notify_count: 0,
+      updateAvailable: false,
+      setUpdateAvailable: value => (authContext.updateAvailable = value),
     }),
     [],
   );
@@ -726,6 +738,7 @@ export default function App() {
                     : 'DesignerPage'
                 }
                 screenOptions={({route}) => ({
+                  lazy: true,
                   tabBarShowLabel: false,
                   headerShown: false,
                   tabBarActiveTintColor: '#2EB6A5',
@@ -735,46 +748,70 @@ export default function App() {
                 {urlLinking?.length > 0 &&
                 loginState.userRole == '2' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen
-                    name="DesignerPageTwo"
-                    options={{headerShown: false}}>
-                    {props => (
-                      <DesignerPageTwoComponent
-                        {...props}
-                        id={id}
-                        setId={setId}
-                        setUrlLinking={setUrlLinking}
-                      />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen
+                      name="DesignerPageTwo"
+                      options={{headerShown: false}}>
+                      {props => (
+                        <DesignerPageTwoComponent
+                          {...props}
+                          id={id}
+                          setId={setId}
+                          setUrlLinking={setUrlLinking}
+                        />
+                      )}
+                    </Stack.Screen>
+                  </>
                 ) : (
-                  <Stack.Screen name="DesignerPage">
-                    {props => (
-                      <DesignerPageComponent {...props} setId={setId} />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen name="DesignerPage">
+                      {props => (
+                        <DesignerPageComponent {...props} setId={setId} />
+                      )}
+                    </Stack.Screen>
+                  </>
                 )}
                 {urlLinking?.length > 0 &&
                 loginState.userRole == '2' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen name="DesignerPage">
-                    {props => (
-                      <DesignerPageComponent {...props} setId={setId} />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen
+                      name="AppUpdateAvailable"
+                      component={AppUpdateAvailableScreen}
+                      initialParams={{path: 'DesignerPageTwo'}}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen name="DesignerPage">
+                      {props => (
+                        <DesignerPageComponent {...props} setId={setId} />
+                      )}
+                    </Stack.Screen>
+                  </>
                 ) : (
-                  <Stack.Screen
-                    name="DesignerPageTwo"
-                    options={{headerShown: false}}>
-                    {props => (
-                      <DesignerPageTwoComponent
-                        {...props}
-                        id={id}
-                        setId={setId}
-                        setUrlLinking={setUrlLinking}
-                      />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen
+                      name="AppUpdateAvailable"
+                      component={AppUpdateAvailableScreen}
+                      initialParams={{path: 'DesignerPageTwo'}}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                    <Stack.Screen
+                      name="DesignerPageTwo"
+                      options={{headerShown: false}}>
+                      {props => (
+                        <DesignerPageTwoComponent
+                          {...props}
+                          id={id}
+                          setId={setId}
+                          setUrlLinking={setUrlLinking}
+                        />
+                      )}
+                    </Stack.Screen>
+                  </>
                 )}
 
                 <Stack.Screen
@@ -855,6 +892,7 @@ export default function App() {
                     : 'CustomerMainPage'
                 }
                 screenOptions={({route}) => ({
+                  lazy: true,
                   tabBarShowLabel: false,
                   headerShown: false,
                   tabBarActiveTintColor: '#2EB6A5',
@@ -864,46 +902,74 @@ export default function App() {
                 {urlLinking?.length > 0 &&
                 loginState.userRole == '3' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen
-                    name="CustomerPageTwo"
-                    options={{headerShown: false}}>
-                    {props => (
-                      <CustomerPageTwoComponent
-                        {...props}
-                        id={id}
-                        setId={setId}
-                        setUrlLinking={setUrlLinking}
-                      />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen
+                      name="CustomerPageTwo"
+                      options={{headerShown: false}}>
+                      {props => (
+                        <CustomerPageTwoComponent
+                          {...props}
+                          id={id}
+                          setId={setId}
+                          setUrlLinking={setUrlLinking}
+                        />
+                      )}
+                    </Stack.Screen>
+                    <Stack.Screen
+                      name="AppUpdateAvailable"
+                      component={AppUpdateAvailableScreen}
+                      initialParams={{
+                        path: 'CustomerPageTwo',
+                      }}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                  </>
                 ) : (
-                  <Stack.Screen name="CustomerMainPage">
-                    {props => (
-                      <CustomerMainPageComponent {...props} setId={setId} />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen name="CustomerMainPage">
+                      {props => (
+                        <CustomerMainPageComponent {...props} setId={setId} />
+                      )}
+                    </Stack.Screen>
+                    <Stack.Screen
+                      name="AppUpdateAvailable"
+                      component={AppUpdateAvailableScreen}
+                      initialParams={{
+                        path: 'CustomerMainPage',
+                      }}
+                      options={{
+                        gestureEnabled: false,
+                      }}
+                    />
+                  </>
                 )}
                 {urlLinking?.length > 0 &&
                 loginState.userRole == '3' &&
                 loginState.userToken !== null ? (
-                  <Stack.Screen name="CustomerMainPage">
-                    {props => (
-                      <CustomerMainPageComponent {...props} setId={setId} />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen name="CustomerMainPage">
+                      {props => (
+                        <CustomerMainPageComponent {...props} setId={setId} />
+                      )}
+                    </Stack.Screen>
+                  </>
                 ) : (
-                  <Stack.Screen
-                    name="CustomerPageTwo"
-                    options={{headerShown: false}}>
-                    {props => (
-                      <CustomerPageTwoComponent
-                        {...props}
-                        id={id}
-                        setId={setId}
-                        setUrlLinking={setUrlLinking}
-                      />
-                    )}
-                  </Stack.Screen>
+                  <>
+                    <Stack.Screen
+                      name="CustomerPageTwo"
+                      options={{headerShown: false}}>
+                      {props => (
+                        <CustomerPageTwoComponent
+                          {...props}
+                          id={id}
+                          setId={setId}
+                          setUrlLinking={setUrlLinking}
+                        />
+                      )}
+                    </Stack.Screen>
+                  </>
                 )}
 
                 <Stack.Screen
@@ -1001,26 +1067,13 @@ export default function App() {
                     : 'GhostPage'
                 }
                 screenOptions={({route}) => ({
+                  lazy: true,
                   tabBarShowLabel: false,
                   headerShown: false,
                   tabBarActiveTintColor: '#2EB6A5',
                   tabBarInactiveTintColor: 'gray',
                   tabBarStyle: tabBarStyle,
                 })}>
-                {/* {urlLinking.length > 0 ? (
-                  <Stack.Screen
-                    name="GhostPageTwo"
-                    // component={GhostPageTwoFunc}
-                    component={GhostPageTwoComponent}
-                    initialParams={{id}}
-                  />
-                ) : (
-                  <Stack.Screen
-                    name="GhostPage"
-                    component={GhostPageComponent}
-                  />
-                )}
-                {} */}
                 <Stack.Screen
                   name="GhostPageTwo"
                   options={{headerShown: false}}>
@@ -1033,6 +1086,14 @@ export default function App() {
                     />
                   )}
                 </Stack.Screen>
+                <Stack.Screen
+                  name="AppUpdateAvailable"
+                  component={AppUpdateAvailableScreen}
+                  initialParams={{path: 'GhostPage'}}
+                  options={{
+                    gestureEnabled: false,
+                  }}
+                />
 
                 <Stack.Screen name="GhostPage">
                   {props => <GhostPageComponent {...props} setId={setId} />}

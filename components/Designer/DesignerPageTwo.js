@@ -189,7 +189,6 @@ export default class DesignerPageTwoComponent extends React.Component {
           arr.shift(res.data.user_category_for_product[0]);
           arr.push(lastItem);
         }
-        console.log(res.data.Favorit_button, 'favorite');
         if (res.data.Favorit_button === true) {
           this.setState({favoriteBool: true});
         } else {
@@ -212,6 +211,8 @@ export default class DesignerPageTwoComponent extends React.Component {
         }
 
         this.setState({loading: false});
+
+        console.log(res.data.city_for_sales_user.length, 'data');
 
         this.setState({
           user: res.data.user,
@@ -263,7 +264,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       fetch(`https://admin.refectio.ru/public/api/addtoFavorit`, requestOptions)
         .then(response => response.json())
         .then(result => {
-          console.log(result, 'add');
           this.setState({favoriteBool: false});
           this.getObjectData(userID);
         })
@@ -275,7 +275,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       )
         .then(response => response.json())
         .then(result => {
-          console.log(result, 'delete');
           this.setState({favoriteBool: true});
           this.getObjectData(userID);
         })
@@ -286,10 +285,6 @@ export default class DesignerPageTwoComponent extends React.Component {
   // updatei apin poxel
 
   updateProduct = async (parent_category_name, id) => {
-    await this.setState({
-      change_category_loaded: true,
-    });
-
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -315,7 +310,7 @@ export default class DesignerPageTwoComponent extends React.Component {
           this.setState({
             products: [],
             // show_plus_button: false
-            change_category_loaded: false,
+            // change_category_loaded: false,
           });
 
           return false;
@@ -335,14 +330,14 @@ export default class DesignerPageTwoComponent extends React.Component {
         }
 
         this.setState({
-          // user: data.user,
-          // user_bonus_for_designer: res.data.user_bonus_for_designer,
+          user: data.user,
+          user_bonus_for_designer: res.data.user_bonus_for_designer,
           // user_category_for_product: res.data.user_category_for_product,
-          // city_for_sales_user: res.data.city_for_sales_user,
+          city_for_sales_user: res.data.city_for_sales_user,
           products: data.products,
-          // show_plus_button: false,
-          // extract: data.user[0].extract,
-          // whatsapp: res.data.user[0].watsap_phone
+          show_plus_button: false,
+          extract: data.user[0].extract,
+          whatsapp: res.data.user[0].watsap_phone,
           change_category_loaded: false,
         });
         this.setState({loading: false});
@@ -356,7 +351,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
-      products: [],
+      // products: [],
       city_count: null,
       about_us: '',
     });
@@ -466,14 +461,14 @@ export default class DesignerPageTwoComponent extends React.Component {
           }
 
           this.setState({
-            // user: data.user,
-            // user_bonus_for_designer: res.data.user_bonus_for_designer,
-            // user_category_for_product: res.data.user_category_for_product,
-            // city_for_sales_user: res.data.city_for_sales_user,
+            user: data.user,
+            user_bonus_for_designer: res.data.user_bonus_for_designer,
+            user_category_for_product: res.data.user_category_for_product,
+            city_for_sales_user: res.data.city_for_sales_user,
             products: data.products,
-            // show_plus_button: false,
-            // extract: data.user[0].extract,
-            // whatsapp: res.data.user[0].watsap_phone
+            show_plus_button: false,
+            extract: data.user[0].extract,
+            whatsapp: res.data.user[0].watsap_phone,
             change_category_loaded: false,
             pressCategory: true,
           });
@@ -493,15 +488,10 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
-    await this.updateProduct(
-      this.state.parent_name.length > 0
-        ? this.state.parent_name
-        : this.state.user_category_for_product[0].parent_category_name,
-      id,
-    );
+    console.log(this.state.city_count, 'count');
     this.setState({
       changed:
-        this.state.city_for_sales_user.length == this.state.city_count
+        this.state.city_for_sales_user.length >= 78
           ? 'Все города России'
           : this.state.city_for_sales_user[0].city_name,
     });
@@ -511,23 +501,27 @@ export default class DesignerPageTwoComponent extends React.Component {
     // this.props.navigation.navigate("CustomerMainPage", { screen: true });
     const {id, setId, setUrlLinking} = this.props;
 
-    if (this.props.route.params?.fromSearch === true) {
-      this.props.navigation.navigate(this.props.route.params.prevRoute);
-      this.props.id = null;
-    } else if (
-      this.props.route.params?.id ||
-      (this.props.id &&
-        !this.props.route.params?.fromSearch &&
-        this.props.route.params?.prevRoute != 'DesignerSaved')
-    ) {
-      this.props.navigation.navigate('DesignerPage', {screen: true});
-    } else if (
-      this.props.route.params?.id ||
-      (this.props.id &&
-        !this.props.route.params?.fromSearch &&
-        this.props.route.params.prevRoute == 'DesignerSaved')
-    ) {
-      this.props.navigation.navigate(this.props.route.params.prevRoute);
+    if (this.props.route.params.prevRoute == 'DesignerSaved') {
+      this.props.navigation.goBack();
+    } else {
+      if (this.props.route.params?.fromSearch === true) {
+        this.props.navigation.navigate(this.props.route.params.prevRoute);
+        this.props.id = null;
+      } else if (
+        this.props.route.params?.id ||
+        (this.props.id &&
+          this.props.route.params.prevRoute != 'DesignerSaved' &&
+          this.props.route.params?.fromSearch == false)
+      ) {
+        this.props.navigation.navigate('DesignerPage', {screen: true});
+      } else if (
+        this.props.route.params?.id ||
+        (this.props.id && !this.props.route.params?.fromSearch)
+      ) {
+        this.props.navigation.navigate(this.props.route.params.prevRoute);
+      } else {
+        this.props.navigation.goBack();
+      }
     }
 
     setId(null);
@@ -537,7 +531,21 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-    // this.setState({fontsLoaded: true});
+
+    loadedDataAfterLoadPageOne = async () => {
+      await this.getObjectData(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+
+      await this.updateProduct(
+        this.state.parent_name.length > 0
+          ? this.state.parent_name
+          : this.state.user_category_for_product[0].parent_category_name,
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    };
+    loadedDataAfterLoadPageOne();
+
     this.loadedDataAfterLoadPage(
       this.props.route.params?.id ? this.props.route.params?.id : id,
     );
@@ -545,22 +553,11 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
+      // loadedDataAfterLoadPageOne();
     });
-    // BackHandler.addEventListener(
-    //   'hardwareBackPress',
-    //   this.handleBackButtonClick,
-    //   this.loadedDataAfterLoadPage(
-    //     this.props.route.params?.id ? this.props.route.params?.id : id,
-    //   ),
-    // );
   }
 
   componentWillUnmount() {
-    // BackHandler.removeEventListener(
-    //   'hardwareBackPress',
-    //   this.handleClearData,
-    //   this.handleBackButtonClick,
-    // );
     if (this.focusListener) {
       this.focusListener();
       this.handleClearData();
@@ -1142,12 +1139,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                           style={{
                             flexDirection: 'row',
                             marginTop: 4,
-                            // width:
-                            //   screenWidth > 360
-                            //     ? '62.5%'
-                            //     : screenWidth > 393
-                            //     ? '71%'
-                            //     : '59%',
                           }}>
                           {`${this.state.user[0].saite}` !== 'null' && (
                             <TouchableOpacity
@@ -1322,8 +1313,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                           : styles.sOpenCityDropDown
                       }>
                       <ScrollView nestedScrollEnabled={true}>
-                        {this.state.city_for_sales_user.length ==
-                        this.state.city_count ? (
+                        {this.state.city_for_sales_user.length >= 78 ? (
                           <TouchableOpacity
                             style={{
                               width: '100%',
@@ -1443,8 +1433,6 @@ export default class DesignerPageTwoComponent extends React.Component {
                   </View>
                 </>
               )}
-
-              {/* dropdown */}
 
               <View
                 style={{
@@ -1575,12 +1563,12 @@ export default class DesignerPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.frame && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Корпус: {item.frame}
                           </Text>
                         )}
                         {item.profile && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Профиль: {item.profile}
                           </Text>
                         )}
@@ -1590,22 +1578,22 @@ export default class DesignerPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.length && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Длина: {item.length.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.height && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Высота: {item.height.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.material && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Материал: {item.material}
                           </Text>
                         )}
                         {item.price && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Цена:{' '}
                             {item.price
                               .toString()
@@ -1675,6 +1663,7 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
+    width: '90%',
   },
   itemType: {
     fontFamily: 'Raleway_600SemiBold',

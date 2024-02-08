@@ -88,7 +88,7 @@ export default class DesignerSavedComponent extends React.Component {
               saveds: [...saveds, ...data],
               isLoading: false,
             });
-            console.log(page, 'pagee')
+            console.log(page, 'pagee');
           } else {
             this.setState({
               isLastPage: true,
@@ -133,8 +133,12 @@ export default class DesignerSavedComponent extends React.Component {
         <View key={index} style={styles.campaign}>
           <TouchableOpacity
             onPress={async () => {
+              const routes = this.props.navigation.getState()?.routes;
+              const prevRoute = routes[routes.length - 1]?.name;
               await this.props.navigation.navigate('DesignerPageTwo', {
                 id: item.id,
+                prevRoute,
+                
               });
             }}>
             <View style={styles.infoCompanyMain}>

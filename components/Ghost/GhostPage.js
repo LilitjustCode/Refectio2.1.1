@@ -14,11 +14,11 @@ import {
 } from 'react-native';
 import Svg, {Path} from 'react-native-svg';
 // import Slider from "../slider/Slider";
+import {storeVersionChecker} from '../../utils/versionCheck/AppStoreVersionChecker';
 import FilterComponent from '../Component/FilterComponent';
 import Slider2 from '../slider/Slider2';
 import GhostNavComponent from './GhostNav';
 // import * as Font from 'expo-font';
-
 export default class GhostPageComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -269,8 +269,7 @@ export default class GhostPageComponent extends React.Component {
 
   componentDidMount() {
     const {navigation} = this.props;
-    // this.getProductsFunction();
-
+    storeVersionChecker(this.props.navigation.navigate);
     this.focusListener = navigation.addListener('focus', () => {
       this._loadFontsAsync();
       this.getProductsFunction();
@@ -325,8 +324,8 @@ export default class GhostPageComponent extends React.Component {
               this.props.navigation.navigate('GhostPageTwo', {
                 id: item.id,
                 prevroutname: 'name',
-              })}}           
-            >
+              });
+            }}>
             <View style={styles.infoCompanyMain}>
               <Image
                 source={{
