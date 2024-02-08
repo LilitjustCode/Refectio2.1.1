@@ -88,12 +88,13 @@ export default function CategoryScreenDesigner(props) {
     })
       .then(response => response.json())
       .then(res => {
-        let arr = shuffle(res.data.data);
-        refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+        // let arr = shuffle(res.data.data);
+        let arr = res.data.data
+        // refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+        setProducts([...products, ...arr])
         setNextUrl(res.data.next_page_url);
-        setIsRefreshing(false);
-        setLoading(false);
-        setMoreLoading(false);
+         setLoading(false);
+         setMoreLoading(false);
       });
   }
 
@@ -461,15 +462,8 @@ export default function CategoryScreenDesigner(props) {
               </Text>
             )}
             onEndReached={handleLoadMore}
-            onEndReachedThreshold={0.1}
+            onEndReachedThreshold={1}
             ListFooterComponent={renderFooter}
-            refreshControl={
-              <RefreshControl
-                refreshing={isRefreshing}
-                colors={['#94D8F4']}
-                onRefresh={handleRefresh}
-              />
-            }
           />
         )}
       </View>

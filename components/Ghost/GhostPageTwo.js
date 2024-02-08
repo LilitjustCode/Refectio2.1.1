@@ -136,64 +136,7 @@ export default class GhostPageTwoComponent extends React.Component {
       });
   };
 
-  // getObjectData = async id => {
-  //   this.setState({loading: true});
-  //   let userID = id;
-  //   // console.log(this.props.id, 'ljj');
-
-  //   await fetch(
-  //     `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
-  //       userID,
-  //     {
-  //       method: 'GET',
-  //     },
-  //   )
-  //     .then(response => response.json())
-  //     .then(res => {
-  //       let arr = res.data.user_category_for_product;
-  //       const isFound = res.data.user_category_for_product.findIndex(
-  //         element => +element.parent_category_id == 10,
-  //       );
-  //       if (isFound == 0) {
-  //         arr = res.data.user_category_for_product;
-  //         let lastItem = res.data.user_category_for_product[0];
-  //         arr.shift(res.data.user_category_for_product[0]);
-  //         arr.push(lastItem);
-  //       }
-
-  //       const isFoundKitchen = arr.findIndex(
-  //         element => +element.parent_category_id == 2,
-  //       );
-  //       if (isFoundKitchen >= 0) {
-  //         let firstItem = arr.splice(isFoundKitchen, 1);
-  //         arr.unshift(firstItem[0]);
-  //       }
-
-  //       const receptionАrea = arr.findIndex(
-  //         element => +element.parent_category_id == 12,
-  //       );
-  //       if (receptionАrea >= 0) {
-  //         let myItem = arr.splice(receptionАrea, 1);
-  //         arr.push(myItem[0]);
-  //       }
-  //       console.log(res.data.user[0].about_us);
-  //       this.setState({loading: false});
-  //       console.log(this.state.loading);
-  //       this.setState({
-  //         user: res.data.user,
-  //         user_category_for_product: arr,
-  //         city_for_sales_user: res.data.city_for_sales_user,
-  //         whatsapp: res.data.user[0].watsap_phone,
-  //         city_count: res.data.city_count,
-  //         about_us: res.data.user[0].about_us,
-  //       });
-  //     });
-  // };
-
   updateProduct = async (parent_category_name, id) => {
-    // await this.setState({
-    //   change_category_loaded: true,
-    // });
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
@@ -360,12 +303,7 @@ export default class GhostPageTwoComponent extends React.Component {
           }
 
           this.setState({
-            // user: data.user,
-            // user_bonus_for_designer: res.data.user_bonus_for_designer,
-            // user_category_for_product: res.data.user_category_for_product,
-            // city_for_sales_user: res.data.city_for_sales_user,
             products: data.products,
-            // show_plus_button: false,
             extract: data.user[0].extract,
             whatsapp: res.data.user[0].watsap_phone,
             change_category_loaded: false,
@@ -399,7 +337,6 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleBackButtonClick() {
-    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
     const {id, setId, setUrlLinking} = this.props;
 
     if (this.props.route.params?.fromSearch === true) {
@@ -418,16 +355,9 @@ export default class GhostPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-    // this.setState({fontsLoaded: true});
-
     loadedDataAfterLoadPageOne = async () => {
-      console.log('dddd');
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
-      );
-      console.log(
-        this.state.user_category_for_product[0].parent_category_name,
-        'dddname',
       );
       await this.updateProduct(
         this.state.parent_name.length > 0
@@ -445,15 +375,8 @@ export default class GhostPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      // loadedDataAfterLoadPageOne();
     });
-    // BackHandler.addEventListener(
-    //   'hardwareBackPress',
-    //   this.handleBackButtonClick,
-    //   this.loadedDataAfterLoadPage(
-    //     this.props.route.params?.id ? this.props.route.params?.id : id,
-    //   ),
-    // );
+
   }
 
   componentWillUnmount() {
@@ -463,11 +386,7 @@ export default class GhostPageTwoComponent extends React.Component {
     }
   }
 
-  componentWillUnmount() {
-    // this._unsubscribe();
-    // this._willBlurListener();
-  }
-
+ 
   addProtocol(url) {
     const protocolRegex = /^https?:\/\//i;
     if (protocolRegex.test(url)) {
@@ -702,6 +621,7 @@ export default class GhostPageTwoComponent extends React.Component {
             </View>
           </ImageBackground>
         </Modal>
+
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -814,12 +734,6 @@ export default class GhostPageTwoComponent extends React.Component {
                           style={{
                             flexDirection: 'row',
                             marginTop: 4,
-                            // width:
-                            //   screenWidth > 360
-                            //     ? '62.5%'
-                            //     : screenWidth > 393
-                            //     ? '71%'
-                            //     : '59%',
                           }}>
                           {`${this.state.user[0].saite}` !== 'null' && (
                             <TouchableOpacity
@@ -862,7 +776,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           {this.state.user[0].extract !== null && (
                             <TouchableOpacity
                               onPress={() => {
-                                this.setState({VipiskaModal: true});
+                              this.props.navigation.navigate('Modal')
                               }}>
                               <Image
                                 source={require('../../assets/image/sidebar.png')}
@@ -1153,16 +1067,8 @@ export default class GhostPageTwoComponent extends React.Component {
                     styles.info,
                     {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
                   ]}
-                  // onPress={() => {
-                  //   this.props.navigation.navigate("Modal");
-                  // }}
-                  onPress={() => {
-                    const number = this.state.whatsapp;
-                    const convertedNumber = number.replace(/\D/g, '');
-                    Linking.openURL(
-                      `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
-                      // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
-                    ).catch(err => console.log(err));
+                  onPress={() => {   
+                    this.props.navigation.navigate('Modal')
                   }}>
                   <Image
                     source={require('../../assets/image/whatsapp.png')}

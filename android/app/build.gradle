@@ -79,8 +79,8 @@ android {
         applicationId 'com.JustCode.RefectioApp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName '5.0'
+        versionCode 6
+        versionName '6.0'
     }
     signingConfigs {release {
                 storeFile file('refectio.keystore')
