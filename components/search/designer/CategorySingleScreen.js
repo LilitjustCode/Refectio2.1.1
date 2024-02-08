@@ -81,7 +81,6 @@ export default function CategorySingleScreenDesigner({
 
   const handleLoadMore = () => {
     if (nextUrl && !moreLoading) {
-      console.log('handleLoadMore');
       setMoreLoading(true);
       getProducts();
     }
@@ -127,8 +126,6 @@ export default function CategorySingleScreenDesigner({
         }}>
         <BackBtn
           onPressBack={() => {
-            console.log('back');
-
             navigation.goBack();
           }}
         />

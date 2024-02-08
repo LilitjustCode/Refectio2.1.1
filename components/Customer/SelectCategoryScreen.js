@@ -1,12 +1,17 @@
-import React, {useEffect, useState} from 'react';
-import {Image, ScrollView, TouchableOpacity, View} from 'react-native';
-import {Text} from 'react-native';
-import {SafeAreaView} from 'react-native';
-import Loading from '../Component/Loading';
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
-import {BackBtn} from '../search/customer/CategorySingleScreen';
-import LimitPopup from './LimitPopup';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, {useEffect, useState} from 'react';
+import {
+  Image,
+  SafeAreaView,
+  ScrollView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import Loading from '../Component/Loading';
+import {BackBtn} from '../search/customer/CategorySingleScreen';
+import CustomerMainPageNavComponent from './CustomerMainPageNav';
+import LimitPopup from './LimitPopup';
 
 export default function SelectCategoryScreen({navigation, user_id}) {
   const [categories, setCategories] = useState([]);
@@ -43,8 +48,6 @@ export default function SelectCategoryScreen({navigation, user_id}) {
     let formdata = new FormData();
     formdata.append('category_id', el.id);
 
-    console.log(onPressCategory);
-
     var requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -58,7 +61,6 @@ export default function SelectCategoryScreen({navigation, user_id}) {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res);
         setIsLoading(false);
         if (res.status) {
           navigation.navigate('AddProduct', {category: el, user_id: user_id});

@@ -13,6 +13,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Loading from '../../Component/Loading';
 import GhostNavComponent from '../../Ghost/GhostNav';
 import {
@@ -86,8 +87,19 @@ export default function CategoryScreenGuest(props) {
     })
       .then(response => response.json())
       .then(res => {
-        let arr = shuffle(res.data.data);
-        refresh ? setProducts(arr) : setProducts([...products, ...arr]);
+        let newArr = shuffle(res.data.data);
+        let updatedProducts;
+
+        if (refresh) {
+          updatedProducts = newArr;
+        } else {
+          const existingIds = new Set(products.map(product => product.id));
+          newArr = newArr.filter(product => !existingIds.has(product.id));
+          updatedProducts = products.concat(newArr);
+        }
+
+        setProducts(updatedProducts);
+
         setNextUrl(res.data.next_page_url);
         setIsRefreshing(false);
         setLoading(false);
@@ -408,8 +420,12 @@ export default function CategoryScreenGuest(props) {
         ) : (
           <FlatList
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => item.id}
             data={products}
+            maxToRenderPerBatch={60}
+            // initialNumToRender={1}
+            // snapToInterval={9}
+            renderToHardwareTextureAndroid={true}
             numColumns={3}
             renderItem={({item, index}) => {
               return (
@@ -426,15 +442,20 @@ export default function CategoryScreenGuest(props) {
                       endPrice,
                     })
                   }>
-                  <Image
+                  <FastImage
+                    style={{
+                      width: (width - 40) / 3,
+                      height: (width - 40) / 3,
+                      marginBottom: 5,
+                      marginRight: 5,
+                    }}
                     source={{
                       uri:
                         `https://admin.refectio.ru/storage/app/uploads/` +
                         item.product_image[0].image,
+                      priority: FastImage.priority.high,
                     }}
-                    style={{marginBottom: 5, marginRight: 5}}
-                    width={(width - 40) / 3}
-                    height={(width - 40) / 3}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
               );

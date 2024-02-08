@@ -47,7 +47,6 @@ export default function CategorySingleScreenCustomer({
   async function getProducts(refresh) {
     let formdata = new FormData();
     if (category.parent) {
-      console.log('subcategory');
       formdata.append('parent_category_id', category.parent_id);
       formdata.append('category_id', category.id);
     } else {
@@ -79,7 +78,6 @@ export default function CategorySingleScreenCustomer({
 
   const handleLoadMore = () => {
     if (nextUrl && !moreLoading) {
-      console.log('handleLoadMore');
       setMoreLoading(true);
       getProducts();
     }

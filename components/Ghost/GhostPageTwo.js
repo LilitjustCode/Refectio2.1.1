@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   Dimensions,
   Image,
   ImageBackground,
@@ -135,10 +134,13 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   updateProduct = async (parent_category_name, id) => {
+<<<<<<< Updated upstream
     await this.setState({
       change_category_loaded: true,
     });
 
+=======
+>>>>>>> Stashed changes
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -200,7 +202,6 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleShare = async () => {
-    console.log(this.state.user[0].id, 'user');
     const shareingStartWith = 'refectio.ru/';
     try {
       {
@@ -647,6 +648,7 @@ export default class GhostPageTwoComponent extends React.Component {
           </Svg>
           <Text style={styles.backText}>Назад</Text>
         </TouchableOpacity>
+<<<<<<< Updated upstream
         {this.state.loading === false ? (
           <View style={styles.main}>
             <ScrollView showsVerticalScrollIndicator={false}>
@@ -658,6 +660,186 @@ export default class GhostPageTwoComponent extends React.Component {
                         <Image
                           source={{
                             uri: this.state.urlImage + this.state.user[0].logo,
+=======
+        <View style={styles.main}>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            <View style={styles.campaign}>
+              {this.state.user.length > 0 && (
+                <>
+                  <View style={styles.infoCompanyMain}>
+                    <View style={{width: '32%'}}>
+                      <Image
+                        source={{
+                          uri: this.state.urlImage + this.state.user[0].logo,
+                        }}
+                        style={{
+                          width: 100,
+                          height: 100,
+                          marginRight: 12,
+                          borderColor: '#C8C8C8',
+                          borderWidth: 1,
+                          resizeMode: 'cover',
+                          borderRadius: 10,
+                        }}
+                      />
+                    </View>
+
+                    <View style={styles.infoCompany}>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          // width: '95%',
+                          // backgroussndColor: 'red',
+                        }}>
+                        <View>
+                          <Text
+                            style={{
+                              fontSize: 20,
+                              // fontFamily: 'Raleway_500Medium',
+                              color: '#333333',
+                              fontWeight: '700',
+                            }}>
+                            {this.state.user[0].company_name}
+                          </Text>
+                          <Text
+                            style={{
+                              fontSize: 16,
+                              color: '#A8A8A8',
+                              fontFamily: 'Raleway_500Medium',
+                            }}>
+                            {this.state.user[0].made_in}
+                          </Text>
+                        </View>
+                        <TouchableOpacity onPress={() => this.favorite()}>
+                          {this.state.favoriteBool == true && (
+                            <Image
+                              source={require('../../assets/image/heartHast.png')}
+                              style={{
+                                width: 24,
+                                height: 21.43,
+                                // marginRight: screenWidth > 393 ? -2 : 1,
+                                marginBottom: 15,
+                                marginRight: 1.5,
+                                // marginTop: 5,
+                              }}
+                            />
+                          )}
+                          {this.state.favoriteBool == false && (
+                            <Image
+                              source={require('../../assets/image/heartSev.png')}
+                              style={{
+                                width: 24,
+                                height: 21.43,
+                                tintColor: 'red',
+                                marginRight: 1.5,
+
+                                marginBottom: 15,
+                              }}
+                            />
+                          )}
+                        </TouchableOpacity>
+                      </View>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                        }}>
+                        <View
+                          style={{
+                            flexDirection: 'row',
+                            marginTop: 4,
+                          }}>
+                          {`${this.state.user[0].saite}` !== 'null' && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                Linking.openURL(
+                                  this.addProtocol(this.state.user[0].saite),
+                                );
+                              }}>
+                              <Image
+                                source={require('../../assets/image/globus.png')}
+                                style={{
+                                  width: 24,
+                                  height: 24,
+                                  marginRight: 14,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.user[0].saite == null && (
+                            <View style={{height: 24}}></View>
+                          )}
+                          {this.state.user[0].telegram !== null && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                Linking.openURL(
+                                  'https://t.me/' + this.state.user[0].telegram,
+                                );
+                              }}>
+                              <Image
+                                source={require('../../assets/image/telegram.png')}
+                                style={{
+                                  width: 24,
+                                  height: 24,
+                                  marginRight: 14,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+
+                          {this.state.user[0].extract !== null && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.props.navigation.navigate('Modal');
+                              }}>
+                              <Image
+                                source={require('../../assets/image/sidebar.png')}
+                                style={{
+                                  width: 18,
+                                  height: 24,
+                                  marginRight: 14,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.user[0].job_with_designer == 'Да' && (
+                            <TouchableOpacity
+                              onPress={() => {
+                                this.setState({designerModal: true});
+                              }}>
+                              <Image
+                                source={require('../../assets/image/design.png')}
+                                style={{
+                                  width: 24,
+                                  height: 24,
+                                  marginRight: 10,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                          {this.state.user[0].dmodel == 'Да' && (
+                            <TouchableOpacity
+                              onPress={() =>
+                                this.setState({dmodel_popup: true})
+                              }>
+                              <Image
+                                source={require('../../assets/image/cube.png')}
+                                style={{
+                                  width: 24,
+                                  height: 24,
+                                }}
+                              />
+                            </TouchableOpacity>
+                          )}
+                        </View>
+                        <TouchableOpacity
+                          style={{
+                            marginTop: 4,
+                            marginLeft: 1,
+>>>>>>> Stashed changes
                           }}
                           style={{
                             width: 100,
@@ -829,7 +1011,138 @@ export default class GhostPageTwoComponent extends React.Component {
                               </TouchableOpacity>
                             )}
                           </View>
+<<<<<<< Updated upstream
                           <TouchableOpacity
+=======
+                        </View>
+                      </View>
+                    )}
+                  </View>
+                </>
+              )}
+
+              <View
+                style={{
+                  width: '100%',
+                  height: 58,
+                  flexDirection: 'row',
+                  justifyContent: 'space-between',
+                  marginTop: 14,
+                  marginBottom: 19,
+                  zIndex: -1,
+                }}>
+                <TouchableOpacity
+                  style={[
+                    styles.info,
+                    {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
+                  ]}
+                  onPress={() => {
+                    // this.setState({ aboutUsPopup: true })
+                    this.props.navigation.navigate('AboutUsScreen', {
+                      value: this.state.about_us,
+                      hideText: true,
+                    });
+                  }}>
+                  <Image
+                    source={require('../../assets/image/la_percent.png')}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text style={styles.infoText}>Доп. информация</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[
+                    styles.info,
+                    {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
+                  ]}
+                  onPress={() => {
+                    this.props.navigation.navigate('Modal');
+                  }}>
+                  <Image
+                    source={require('../../assets/image/whatsapp.png')}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text style={styles.infoText}>Написать в вотсап</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.info}
+                  // onPress={() => {
+                  //   this.props.navigation.navigate("Modal");
+                  // }}
+                >
+                  <Image
+                    source={require('../../assets/image/pcichka.png')}
+                    style={{
+                      width: 30,
+                      height: 30,
+                      resizeMode: 'contain',
+                    }}
+                  />
+                  <Text style={styles.infoText}>Отзывы</Text>
+                </TouchableOpacity>
+              </View>
+
+              <View style={{zIndex: -1}}>
+                <ScrollView
+                  horizontal={true}
+                  showsVerticalScrollIndicator={false}
+                  showsHorizontalScrollIndicator={false}>
+                  {this.state.user_category_for_product.map((item, index) => {
+                    return (
+                      <TouchableOpacity
+                        key={index}
+                        onPress={async () => {
+                          await this.updateProductAfterClickToCategory(
+                            item.parent_category_name,
+                            index,
+                          );
+                          this.setState({active: index});
+                          this.setState({
+                            parent_name: item.parent_category_name,
+                          });
+                        }}
+                        style={
+                          this.state.active === index
+                            ? styles.categoriesButtonActive
+                            : styles.categoriesButton
+                        }>
+                        <Text
+                          style={
+                            this.state.active === index
+                              ? styles.categoriesNameActive
+                              : styles.categoriesName
+                          }>
+                          {item.parent_category_name}
+                        </Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              </View>
+
+              {!this.state.change_category_loaded &&
+                this.state.products.map((item, index) => {
+                  return (
+                    <View key={index} style={{marginTop: 18}}>
+                      <Slider2 slid={item.product_image} />
+
+                      <View
+                        style={{
+                          width: '100%',
+                        }}>
+                        <View style={styles.itemNameBox}>
+                          <Text style={styles.itemName}>{item.name}</Text>
+                        </View>
+                        {item.facades && (
+                          <Text
+>>>>>>> Stashed changes
                             style={{
                               marginTop: 4,
                               marginLeft: 1,

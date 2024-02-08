@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {
   SafeAreaView,
   ScrollView,
@@ -11,9 +11,6 @@ import {BackBtn} from '../customer/CategorySingleScreen';
 import {renderSwitch} from '../customer/SubCategoryScreen';
 
 export default function SubCategoryScreen({navigation, category}) {
-  useEffect(() => {
-    console.log('category from route ===', category);
-  }, [category]);
   return (
     <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
       <View
@@ -66,7 +63,6 @@ export default function SubCategoryScreen({navigation, category}) {
                 onPress={() => {
                   const routes = navigation.getState()?.routes;
                   const prevRoute = routes[routes.length - 2]?.name;
-                  console.log(category);
                   return navigation.navigate('CategoryScreen', {
                     category: el,
                     prevRoute,
