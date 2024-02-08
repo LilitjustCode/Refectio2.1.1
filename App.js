@@ -674,13 +674,16 @@ export default function App() {
       this.getLiveZakaz();
     }, 3000);
   }, []);
-
+  const linking = {
+    prefixes: ['https://refectio.ru/'],
+    config: {
+      screens: {
+        GhostPage: 'AlexRoom/337',
+      },
+    },
+  };
   if (isLoading) {
     return (
-      // <View style={{ backgroundColor: '#fff', flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      //   <ActivityIndicator size={100} color="#00f" />
-      // </View>
-
       <View style={{flex: 1}}>
         <Image
           source={require('./assets/splash.png')}
@@ -697,7 +700,7 @@ export default function App() {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <NavigationContainer>
+        <NavigationContainer linking={linking}>
           {/* {urlLinking.length > 0 && (
             <Stack.Navigator
               initialRouteName="GhostPageTwo"
