@@ -4,7 +4,6 @@ import {
   FlatList,
   Image,
   Keyboard,
-  RefreshControl,
   SafeAreaView,
   ScrollView,
   StyleSheet,
@@ -13,7 +12,9 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import Loading from '../../Component/Loading';
+
 import DesignerPageNavComponent from '../../Designer/DesignerPageNav';
 import {
   BackBtn,
@@ -21,7 +22,6 @@ import {
   FilterIcon,
   OpenIcon,
 } from '../customer/CategoryScreen';
-import shuffle from '../shuffle';
 
 const {width} = Dimensions.get('screen');
 
@@ -88,13 +88,12 @@ export default function CategoryScreenDesigner(props) {
     })
       .then(response => response.json())
       .then(res => {
-        // let arr = shuffle(res.data.data);
-        let arr = res.data.data
-        // refresh ? setProducts(arr) : setProducts([...products, ...arr]);
-        setProducts([...products, ...arr])
+        let arr = shuffle(res.data.data);
+        refresh ? setProducts(arr) : setProducts([...products, ...arr]);
         setNextUrl(res.data.next_page_url);
-         setLoading(false);
-         setMoreLoading(false);
+        setIsRefreshing(false);
+        setLoading(false);
+        setMoreLoading(false);
       });
   }
 
@@ -429,15 +428,20 @@ export default function CategoryScreenDesigner(props) {
                       endPrice,
                     })
                   }>
-                  <Image
+                  <FastImage
+                    style={{
+                      width: (width - 40) / 3,
+                      height: (width - 40) / 3,
+                      marginBottom: 5,
+                      marginRight: 5,
+                    }}
                     source={{
                       uri:
                         `https://admin.refectio.ru/storage/app/uploads/` +
                         item.product_image[0].image,
+                      priority: FastImage.priority.high,
                     }}
-                    style={{marginBottom: 5, marginRight: 5}}
-                    width={(width - 40) / 3}
-                    height={(width - 40) / 3}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
               );

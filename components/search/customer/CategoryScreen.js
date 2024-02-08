@@ -13,8 +13,10 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import FastImage from 'react-native-fast-image';
 import {Path, Svg} from 'react-native-svg';
 import Loading from '../../Component/Loading';
+
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 import shuffle from '../shuffle';
 
@@ -422,15 +424,20 @@ export default function CategoryScreenCustomer(props) {
                       endPrice,
                     })
                   }>
-                  <Image
+                  <FastImage
+                    style={{
+                      width: (width - 40) / 3,
+                      height: (width - 40) / 3,
+                      marginBottom: 5,
+                      marginRight: 5,
+                    }}
                     source={{
                       uri:
                         `https://admin.refectio.ru/storage/app/uploads/` +
                         item.product_image[0].image,
+                      priority: FastImage.priority.high,
                     }}
-                    style={{marginBottom: 5, marginRight: 5}}
-                    width={(width - 40) / 3}
-                    height={(width - 40) / 3}
+                    resizeMode={FastImage.resizeMode.cover}
                   />
                 </TouchableOpacity>
               );
