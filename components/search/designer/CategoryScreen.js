@@ -22,6 +22,7 @@ import {
   FilterIcon,
   OpenIcon,
 } from '../customer/CategoryScreen';
+import shuffle from '../shuffle';
 
 const {width} = Dimensions.get('screen');
 
