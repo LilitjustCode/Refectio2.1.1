@@ -14,6 +14,7 @@ import {
   View,
 } from 'react-native';
 import {Path, Svg} from 'react-native-svg';
+
 import Loading from '../../Component/Loading';
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
 import shuffle from '../shuffle';
