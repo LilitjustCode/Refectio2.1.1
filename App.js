@@ -9,7 +9,7 @@ import EditPhoneNumberComponent from './components/Auth/EditPhoneNumber';
 import ForgetPasswordComponent from './components/Auth/ForgetPassword';
 import ForgetPasswordTelComponent from './components/Auth/ForgetPasswordTel';
 import LoginScreenComponent from './components/Auth/LoginScreen';
-
+import EditZakazchikDesignerComponent from './components/Designer/Live/EditZakazchikDesigner';
 import NewPasswordComponent from './components/Auth/NewPassword';
 import RegisteredScreenComponent from './components/Auth/RegisteredScreen';
 import RegistrationManufacturerComponent from './components/Auth/RegistrationManufacturer';
@@ -457,25 +457,6 @@ export default function App() {
   const [id, setId] = useState('');
   const [urlLinking, setUrlLinking] = useState('');
 
-  // useEffect(() => {
-  //   const handleDeepLink = ({url}) => {
-  //     console.log(url, 'ureeell');
-  //     const match = url.match(/performer\/(\d+)/);
-  //     const performerId = match && match[1];
-
-  //     if (performerId) {
-  //       // Perform actions based on performerId
-  //       console.log('Opening performer with ID:', performerId);
-  //     }
-  //   };
-
-  //   Linking.addEventListener('url', handleDeepLink);
-
-  //   return () => {
-  //     // Linking.removeEventListener('url', handleDeepLink);
-  //   };
-  // }, []);
-
   useEffect(() => {
     // setUrlLinking('');
 
@@ -503,10 +484,6 @@ export default function App() {
         console.error('Error getting initial URL:', error);
       }
     };
-
-    // let checkerr = new VersionCheck();
-    // checkerr.getVersion();
-    // alert(DeviceInfo.getVersion());
     Linking.addEventListener('url', handleDeepLink);
     handleInitialUrl();
 
@@ -518,27 +495,6 @@ export default function App() {
   useEffect(() => {
     console.log('id changed', id);
   }, [id]);
-
-  console.log(urlLinking, 'urlLinking');
-  // useEffect(() => {
-  //   async function checkForUpdate() {
-  //     const update = await Updates.checkForUpdateAsync();
-  //     if (update.isAvailable) {
-  //       setUpdateAvailable(true);
-  //       await AsyncStorage.setItem('update', true);
-  //     }
-  //   }
-  //   checkForUpdate();
-  // }, []);
-
-  // const handleUpdate = async () => {
-  //   try {
-  //     await Updates.fetchUpdateAsync();
-  //     Updates.reloadFromCache();
-  //   } catch (error) {
-  //     // Handle update error
-  //   }
-  // };
 
   const initialLoginState = {
     isLoading: true,
@@ -587,42 +543,41 @@ export default function App() {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async foundUser => {
+      signIn: async (foundUser) => {
         // setIsLoading(true);
         const userToken = String(foundUser.userToken);
         const userRole = String(foundUser.userRole);
 
         try {
-          await AsyncStorage.setItem('userToken', userToken);
-          await AsyncStorage.setItem('userRole', userRole);
+          await AsyncStorage.setItem("userToken", userToken);
+          await AsyncStorage.setItem("userRole", userRole);
 
-          console.log(userToken, 'userToken -  AFTER LOGIN');
-          console.log(userRole, 'userRole -  AFTER LOGIN');
+          console.log(userToken, "userToken -  AFTER LOGIN");
+          console.log(userRole, "userRole -  AFTER LOGIN");
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'LOGIN', userToken: userToken, userRole: userRole});
+        dispatch({ type: "LOGIN", userToken: userToken, userRole: userRole });
       },
-      signOut: async callback => {
+      signOut: async (callback) => {
         try {
-          await AsyncStorage.removeItem('userToken');
-          await AsyncStorage.removeItem('userRole');
+          await AsyncStorage.removeItem("userToken");
+          await AsyncStorage.removeItem("userRole");
 
           setIsLoading(false);
         } catch (e) {
           console.log(e);
         }
-        dispatch({type: 'LOGOUT'});
+        dispatch({ type: "LOGOUT" });
       },
       signUp: () => {
         // setIsLoading(false);
       },
       notify_count: 0,
-      updateAvailable: false,
-      setUpdateAvailable: value => (authContext.updateAvailable = value),
     }),
-    [],
+    []
   );
+
 
   getLiveZakaz = async () => {
     let token = await AsyncStorage.getItem('userToken');
@@ -813,6 +768,11 @@ export default function App() {
                     </Stack.Screen>
                   </>
                 )}
+
+                <Stack.Screen
+                  name="EditZakaziLive"
+                  component={EditZakazchikDesignerComponent}
+                />
 
                 <Stack.Screen
                   name="DesignerSaved"

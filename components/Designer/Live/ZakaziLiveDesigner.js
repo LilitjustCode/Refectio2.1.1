@@ -259,6 +259,7 @@ export default class ZakaziLiveDesignerComponent extends React.Component {
             <TouchableOpacity
               style={styles.plusBlue}
               onPress={() => {
+                // this.props.navigation.navigate('AddZakazchikDesigner');
                 this.props.navigation.navigate('AddZakazchikDesigner');
                 this.clearAllData();
               }}>

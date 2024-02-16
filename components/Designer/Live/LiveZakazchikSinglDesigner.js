@@ -22,7 +22,6 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
       page: 1,
       isLoading: false,
       isLastPage: false,
-
       name: '',
       surname: '',
       photo: '',
@@ -35,7 +34,6 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
       page: 1,
       isLoading: false,
       isLastPage: false,
-
       name: '',
       surname: '',
       photo: '',
@@ -72,6 +70,7 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
       .then(response => response.json())
       .then(async responseJson => {
         if (responseJson.status === true) {
+          // console.log(responseJson, 'aaa');
           this.setState({
             name: responseJson?.order_data?.name,
             surname: responseJson?.order_data?.surname,
@@ -161,11 +160,12 @@ export default class LiveZakazchikSinglDesignerComponent extends React.Component
   renderSectionFooter = ({section}) => {
     const {data} = this.state;
     if (section.company_name === data[data.length - 1].company_name) {
-      // Render a button for the last section
       return (
         <TouchableOpacity
           onPress={() => {
-            this.props.navigation.navigate('AddZakazchikDesigner');
+            this.props.navigation.navigate('EditZakaziLive', {
+              params: this.props.item_id,
+            });
           }}
           style={styles.plusPraizvaditel}>
           <Text style={styles.plusPraizvaditelText}>+ Производитель</Text>
