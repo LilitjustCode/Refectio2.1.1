@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import {Path, Svg} from 'react-native-svg';
+
 import Loading from '../../Component/Loading';
 
 import CustomerMainPageNavComponent from '../../Customer/CustomerMainPageNav';
