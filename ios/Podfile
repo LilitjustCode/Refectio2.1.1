@@ -25,6 +25,8 @@ if linkage != nil
   use_frameworks! :linkage => linkage.to_sym
 end
 
+pod 'RNFastImage', :path => '../node_modules/react-native-fast-image'  # Add this line
+
 target 'Refectio21' do
   config = use_native_modules!
 

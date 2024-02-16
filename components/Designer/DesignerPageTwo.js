@@ -197,6 +197,7 @@ export default class DesignerPageTwoComponent extends React.Component {
         const isFoundKitchen = arr.findIndex(
           element => +element.parent_category_id == 2,
         );
+        
         if (isFoundKitchen >= 0) {
           let firstItem = arr.splice(isFoundKitchen, 1);
           arr.unshift(firstItem[0]);
@@ -309,8 +310,6 @@ export default class DesignerPageTwoComponent extends React.Component {
         if (res.status === false) {
           this.setState({
             products: [],
-            // show_plus_button: false
-            // change_category_loaded: false,
           });
 
           return false;
@@ -332,7 +331,6 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.setState({
           user: data.user,
           user_bonus_for_designer: res.data.user_bonus_for_designer,
-          // user_category_for_product: res.data.user_category_for_product,
           city_for_sales_user: res.data.city_for_sales_user,
           products: data.products,
           show_plus_button: false,
@@ -351,7 +349,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
-      // products: [],
       city_count: null,
       about_us: '',
     });
@@ -383,10 +380,8 @@ export default class DesignerPageTwoComponent extends React.Component {
               this.state.user[0]?.company_name.split(' ')[3]
             }/${this.state.user[0].id}`);
       }
-
       if (Platform.OS === 'android') {
         await Share.share({message: url});
-        // Handle the result if needed
       } else {
         await Share.share({message: url});
       }
@@ -474,8 +469,6 @@ export default class DesignerPageTwoComponent extends React.Component {
           });
         });
     }
-
-    // this.setState({ active: index })
   };
 
   addProtocol(url) {
@@ -488,7 +481,6 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
-    console.log(this.state.city_count, 'count');
     this.setState({
       changed:
         this.state.city_for_sales_user.length >= 78
@@ -498,11 +490,9 @@ export default class DesignerPageTwoComponent extends React.Component {
   };
 
   handleBackButtonClick() {
-    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
     const {id, setId, setUrlLinking} = this.props;
-
     if (this.props.route.params.prevRoute == 'DesignerSaved') {
-      this.props.navigation.goBack();
+      this.props.navigation.navigate('DesignerSaved');
     } else {
       if (this.props.route.params?.fromSearch === true) {
         this.props.navigation.navigate(this.props.route.params.prevRoute);
@@ -553,7 +543,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      // loadedDataAfterLoadPageOne();
+      console.log(this.props.route.params.prevRoute, 'route name');
     });
   }
 
@@ -658,7 +648,6 @@ export default class DesignerPageTwoComponent extends React.Component {
               <View
                 style={{
                   width: '90%',
-                  // height: ,
                   backgroundColor: '#fff',
                   borderRadius: 20,
                   position: 'relative',
@@ -1074,14 +1063,11 @@ export default class DesignerPageTwoComponent extends React.Component {
                           flexDirection: 'row',
                           alignItems: 'center',
                           justifyContent: 'space-between',
-                          // width: '95%',
-                          // backgroussndColor: 'red',
                         }}>
                         <View>
                           <Text
                             style={{
                               fontSize: 20,
-                              // fontFamily: 'Raleway_500Medium',
                               color: '#333333',
                               fontWeight: '700',
                             }}>
@@ -1644,6 +1630,7 @@ export default class DesignerPageTwoComponent extends React.Component {
     );
   }
 }
+
 const styles = StyleSheet.create({
   main: {
     flex: 1,

@@ -21,11 +21,12 @@ import DesignerPageNavComponent from '../DesignerPageNav';
 import Loading from '../../Component/Loading';
 const iconWidth = Dimensions.get('window').width / 5;
 
-export default class AddZakazchikDesignerComponent extends React.Component {
+export default class EditZakazchikDesignerComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       cityItems: [],
+      city_id: '',
       keyboardOpen: false,
       iconsModal: false,
       iconItems: false,
@@ -34,7 +35,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
       manufacture_get: [],
       changed_city: '',
       changed_city_error: false,
-      city_id_l: '',
+
       surname: '',
       surname_error: false,
       name: '',
@@ -44,9 +45,59 @@ export default class AddZakazchikDesignerComponent extends React.Component {
       proizvoditel_id: [],
       iconsArray: [],
       isLoading: false,
+      data: [],
     };
     this.ref = React.createRef();
   }
+
+  fetchData = async () => {
+    const {data, isLastPage} = this.state;
+    // console.log(this.props, 'props');
+    let token = await AsyncStorage.getItem('userToken');
+    let myHeaders = new Headers();
+    myHeaders.append('Authorization', 'Bearer ' + token);
+    myHeaders.append('Content-Type', 'application/json');
+
+    let raw = JSON.stringify({
+      some_id: this.props.route.params.params,
+    });
+
+    let requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow',
+    };
+
+    fetch(
+      `https://admin.refectio.ru/public/api/SinglePageOrdersFromDesigner?page=1`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(async responseJson => {
+        // console.log(responseJson, 'response');
+        if (responseJson.status === true) {
+          this.setState({
+            name: responseJson?.order_data?.name,
+            surname: responseJson?.order_data?.surname,
+            photo: responseJson?.order_data?.photo,
+            city_id: responseJson.order_data.city,
+          });
+          if (responseJson.My_Data.data.length > 0) {
+            await this.setState({
+              data: [...data, ...responseJson?.My_Data?.data],
+              isLoading: false,
+            });
+            this.getCityApi();
+            this.getManufacturerChangeCity(responseJson.order_data.city);
+          } else {
+          }
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  };
 
   getAllIcons = async () => {
     let requestOptions = {
@@ -102,21 +153,26 @@ export default class AddZakazchikDesignerComponent extends React.Component {
       redirect: 'follow',
     };
 
-    if (!this.state.OpenCityDropDown) {
-      await fetch(
-        `https://admin.refectio.ru/public/api/getCityApi`,
-        requestOptions,
-      )
-        .then(response => response.json())
-        .then(res => {
-          if (res.status === true) {
-            this.setState({OpenCityDropDown: true});
-          }
-          this.setState({cityItems: res.data.city});
-        });
-    } else {
-      this.setState({OpenCityDropDown: false, OpenCityDropDown_error: true});
-    }
+    // if () {
+    // } else {
+
+    // }
+    await fetch(
+      `https://admin.refectio.ru/public/api/getCityApi`,
+      requestOptions,
+    )
+      .then(response => response.json())
+      .then(res => {
+        if (this.state.OpenCityDropDown == true && res.status === true) {
+          this.setState({OpenCityDropDown: true});
+        } else {
+          this.setState({
+            OpenCityDropDown: false,
+            OpenCityDropDown_error: true,
+          });
+        }
+        this.setState({cityItems: res.data.city});
+      });
   };
 
   getManufacturerChangeCity = async city => {
@@ -132,7 +188,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
     myHeaders.append('Authorization', 'Bearer ' + token);
 
     let formdata = new FormData();
-    formdata.append('city_id', city.id);
+    formdata.append('city_id', city);
 
     let requestOptions = {
       method: 'POST',
@@ -144,6 +200,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
     fetch(`https://admin.refectio.ru/public/api/manufactur-get`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        // console.log(result, 'ress');
         if (result.status === true) {
           this.setState({
             manufacture_get: result.data,
@@ -170,7 +227,6 @@ export default class AddZakazchikDesignerComponent extends React.Component {
     form_data.append('name', this.state.name);
     form_data.append('surname', this.state.surname);
     form_data.append('photo', this.state.photo);
-    form_data.append('city_id', this.state.city_id_l.id);
 
     let requestOptions = {
       method: 'POST',
@@ -185,6 +241,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
     )
       .then(response => response.json())
       .then(async result => {
+        // console.log(result, 'res');
         if (result.status === true) {
           await this.props.navigation.navigate('ZakaziLiveDesigner');
           await this.clearAllData();
@@ -218,8 +275,12 @@ export default class AddZakazchikDesignerComponent extends React.Component {
 
   componentDidMount() {
     const {navigation} = this.props;
-
-    this.focusListener = navigation.addListener('focus', () => {});
+    // this.getAuthUserProfile();
+    console.log(this.state.data, 'data');
+    this.fetchData();
+    this.focusListener = navigation.addListener('focus', () => {
+      // this.getAuthUserProfile();
+    });
 
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',
@@ -275,6 +336,9 @@ export default class AddZakazchikDesignerComponent extends React.Component {
   };
 
   render() {
+    console.log(
+      this.state.cityItems.filter(el => el.id == this.state.city_id)[0]?.name,
+    );
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.container}>
@@ -367,8 +431,8 @@ export default class AddZakazchikDesignerComponent extends React.Component {
             <TouchableOpacity
               style={styles.iconItems}
               onPress={() => {
-                this.getAllIcons();
-                this.setState({iconsModal: true});
+                // this.getAllIcons();
+                // this.setState({iconsModal: true});
               }}>
               {this.state.photo !== '' ? (
                 <Image
@@ -407,6 +471,8 @@ export default class AddZakazchikDesignerComponent extends React.Component {
               </Text>
               <TextInput
                 underlineColorAndroid="transparent"
+                // placeholder="Шкаф «Ансамбль»"
+                editable={false}
                 style={[
                   styles.nazvania,
                   this.state.surname_error
@@ -431,6 +497,7 @@ export default class AddZakazchikDesignerComponent extends React.Component {
               <TextInput
                 underlineColorAndroid="transparent"
                 // placeholder="Шкаф «Ансамбль»"
+                editable={false}
                 style={[
                   styles.nazvania,
                   this.state.name_error
@@ -471,7 +538,11 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                   this.getCityApi();
                 }}>
                 <Text style={styles.selectedText}>
-                  {this.state.changed_city}
+                  {this.state.changed_city
+                    ? this.state.changed_city
+                    : this.state.cityItems.filter(
+                        el => el.id == this.state.city_id,
+                      )[0]?.name}
                 </Text>
 
                 <View style={{position: 'absolute', right: 17, bottom: 18}}>
@@ -527,7 +598,6 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                         }}
                         onPress={() => {
                           this.getManufacturerChangeCity(item);
-                          this.setState({city_id_l: item});
                         }}>
                         <Text
                           style={{
@@ -576,22 +646,32 @@ export default class AddZakazchikDesignerComponent extends React.Component {
                   <TouchableOpacity
                     style={[
                       styles.takeItButton,
-                      this.verifyCheckBox(item.id) === true
+                      this.verifyCheckBox(item.id) === true ||
+                      this.state.data.filter(el => el.id === item.id)[0]?.id ==
+                        item.id
                         ? {backgroundColor: '#B5D8FE'}
                         : {backgroundColor: '#F5F5F5'},
                     ]}
                     onPress={() => {
-                      // console.log(item.logo, 'logo');
+                      console.log(
+                        this.state.data.filter(el => el.id === item.id)[0].id,
+                        'logo',
+                      );
+
                       this.enterCheckBox(item);
                     }}>
                     <Text
                       style={[
                         styles.takeItText,
-                        this.verifyCheckBox(item.id) === true
+                        this.verifyCheckBox(item.id) === true ||
+                        this.state.data.filter(el => el.id === item.id)[0]
+                          ?.id == item.id
                           ? {color: '#FFFFFF'}
                           : {color: '#838383'},
                       ]}>
-                      {this.verifyCheckBox(item.id) === true
+                      {this.verifyCheckBox(item.id) === true ||
+                      this.state.data.filter(el => el.id === item.id)[0]?.id ==
+                        item.id
                         ? 'Выбрано'
                         : 'Выбрать'}
                     </Text>

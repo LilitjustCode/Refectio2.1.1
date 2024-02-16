@@ -4,7 +4,6 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -18,8 +17,8 @@ import {
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Linking} from 'react-native';
 import WebView from 'react-native-webview';
-import {storeVersionChecker} from '../../utils/versionCheck/AppStoreVersionChecker';
 import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import GhostNavComponent from './GhostNav';
@@ -83,11 +82,7 @@ export default class GhostPageTwoComponent extends React.Component {
 
   getObjectData = async id => {
     this.setState({loading: true});
-    let userToken = await AsyncStorage.getItem('userToken');
-    let AuthStr = 'Bearer ' + userToken;
-
     let userID = id;
-
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
         userID,
@@ -123,9 +118,9 @@ export default class GhostPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1);
           arr.push(myItem[0]);
         }
-
+        console.log(res.data.user[0].about_us);
         this.setState({loading: false});
-
+        console.log(this.state.loading);
         this.setState({
           user: res.data.user,
           user_category_for_product: arr,
@@ -138,6 +133,9 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   updateProduct = async (parent_category_name, id) => {
+    await this.setState({
+      change_category_loaded: true,
+    });
 
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
@@ -305,8 +303,9 @@ export default class GhostPageTwoComponent extends React.Component {
 
           this.setState({
             products: data.products,
-            extract: data.user[0].extract,
-            whatsapp: res.data.user[0].watsap_phone,
+            // show_plus_button: false,
+            // extract: data.user[0].extract,
+            // whatsapp: res.data.user[0].watsap_phone
             change_category_loaded: false,
             pressCategory: true,
           });
@@ -315,20 +314,20 @@ export default class GhostPageTwoComponent extends React.Component {
 
     // this.setState({ active: index })
   };
+
   handleClearData = () => {
     this.setState({
       user: [],
       user_category_for_product: [],
       city_for_sales_user: [],
       whatsapp: '',
-      // products: [],
       city_count: null,
       about_us: '',
     });
   };
+
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
-
     this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
@@ -356,12 +355,12 @@ export default class GhostPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-    storeVersionChecker(this.props.navigation.navigate);
-    this.setState({fontsLoaded: true});
+
     loadedDataAfterLoadPageOne = async () => {
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
+
       await this.updateProduct(
         this.state.parent_name.length > 0
           ? this.state.parent_name
@@ -378,8 +377,8 @@ export default class GhostPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
+      // loadedDataAfterLoadPageOne();
     });
-
   }
 
   componentWillUnmount() {
@@ -389,12 +388,6 @@ export default class GhostPageTwoComponent extends React.Component {
     }
   }
 
-  componentDidUpdate() {
-    // this._unsubscribe();
-    // this._willBlurListener();
-  }
-
-
   addProtocol(url) {
     const protocolRegex = /^https?:\/\//i;
     if (protocolRegex.test(url)) {
@@ -402,6 +395,7 @@ export default class GhostPageTwoComponent extends React.Component {
     }
     return 'http://' + url;
   }
+
 
   render() {
     return (
@@ -629,7 +623,6 @@ export default class GhostPageTwoComponent extends React.Component {
             </View>
           </ImageBackground>
         </Modal>
-
         <TouchableOpacity
           style={{
             flexDirection: 'row',
@@ -652,10 +645,11 @@ export default class GhostPageTwoComponent extends React.Component {
           </Svg>
           <Text style={styles.backText}>Назад</Text>
         </TouchableOpacity>
+
         <View style={styles.main}>
           <ScrollView showsVerticalScrollIndicator={false}>
             <View style={styles.campaign}>
-              {this.state.user.length > 0 && (
+              {this.state.user.length > 0 ? (
                 <>
                   <View style={styles.infoCompanyMain}>
                     <View style={{width: '32%'}}>
@@ -742,6 +736,12 @@ export default class GhostPageTwoComponent extends React.Component {
                           style={{
                             flexDirection: 'row',
                             marginTop: 4,
+                            // width:
+                            //   screenWidth > 360
+                            //     ? '62.5%'
+                            //     : screenWidth > 393
+                            //     ? '71%'
+                            //     : '59%',
                           }}>
                           {`${this.state.user[0].saite}` !== 'null' && (
                             <TouchableOpacity
@@ -784,7 +784,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           {this.state.user[0].extract !== null && (
                             <TouchableOpacity
                               onPress={() => {
-                              this.props.navigation.navigate('Modal')
+                                this.setState({VipiskaModal: true});
                               }}>
                               <Image
                                 source={require('../../assets/image/sidebar.png')}
@@ -916,8 +916,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           : styles.sOpenCityDropDown
                       }>
                       <ScrollView nestedScrollEnabled={true}>
-                        {this.state.city_for_sales_user.length ==
-                        this.state.city_count ? (
+                        {this.state.city_for_sales_user.length >= 78 ? (
                           <TouchableOpacity
                             style={{
                               width: '100%',
@@ -1036,6 +1035,10 @@ export default class GhostPageTwoComponent extends React.Component {
                     )}
                   </View>
                 </>
+              ) : (
+                <View style={styles.loaderBox}>
+                  <ActivityIndicator color={'#868686'} size={'large'} />
+                </View>
               )}
 
               <View
@@ -1054,7 +1057,6 @@ export default class GhostPageTwoComponent extends React.Component {
                     {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
                   ]}
                   onPress={() => {
-                    // this.setState({ aboutUsPopup: true })
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
@@ -1075,8 +1077,16 @@ export default class GhostPageTwoComponent extends React.Component {
                     styles.info,
                     {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
                   ]}
-                  onPress={() => {   
-                    this.props.navigation.navigate('Modal')
+                  // onPress={() => {
+                  //   this.props.navigation.navigate("Modal");
+                  // }}
+                  onPress={() => {
+                    const number = this.state.whatsapp;
+                    const convertedNumber = number.replace(/\D/g, '');
+                    Linking.openURL(
+                      `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
+                      // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
+                    ).catch(err => console.log(err));
                   }}>
                   <Image
                     source={require('../../assets/image/whatsapp.png')}
@@ -1118,7 +1128,6 @@ export default class GhostPageTwoComponent extends React.Component {
                         onPress={async () => {
                           await this.updateProductAfterClickToCategory(
                             item.parent_category_name,
-                            index,
                           );
                           this.setState({active: index});
                           this.setState({
@@ -1143,6 +1152,12 @@ export default class GhostPageTwoComponent extends React.Component {
                   })}
                 </ScrollView>
               </View>
+
+              {this.state.change_category_loaded && (
+                <View style={{marginTop: 200}}>
+                  <ActivityIndicator size={100} color={'#C2C2C2'} />
+                </View>
+              )}
 
               {!this.state.change_category_loaded &&
                 this.state.products.map((item, index) => {
@@ -1169,12 +1184,12 @@ export default class GhostPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.frame && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Корпус: {item.frame}
                           </Text>
                         )}
                         {item.profile && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Профиль: {item.profile}
                           </Text>
                         )}
@@ -1184,22 +1199,22 @@ export default class GhostPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.length && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Длина: {item.length.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.height && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Высота: {item.height.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.material && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Материал: {item.material}
                           </Text>
                         )}
                         {item.price && (
-                          <Text style={{color: '#333333', width: '90%'}}>
+                          <Text style={{color: '#333333'}}>
                             Цена:{' '}
                             {item.price
                               .toString()
@@ -1278,7 +1293,6 @@ const styles = StyleSheet.create({
     width: 'auto',
     marginTop: 5,
     marginBottom: 4,
-    width: '90%',
   },
   itemName: {
     fontFamily: 'Raleway_600SemiBold',

@@ -59,6 +59,7 @@ export default class MyAccauntComponent extends React.Component {
     fetch(`https://admin.refectio.ru/public/api/UserLogout`, requestOptions)
       .then(response => response.json())
       .then(result => {
+        console.log(this.context, 'reesss');
         if (result.status === true) {
           let foundUser = {
             userToken: userToken,
