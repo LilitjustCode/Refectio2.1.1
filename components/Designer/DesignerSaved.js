@@ -1,24 +1,19 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {Component} from 'react';
+import React from 'react';
 import {
-  SafeAreaView,
+  ActivityIndicator,
   FlatList,
-  View,
   Image,
-  Text,
-  Touchable,
-  TouchableOpacity,
-  TextInput,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
-  Pressable,
-  ActivityIndicator,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import Svg, {Path, Rect} from 'react-native-svg';
 
 import Slider2 from '../slider/Slider2';
 import DesignerPageNavComponent from './DesignerPageNav';
-import {ImageSlider} from 'react-native-image-slider-banner';
 
 export default class DesignerSavedComponent extends React.Component {
   constructor(props) {
@@ -35,9 +30,7 @@ export default class DesignerSavedComponent extends React.Component {
   }
 
   getMySaveds = async () => {
-    console.log('111lllajsk');
     const {page, saveds, isLastPage} = this.state;
-    console.log(page, 'aaa');
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     let AuthStr = 'Bearer ' + userToken;
@@ -55,7 +48,6 @@ export default class DesignerSavedComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res, 'res');
         if (res.status === true) {
           let data = res.new_data.data;
           if (data?.length > 0) {
@@ -113,29 +105,27 @@ export default class DesignerSavedComponent extends React.Component {
     this.getMySaveds();
   };
 
-  loadPage = async () => {
-    await this.setState({isLoading: true});
+  loadPage = () => {
+    this.setState({isLoading: true});
     // await this.getMySaveds();
   };
 
   componentDidMount() {
     const {navigation} = this.props;
+
     this.getMySaveds();
-    this.focusListener = navigation.addListener('focus', () => {
-      // this.setState({isLoading: true});
-      //
-      this.loadPage();
-      console.log('111');
+    this.focusListener = navigation.addListener('focus', e => {
+      this.getMySaveds();
+      if (e.target === 'focus') {
+        this.loadPage();
+      } else {
+        this.setState({saveds: []});
+        this.setState({page: 0});
+      }
     });
   }
 
-  componentWillUnmount() {
-    if (this.focusListener) {
-      this.focusListener();
-      this.setState({saveds: []});
-      this.setState({page: 0});
-    }
-  }
+  componentWillUnmount() {}
 
   renderFooter = () => {
     if (!this.state.isLoading) return null;
@@ -249,16 +239,24 @@ export default class DesignerSavedComponent extends React.Component {
           <View style={styles.nameCompanyParent}>
             <Text style={styles.componyName}>Избранное</Text>
           </View>
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            renderItem={this.renderItem}
-            ref={this.ref}
-            data={this.state.saveds}
-            keyExtractor={(item, index) => index.toString()}
-            onEndReached={this.handleLoadMore}
-            onEndReachedThreshold={0.5}
-            ListFooterComponent={this.renderFooter}
-          />
+          {!this.state.isLoading ? (
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              renderItem={this.renderItem}
+              ref={this.ref}
+              data={this.state.saveds}
+              keyExtractor={(item, index) => index.toString()}
+              onEndReached={this.handleLoadMore}
+              onEndReachedThreshold={0.5}
+              ListFooterComponent={this.renderFooter}
+            />
+          ) : (
+            <ActivityIndicator
+              size={'large'}
+              color={'#c2c2c2'}
+              style={styles.loaderBox}
+            />
+          )}
         </View>
         <DesignerPageNavComponent
           active_page={'Избранное'}
@@ -315,5 +313,12 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     marginRight: 11,
     color: '#333333',
+  },
+  loaderBox: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    right: 0,
+    left: 0,
   },
 });
