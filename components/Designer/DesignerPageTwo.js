@@ -213,8 +213,6 @@ export default class DesignerPageTwoComponent extends React.Component {
 
         this.setState({loading: false});
 
-        console.log(res.data.city_for_sales_user.length, 'data');
-
         this.setState({
           user: res.data.user,
           user_category_for_product: arr,
@@ -543,7 +541,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      console.log(this.props.route.params.prevRoute, 'route name');
     });
   }
 

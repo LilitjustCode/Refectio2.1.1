@@ -97,7 +97,6 @@ export default class CustomerMainPageComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-      
         if (res.status === true) {
           let data = res.data.data.data;
           if (data?.length > 0) {
@@ -208,7 +207,6 @@ export default class CustomerMainPageComponent extends React.Component {
     formdata.append('city_name', city_name); // Город
     formdata.append('made_in', made_in_result); // Страна произволства
     formdata.append('show_room', show_room);
-    console.log(category_name, 'name');
     let requestOptions = {
       method: 'POST',
       body: formdata,
@@ -224,7 +222,6 @@ export default class CustomerMainPageComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res, 'res');
         if (!res.status) {
           this.setState({
             getAllProducts: [],
@@ -234,7 +231,6 @@ export default class CustomerMainPageComponent extends React.Component {
           return false;
         }
         let data = res.data.user;
-        console.log(data, 'filter');
         let filtered_category_name = res.data?.returnCategoryNameArray[0];
 
         for (let i = 0; i < data?.length; i++) {
