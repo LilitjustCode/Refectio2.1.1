@@ -437,7 +437,7 @@ export default class EditZakazchikDesignerComponent extends React.Component {
               {this.state.photo !== '' ? (
                 <Image
                   source={{
-                    uri:
+                    uri: 
                       `https://admin.refectio.ru/public/uploads/UnicodeIcon/` +
                       this.state.photo,
                   }}
@@ -653,11 +653,6 @@ export default class EditZakazchikDesignerComponent extends React.Component {
                         : {backgroundColor: '#F5F5F5'},
                     ]}
                     onPress={() => {
-                      console.log(
-                        this.state.data.filter(el => el.id === item.id)[0].id,
-                        'logo',
-                      );
-
                       this.enterCheckBox(item);
                     }}>
                     <Text

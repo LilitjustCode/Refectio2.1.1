@@ -1,6 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {NavigationContainer} from '@react-navigation/native';
 import * as React from 'react';
+import DesignerPageTwoSavedComponent from './components/Designer/DesignerPageTwoSaved';
 import {useEffect, useState} from 'react';
 import {Dimensions, Image, Linking, StatusBar, View} from 'react-native';
 import AuthScreenComponent from './components/Auth/AuthScreen';
@@ -543,41 +544,40 @@ export default function App() {
 
   const authContext = React.useMemo(
     () => ({
-      signIn: async (foundUser) => {
+      signIn: async foundUser => {
         // setIsLoading(true);
         const userToken = String(foundUser.userToken);
         const userRole = String(foundUser.userRole);
 
         try {
-          await AsyncStorage.setItem("userToken", userToken);
-          await AsyncStorage.setItem("userRole", userRole);
+          await AsyncStorage.setItem('userToken', userToken);
+          await AsyncStorage.setItem('userRole', userRole);
 
-          console.log(userToken, "userToken -  AFTER LOGIN");
-          console.log(userRole, "userRole -  AFTER LOGIN");
+          console.log(userToken, 'userToken -  AFTER LOGIN');
+          console.log(userRole, 'userRole -  AFTER LOGIN');
         } catch (e) {
           console.log(e);
         }
-        dispatch({ type: "LOGIN", userToken: userToken, userRole: userRole });
+        dispatch({type: 'LOGIN', userToken: userToken, userRole: userRole});
       },
-      signOut: async (callback) => {
+      signOut: async callback => {
         try {
-          await AsyncStorage.removeItem("userToken");
-          await AsyncStorage.removeItem("userRole");
-
+          await AsyncStorage.removeItem('userToken');
+          await AsyncStorage.removeItem('userRole');
+          console.log('l');
           setIsLoading(false);
         } catch (e) {
           console.log(e);
         }
-        dispatch({ type: "LOGOUT" });
+        dispatch({type: 'LOGOUT'});
       },
       signUp: () => {
         // setIsLoading(false);
       },
       notify_count: 0,
     }),
-    []
+    [],
   );
-
 
   getLiveZakaz = async () => {
     let token = await AsyncStorage.getItem('userToken');
@@ -641,14 +641,7 @@ export default function App() {
       this.getLiveZakaz();
     }, 3000);
   }, []);
-  const linking = {
-    prefixes: ['https://refectio.ru/'],
-    config: {
-      screens: {
-        GhostPage: 'AlexRoom/337',
-      },
-    },
-  };
+
   if (isLoading) {
     return (
       <View style={{flex: 1}}>
@@ -667,7 +660,7 @@ export default function App() {
           backgroundColor="white"
           barStyle="dark-content"
         />
-        <NavigationContainer linking={linking}>
+        <NavigationContainer>
           {/* {urlLinking.length > 0 && (
             <Stack.Navigator
               initialRouteName="GhostPageTwo"
@@ -768,7 +761,11 @@ export default function App() {
                     </Stack.Screen>
                   </>
                 )}
-
+                {/* DesignerPageTwoSavedComponent */}
+                <Stack.Screen
+                  name="DesignerPageTwoSavedComponent"
+                  component={DesignerPageTwoSavedComponent}
+                />
                 <Stack.Screen
                   name="EditZakaziLive"
                   component={EditZakazchikDesignerComponent}

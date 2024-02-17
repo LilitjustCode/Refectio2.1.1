@@ -197,7 +197,7 @@ export default class DesignerPageTwoComponent extends React.Component {
         const isFoundKitchen = arr.findIndex(
           element => +element.parent_category_id == 2,
         );
-        
+
         if (isFoundKitchen >= 0) {
           let firstItem = arr.splice(isFoundKitchen, 1);
           arr.unshift(firstItem[0]);
@@ -456,14 +456,14 @@ export default class DesignerPageTwoComponent extends React.Component {
           }
 
           this.setState({
-            user: data.user,
-            user_bonus_for_designer: res.data.user_bonus_for_designer,
-            user_category_for_product: res.data.user_category_for_product,
-            city_for_sales_user: res.data.city_for_sales_user,
+            // user: data.user,
+            // user_bonus_for_designer: res.data.user_bonus_for_designer,
+            // user_category_for_product: res.data.user_category_for_product,
+            // city_for_sales_user: res.data.city_for_sales_user,
             products: data.products,
-            show_plus_button: false,
-            extract: data.user[0].extract,
-            whatsapp: res.data.user[0].watsap_phone,
+            // show_plus_button: false,
+            // extract: data.user[0].extract,
+            // whatsapp: res.data.user[0].watsap_phone,
             change_category_loaded: false,
             pressCategory: true,
           });
@@ -1018,7 +1018,9 @@ export default class DesignerPageTwoComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={this.handleBackButtonClick}>
+            onPress={() => {
+              this.props.navigation.navigate('DesignerSaved');
+            }}>
             <Svg
               width={25}
               height={30}

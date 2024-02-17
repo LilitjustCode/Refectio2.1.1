@@ -439,7 +439,7 @@ export default function CategoryScreenDesigner(props) {
                     source={{
                       uri:
                         `https://admin.refectio.ru/storage/app/uploads/` +
-                        item.product_image[0].image,
+                        item.product_image[0]?.image,
                       priority: FastImage.priority.high,
                     }}
                     resizeMode={FastImage.resizeMode.cover}

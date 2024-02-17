@@ -135,11 +135,13 @@ export default class DesignerSavedComponent extends React.Component {
             onPress={async () => {
               const routes = this.props.navigation.getState()?.routes;
               const prevRoute = routes[routes.length - 1]?.name;
-              await this.props.navigation.navigate('DesignerPageTwo', {
-                id: item.id,
-                prevRoute,
-                
-              });
+              await this.props.navigation.navigate(
+                'DesignerPageTwoSavedComponent',
+                {
+                  id: item.id,
+                  prevRoute,
+                },
+              );
             }}>
             <View style={styles.infoCompanyMain}>
               <Image
