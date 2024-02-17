@@ -35,7 +35,9 @@ export default class DesignerSavedComponent extends React.Component {
   }
 
   getMySaveds = async () => {
+    console.log('111lllajsk');
     const {page, saveds, isLastPage} = this.state;
+    console.log(page, 'aaa');
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     let AuthStr = 'Bearer ' + userToken;
@@ -53,20 +55,21 @@ export default class DesignerSavedComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
+        console.log(res, 'res');
         if (res.status === true) {
           let data = res.new_data.data;
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
               if (
                 data[i].slider_photo?.length &&
-                data[i].slider_photo[i]?.user_id == data[i].id
+                data[i].slider_photo[i]?.user_id == data[i]?.id
               ) {
                 let product_image = data[i].slider_photo;
                 product_image.length > 5 ? product_image.splice(5) : null;
                 data[i].images = product_image;
               } else if (
                 data[i].user_product_limit1?.length < 1 &&
-                data[i].id == data[i].user_product_limit1[0]?.user_id
+                data[i]?.id == data[i].user_product_limit1[0]?.user_id
               ) {
                 data[i].images = [];
                 continue;
@@ -110,12 +113,29 @@ export default class DesignerSavedComponent extends React.Component {
     this.getMySaveds();
   };
 
+  loadPage = async () => {
+    await this.setState({isLoading: true});
+    // await this.getMySaveds();
+  };
+
   componentDidMount() {
     const {navigation} = this.props;
     this.getMySaveds();
+    this.focusListener = navigation.addListener('focus', () => {
+      // this.setState({isLoading: true});
+      //
+      this.loadPage();
+      console.log('111');
+    });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    if (this.focusListener) {
+      this.focusListener();
+      this.setState({saveds: []});
+      this.setState({page: 0});
+    }
+  }
 
   renderFooter = () => {
     if (!this.state.isLoading) return null;
@@ -133,13 +153,10 @@ export default class DesignerSavedComponent extends React.Component {
         <View key={index} style={styles.campaign}>
           <TouchableOpacity
             onPress={async () => {
-              const routes = this.props.navigation.getState()?.routes;
-              const prevRoute = routes[routes.length - 1]?.name;
               await this.props.navigation.navigate(
                 'DesignerPageTwoSavedComponent',
                 {
                   id: item.id,
-                  prevRoute,
                 },
               );
             }}>
@@ -169,6 +186,7 @@ export default class DesignerSavedComponent extends React.Component {
                       fontWeight: '700',
                       color: '#333333',
                       marginBottom: 6,
+                      width: '90%',
                     }}>
                     {item.company_name}
                   </Text>

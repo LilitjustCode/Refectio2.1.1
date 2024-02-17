@@ -153,10 +153,6 @@ export default class EditZakazchikDesignerComponent extends React.Component {
       redirect: 'follow',
     };
 
-    // if () {
-    // } else {
-
-    // }
     await fetch(
       `https://admin.refectio.ru/public/api/getCityApi`,
       requestOptions,
@@ -243,8 +239,9 @@ export default class EditZakazchikDesignerComponent extends React.Component {
       .then(async result => {
         // console.log(result, 'res');
         if (result.status === true) {
-          await this.props.navigation.navigate('ZakaziLiveDesigner');
-          await this.clearAllData();
+          // await this.props.navigation.navigate('ZakaziLiveDesigner');
+          // await this.clearAllData();
+          console.log('res', result);
         } else {
           if (result.hasOwnProperty('name')) {
             this.setState({name_error: true});
@@ -437,7 +434,7 @@ export default class EditZakazchikDesignerComponent extends React.Component {
               {this.state.photo !== '' ? (
                 <Image
                   source={{
-                    uri: 
+                    uri:
                       `https://admin.refectio.ru/public/uploads/UnicodeIcon/` +
                       this.state.photo,
                   }}

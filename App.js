@@ -762,10 +762,19 @@ export default function App() {
                   </>
                 )}
                 {/* DesignerPageTwoSavedComponent */}
+
                 <Stack.Screen
                   name="DesignerPageTwoSavedComponent"
-                  component={DesignerPageTwoSavedComponent}
-                />
+                  options={{headerShown: false}}>
+                  {props => (
+                    <DesignerPageTwoSavedComponent
+                      {...props}
+                      // id={id}
+                      // setId={setId}
+                      // setUrlLinking={setUrlLinking}
+                    />
+                  )}
+                </Stack.Screen>
                 <Stack.Screen
                   name="EditZakaziLive"
                   component={EditZakazchikDesignerComponent}

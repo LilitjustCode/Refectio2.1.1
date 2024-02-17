@@ -29,7 +29,7 @@ const {width: screenWidth} = Dimensions.get('window');
 export default class DesignerPageTwoSavedComponent extends React.Component {
   constructor(props) {
     super(props);
-    this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
+    // this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
       RewardModal: false,
       loading: false,
@@ -488,36 +488,6 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
           : this.state.city_for_sales_user[0].city_name,
     });
   };
-
-  handleBackButtonClick() {
-    const {id, setId, setUrlLinking} = this.props;
-    if (this.props.route.params.prevRoute == 'DesignerSaved') {
-      this.props.navigation.navigate('DesignerSaved');
-    } else {
-      if (this.props.route.params?.fromSearch === true) {
-        this.props.navigation.navigate(this.props.route.params.prevRoute);
-        this.props.id = null;
-      } else if (
-        this.props.route.params?.id ||
-        (this.props.id &&
-          this.props.route.params.prevRoute != 'DesignerSaved' &&
-          this.props.route.params?.fromSearch == false)
-      ) {
-        this.props.navigation.navigate('DesignerPage', {screen: true});
-      } else if (
-        this.props.route.params?.id ||
-        (this.props.id && !this.props.route.params?.fromSearch)
-      ) {
-        this.props.navigation.navigate(this.props.route.params.prevRoute);
-      } else {
-        this.props.navigation.goBack();
-      }
-    }
-
-    setId(null);
-    setUrlLinking(null);
-    this.handleClearData();
-  }
 
   componentDidMount() {
     const {id, navigation} = this.props;
@@ -1018,7 +988,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={this.handleBackButtonClick}>
+            onPress={() => this.props.navigation.navigate('DesignerSaved')}>
             <Svg
               width={25}
               height={30}

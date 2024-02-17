@@ -180,8 +180,22 @@ export default function CategorySingleScreenCustomer({
                           Фасады : {item.facades}
                         </Text>
                       )}
-                      {item.frame && <Text>Корпус: {item.frame}</Text>}
-                      {item.profile && <Text>Профиль: {item.profile}</Text>}
+                      {item.frame && (
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Корпус: {item.frame}
+                        </Text>
+                      )}
+                      {item.profile && (
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Профиль: {item.profile}
+                        </Text>
+                      )}
                       {item.tabletop && (
                         <Text
                           style={{
@@ -191,12 +205,29 @@ export default function CategorySingleScreenCustomer({
                         </Text>
                       )}
                       {item.length && (
-                        <Text>Длина: {item.length.replace('.', ',')} м.</Text>
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Длина: {item.length.replace('.', ',')} м.
+                        </Text>
                       )}
                       {item.height && (
-                        <Text>Высота: {item.height.replace('.', ',')} м.</Text>
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Высота: {item.height.replace('.', ',')} м.
+                        </Text>
                       )}
-                      {item.material && <Text>Материал: {item.material}</Text>}
+                      {item.material && (
+                        <Text
+                          style={{
+                            width: '90%',
+                          }}>
+                          Материал: {item.material}
+                        </Text>
+                      )}
                       {item.price && (
                         <Text>
                           Цена:{' '}

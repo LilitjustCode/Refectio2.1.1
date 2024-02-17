@@ -1018,9 +1018,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={() => {
-              this.props.navigation.navigate('DesignerSaved');
-            }}>
+            onPress={this.handleBackButtonClick}>
             <Svg
               width={25}
               height={30}
@@ -1072,6 +1070,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                               fontSize: 20,
                               color: '#333333',
                               fontWeight: '700',
+                              width: '70%',
                             }}>
                             {this.state.user[0].company_name}
                           </Text>
