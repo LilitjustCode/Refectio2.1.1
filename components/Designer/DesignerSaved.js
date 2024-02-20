@@ -29,8 +29,9 @@ export default class DesignerSavedComponent extends React.Component {
     this.ref = React.createRef();
   }
 
-  getMySaveds = async () => {
-    const {page, saveds, isLastPage} = this.state;
+  getMySaveds = async page => {
+    const {saveds, isLastPage} = this.state;
+    console.log(page, saveds, 'mysaveda');
     let myHeaders = new Headers();
     let userToken = await AsyncStorage.getItem('userToken');
     let AuthStr = 'Bearer ' + userToken;
@@ -49,6 +50,7 @@ export default class DesignerSavedComponent extends React.Component {
       .then(response => response.json())
       .then(res => {
         if (res.status === true) {
+          this.setState({isLoading: false});
           let data = res.new_data.data;
           if (data?.length > 0) {
             for (let i = 0; i < data.length; i++) {
@@ -72,18 +74,10 @@ export default class DesignerSavedComponent extends React.Component {
                 data[i].images = product_image;
               }
             }
-
-            // this.setState({
-            //   saveds: data,
-            //   isLoading: false,
-            // });
-
             this.setState({
-              page: page + 1,
               saveds: [...saveds, ...data],
               isLoading: false,
             });
-            console.log(page, 'pagee');
           } else {
             this.setState({
               isLastPage: true,
@@ -100,32 +94,49 @@ export default class DesignerSavedComponent extends React.Component {
       .catch(error => console.log('error', error));
     // console.log(this.state.categories)
   };
-
   handleLoadMore = () => {
-    this.getMySaveds();
+    this.setState(
+      prevState => ({
+        page: prevState.page + 1,
+      }),
+      () => {
+        this.getMySaveds(this.state.page);
+      },
+    );
   };
 
-  loadPage = () => {
-    this.setState({isLoading: true});
-    // await this.getMySaveds();
+  handleClearData = async () => {
+    console.log('alll');
+    await this.setState({
+      saveds: [],
+      page: 1,
+      isLoading: false,
+      isLastPage: false,
+    });
+  };
+
+  loadPage = async () => {
+    await this.setState({page: 1, isLoading: true, saveds: []});
+    this.getMySaveds(this.state.page);
   };
 
   componentDidMount() {
     const {navigation} = this.props;
 
-    this.getMySaveds();
-    this.focusListener = navigation.addListener('focus', e => {
-      this.getMySaveds();
-      if (e.target === 'focus') {
-        this.loadPage();
-      } else {
-        this.setState({saveds: []});
-        this.setState({page: 0});
-      }
+    this.getMySaveds(this.state.page);
+
+    this.focusListener = navigation.addListener('focus', async () => {
+      await this.loadPage();
+      console.log(this.state.page, 'pagesss');
     });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    if (this.focusListener) {
+      console.log('clean');
+      this.handleClearData();
+    }
+  }
 
   renderFooter = () => {
     if (!this.state.isLoading) return null;
@@ -233,13 +244,20 @@ export default class DesignerSavedComponent extends React.Component {
   };
 
   render() {
+    // console.log(this.state.page, this.state.saveds, 'render');
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
           <View style={styles.nameCompanyParent}>
             <Text style={styles.componyName}>Избранное</Text>
           </View>
-          {!this.state.isLoading ? (
+          {this.state.isLoading ? (
+            <ActivityIndicator
+              size={'large'}
+              color={'#c2c2c2'}
+              style={styles.loaderBox}
+            />
+          ) : (
             <FlatList
               showsVerticalScrollIndicator={false}
               renderItem={this.renderItem}
@@ -249,12 +267,6 @@ export default class DesignerSavedComponent extends React.Component {
               onEndReached={this.handleLoadMore}
               onEndReachedThreshold={0.5}
               ListFooterComponent={this.renderFooter}
-            />
-          ) : (
-            <ActivityIndicator
-              size={'large'}
-              color={'#c2c2c2'}
-              style={styles.loaderBox}
             />
           )}
         </View>

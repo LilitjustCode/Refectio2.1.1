@@ -552,6 +552,7 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   render() {
+    console.log(this.state.user[0]?.company_name.length);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -1063,13 +1064,18 @@ export default class DesignerPageTwoComponent extends React.Component {
                         }}>
                         <View>
                           <Text
+                            numberOfLines={1}
                             style={{
                               fontSize: 20,
                               color: '#333333',
                               fontWeight: '700',
-                              width: '70%',
                             }}>
-                            {this.state.user[0].company_name}
+                            {this.state.user[0].company_name.length >= 25
+                              ? this.state.user[0].company_name.substring(
+                                  0,
+                                  this.state.user[0].company_name.length - 10,
+                                ) + '...'
+                              : this.state.user[0].company_name}
                           </Text>
                           <Text
                             style={{
