@@ -1,21 +1,17 @@
-import React, { useRef, useState } from "react";
-import { Dimensions, Image, TouchableOpacity } from "react-native";
-import { ImageBackground } from "react-native";
-import { Modal } from "react-native";
+import React, {useRef, useState} from 'react';
+import {Dimensions, Image, TouchableOpacity} from 'react-native';
+import {ImageBackground} from 'react-native';
+import {Modal} from 'react-native';
 import {
   KeyboardAvoidingView,
   Platform,
   SafeAreaView,
   Text,
   View,
-} from "react-native";
-import {
-  actions,
-  RichEditor,
-  RichToolbar,
-} from "react-native-pell-rich-editor";
-import HTML from "react-native-render-html";
-import WebView from "react-native-webview";
+} from 'react-native';
+import {actions, RichEditor, RichToolbar} from 'react-native-pell-rich-editor';
+import HTML from 'react-native-render-html';
+import WebView from 'react-native-webview';
 // import BlueButton from "../Component/Buttons/BlueButton";
 // import { useNavigation } from "@react-navigation/native";
 
@@ -37,7 +33,7 @@ export default function RichTextEditorComponent({
       : text;
   };
 
-  console.log(value, "vaal");
+  console.log(value, 'vaal');
   // Truncate the 'value' to a specific length
   const truncatedValue = truncateText(value, 150); // Change '50' to your desired length
 
@@ -46,7 +42,7 @@ export default function RichTextEditorComponent({
   return (
     <SafeAreaView>
       {hideText ? null : (
-        <Text style={{ color: "lightgrey", marginBottom: 10 }}>
+        <Text style={{color: 'lightgrey', marginBottom: 10}}>
           *Редактирование текста возможно через сайт www.refectio.ru
         </Text>
       )}
@@ -54,19 +50,18 @@ export default function RichTextEditorComponent({
         <View
           style={{
             borderWidth: 1,
-            borderColor: "lightgrey",
+            borderColor: 'lightgrey',
             borderRadius: 6,
-            position: "relative",
+            position: 'relative',
             marginRight: 12,
-            height: "70%",
+            height: '70%',
             // padding: 10,
             // width: height === 200 ? "87%" : "",
-          }}
-        >
+          }}>
           <WebView
             source={{
               html:
-                value == null || value == "null" || value == "<p><br></p>"
+                value == null || value == 'null' || value == '<p><br></p>'
                   ? hideText
                     ? `<div style= "font-size: 40px; color: lightgray">Производитель не добавил доп. информацию</div>`
                     : `<div style= "font-size: 40px; color: lightgray">Добавьте доп информацию</div>`
@@ -78,13 +73,12 @@ export default function RichTextEditorComponent({
         <View
           style={{
             borderWidth: 1,
-            borderColor: "#F5F5F5",
+            borderColor: '#F5F5F5',
             borderRadius: 6,
             // height: 50,
 
             // justifyContpaddent: "center",
-          }}
-        >
+          }}>
           {value?.length > 0 ? (
             // <View
             //   style={{
@@ -124,19 +118,18 @@ export default function RichTextEditorComponent({
             <View
               style={{
                 // flexDirection: "row",
-                width: "100%",
-                flexDirection: "row",
+                width: '100%',
+                flexDirection: 'row',
                 // // position: "relative",
-                alignItems: "center",
-                justifyContent: "space-between",
+                alignItems: 'center',
+                justifyContent: 'space-between',
                 // height: 200,
                 // alignItems: "center",
                 // marginTop: 15,
                 // borderWidth: 0,
                 paddingHorizontal: 10,
                 height: 100,
-              }}
-            >
+              }}>
               <View
                 style={{
                   // borderWidth: 1,
@@ -145,13 +138,12 @@ export default function RichTextEditorComponent({
                   // position: "relative",
                   // marginRight: 12,
                   // alignSelf: "flex-start",
-                  width: "87%",
+                  width: '87%',
                   // paddingHorizoԴntal: 20,
                   // height: 50,
-                }}
-              >
+                }}>
                 <HTML
-                  contentWidth={300}
+                  contentWidth={900}
                   // height={100}
                   source={{
                     html: htmlContent,
@@ -160,15 +152,14 @@ export default function RichTextEditorComponent({
               </View>
               <TouchableOpacity
                 onPress={() => {
-                  navigation.navigate("AboutUsScreen", {
+                  navigation.navigate('AboutUsScreen', {
                     value: value,
                   });
-                }}
-              >
+                }}>
                 <Image
-                  source={require("../../assets/image/imageblue.png")}
+                  source={require('../../assets/image/imageblue.png')}
                   style={{
-                    alignSelf: "flex-end",
+                    alignSelf: 'flex-end',
                     width: 30,
                     height: 30,
                     marginRight: 5,
@@ -177,7 +168,7 @@ export default function RichTextEditorComponent({
               </TouchableOpacity>
             </View>
           ) : (
-            ""
+            ''
           )}
         </View>
       )}

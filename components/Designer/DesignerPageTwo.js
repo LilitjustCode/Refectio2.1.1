@@ -1070,10 +1070,10 @@ export default class DesignerPageTwoComponent extends React.Component {
                               color: '#333333',
                               fontWeight: '700',
                             }}>
-                            {this.state.user[0].company_name.length >= 25
+                            {this.state.user[0].company_name.length >= 20
                               ? this.state.user[0].company_name.substring(
                                   0,
-                                  this.state.user[0].company_name.length - 10,
+                                  this.state.user[0].company_name.length - 7,
                                 ) + '...'
                               : this.state.user[0].company_name}
                           </Text>
@@ -1097,10 +1097,8 @@ export default class DesignerPageTwoComponent extends React.Component {
                               style={{
                                 width: 24,
                                 height: 21.43,
-                                // marginRight: screenWidth > 393 ? -2 : 1,
                                 marginBottom: 15,
                                 marginRight: 1.5,
-                                // marginTop: 5,
                               }}
                             />
                           )}

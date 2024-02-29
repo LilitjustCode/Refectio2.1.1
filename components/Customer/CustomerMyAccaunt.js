@@ -2350,7 +2350,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
                   width: '100%',
                   flexDirection: 'row',
                   position: 'relative',
-                  // alignItems: "center",
                   marginTop: 15,
                 }}>
                 <View
@@ -2372,21 +2371,6 @@ export default class CustomerMyAccauntComponent extends React.Component {
                     }}
                   />
                 </View>
-                {/* <TouchableOpacity
-                  onPress={() => {
-                    this.props.navigation.navigate("AboutUsScreen", {
-                      value: this.state.about_us,
-                    });
-                  }}
-                >
-                  <Image
-                    source={require("../../assets/image/ep_edit.png")}
-                    style={{
-                      width: 30,
-                      height: 30,
-                    }}
-                  />
-                </TouchableOpacity> */}
               </View>
             )}
 

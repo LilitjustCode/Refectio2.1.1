@@ -35,7 +35,7 @@ export default class EditZakazchikDesignerComponent extends React.Component {
       manufacture_get: [],
       changed_city: '',
       changed_city_error: false,
-
+      some_id: '',
       surname: '',
       surname_error: false,
       name: '',
@@ -75,9 +75,10 @@ export default class EditZakazchikDesignerComponent extends React.Component {
     )
       .then(response => response.json())
       .then(async responseJson => {
-        // console.log(responseJson, 'response');
+        console.log(responseJson, 'response');
         if (responseJson.status === true) {
           this.setState({
+            some_id: responseJson?.order_data?.id,
             name: responseJson?.order_data?.name,
             surname: responseJson?.order_data?.surname,
             photo: responseJson?.order_data?.photo,
@@ -172,12 +173,12 @@ export default class EditZakazchikDesignerComponent extends React.Component {
   };
 
   getManufacturerChangeCity = async city => {
-    await this.setState({changed_city: city.name});
-    if (this.state.changed_city === '') {
-      this.setState({changed_city_error: true});
-    } else {
-      this.setState({changed_city_error: false});
-    }
+    // await this.setState({changed_city: city.name});
+    // if (this.state.changed_city === '') {
+    //   this.setState({changed_city_error: true});
+    // } else {
+    //   this.setState({changed_city_error: false});
+    // }
     let token = await AsyncStorage.getItem('userToken');
 
     let myHeaders = new Headers();
@@ -217,12 +218,11 @@ export default class EditZakazchikDesignerComponent extends React.Component {
     let form_data = new FormData();
 
     for (let i = 0; i < this.state.proizvoditel_id.length; i++) {
-      form_data.append('proizvoditel_id[]', this.state.proizvoditel_id[i]);
+      form_data.append('proizvoditel_id', this.state.proizvoditel_id[i]);
+      console.log(this.state.proizvoditel_id[i], 'khh');
     }
 
-    form_data.append('name', this.state.name);
-    form_data.append('surname', this.state.surname);
-    form_data.append('photo', this.state.photo);
+    form_data.append('some_id', this.state.some_id);
 
     let requestOptions = {
       method: 'POST',
@@ -232,16 +232,13 @@ export default class EditZakazchikDesignerComponent extends React.Component {
     };
 
     fetch(
-      `https://admin.refectio.ru/public/api/manufactur-geter`,
+      `https://admin.refectio.ru/public/api/manufactur-insert`,
       requestOptions,
     )
       .then(response => response.json())
       .then(async result => {
-        // console.log(result, 'res');
+        console.log('res', result);
         if (result.status === true) {
-          // await this.props.navigation.navigate('ZakaziLiveDesigner');
-          // await this.clearAllData();
-          console.log('res', result);
         } else {
           if (result.hasOwnProperty('name')) {
             this.setState({name_error: true});
@@ -272,12 +269,9 @@ export default class EditZakazchikDesignerComponent extends React.Component {
 
   componentDidMount() {
     const {navigation} = this.props;
-    // this.getAuthUserProfile();
-    console.log(this.state.data, 'data');
+
     this.fetchData();
-    this.focusListener = navigation.addListener('focus', () => {
-      // this.getAuthUserProfile();
-    });
+    this.focusListener = navigation.addListener('focus', () => {});
 
     this.keyboardDidShowListener = Keyboard.addListener(
       'keyboardDidShow',

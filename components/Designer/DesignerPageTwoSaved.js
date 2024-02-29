@@ -1041,10 +1041,10 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
                               color: '#333333',
                               fontWeight: '700',
                             }}>
-                            {this.state.user[0].company_name.length >= 25
+                            {this.state.user[0].company_name.length >= 20
                               ? this.state.user[0].company_name.substring(
                                   0,
-                                  this.state.user[0].company_name.length - 10,
+                                  this.state.user[0].company_name.length - 7,
                                 ) + '...'
                               : this.state.user[0].company_name}
                           </Text>

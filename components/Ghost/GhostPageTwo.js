@@ -83,7 +83,7 @@ export default class GhostPageTwoComponent extends React.Component {
   getObjectData = async id => {
     this.setState({loading: true});
     let userID = id;
-    console.log(userID, 'id');
+
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
         userID,
@@ -119,9 +119,8 @@ export default class GhostPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1);
           arr.push(myItem[0]);
         }
-        console.log(res.data.user[0].about_us);
+
         this.setState({loading: false});
-        console.log('bacck = > ', res.data.city_for_sales_user);
 
         this.setState({
           user: res.data.user,
@@ -184,14 +183,8 @@ export default class GhostPageTwoComponent extends React.Component {
         }
 
         this.setState({
-          // user: data.user,
-          // user_bonus_for_designer: res.data.user_bonus_for_designer,
-          // user_category_for_product: res.data.user_category_for_product,
-          // city_for_sales_user: res.data.city_for_sales_user,
           products: data.products,
-          // show_plus_button: false,
-          // extract: data.user[0].extract,
-          // whatsapp: res.data.user[0].watsap_phone
+
           change_category_loaded: false,
         });
         this.setState({loading: false});
@@ -200,7 +193,6 @@ export default class GhostPageTwoComponent extends React.Component {
   };
 
   handleShare = async () => {
-    console.log(this.state.user[0].id, 'user');
     const shareingStartWith = 'refectio.ru/';
     try {
       {
@@ -326,6 +318,18 @@ export default class GhostPageTwoComponent extends React.Component {
       city_count: null,
       about_us: '',
     });
+    if (this.props.route.params?.fromSearch === true) {
+      console.log('search, yes');
+      this.setState({
+        user: [],
+        user_category_for_product: [],
+        city_for_sales_user: [],
+        whatsapp: '',
+        city_count: null,
+        about_us: '',
+        products: [],
+      });
+    }
   };
 
   loadedDataAfterLoadPage = async id => {
@@ -357,7 +361,7 @@ export default class GhostPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-
+    console.log(this.props.route.params?.fromSearch, 'no');
     loadedDataAfterLoadPageOne = async () => {
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
@@ -379,7 +383,9 @@ export default class GhostPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      // loadedDataAfterLoadPageOne();
+      if (this.props.route.params?.fromSearch) {
+        loadedDataAfterLoadPageOne();
+      }
     });
   }
 
@@ -399,7 +405,6 @@ export default class GhostPageTwoComponent extends React.Component {
   }
 
   render() {
-    console.log(this.state.city_for_sales_user, 'կկկ');
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <Modal visible={this.state.dmodel_popup}>
@@ -1159,7 +1164,6 @@ export default class GhostPageTwoComponent extends React.Component {
 
               {!this.state.change_category_loaded &&
                 this.state.products.map((item, index) => {
-                  console.log(item.about, 'llll about');
                   return (
                     <View key={index} style={{marginTop: 18}}>
                       <Slider2 slid={item.product_image} />

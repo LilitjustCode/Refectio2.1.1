@@ -14,11 +14,11 @@ import {
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
-// import * as ImagePicker from "expo-image-picker";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {launchImageLibrary} from 'react-native-image-picker';
 import RichTextEditorComponent from '../Auth/RichTextEditor';
 import Loading from '../Component/Loading';
+import ImageWithLoadingIndicator from './ImageWithLoading';
 
 export default class EditProductComponent extends React.Component {
   constructor(props) {
@@ -30,7 +30,7 @@ export default class EditProductComponent extends React.Component {
       parentCategoryName: null,
       parentCategoryId: null,
       img: null,
-
+      buttonBlue: false,
       name: '',
       name_error: false,
 
@@ -83,45 +83,73 @@ export default class EditProductComponent extends React.Component {
 
   handleHead = ({tintColor}) => <Text style={{color: tintColor}}>H1</Text>;
 
+  // pickImage = async () => {
+  //   const result = await launchImageLibrary({
+  //     mediaType: 'photo',
+  //     quality: 1,
+  //     selectionLimit: 50,
+  //     // includeBase64: true,
+  //   });
+  //   if (!result.canceled) {
+  //     this.setState({img: result.assets[0].uri, all_images_error: false});
+  //   } else {
+  //     this.setState({all_images_error: true});
+  //   }
+
+  //   let all_images = this.state.all_images;
+  //   if (result.hasOwnProperty('assets')) {
+  //     await result.assets.map((element, index) => {
+  //       all_images.push({
+  //         uri: element.uri,
+  //         type: 'image/jpg',
+  //         name: 'photo.jpg',
+  //       });
+  //     });
+  //   } else {
+  //     all_images.push({
+  //       uri: result.assets[0].uri,
+  //       type: 'image/jpg',
+  //       name: 'photo.jpg',
+  //     });
+  //   }
+
+  //   this.setState({
+  //     all_images: all_images,
+  //     all_images_error: false,
+  //   });
+  // };
+
   pickImage = async () => {
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsMultipleSelection: true,
-    //   quality: 0.5,
-    // });
+    this.setState({buttonSend: false, buttonBlue: false});
+
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
       selectionLimit: 50,
-      // includeBase64: true,
     });
+
     if (!result.canceled) {
-      this.setState({img: result.assets[0].uri, all_images_error: false});
-    } else {
-      this.setState({all_images_error: true});
+      await Promise.all(
+        result.assets.map(async element => {
+          // Simulate asynchronous image upload process with setTimeout
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          this.setState(prevState => ({
+            buttonBlue: true,
+            all_images: [
+              ...prevState.all_images,
+              {
+                uri: element.uri,
+                type: 'image/jpg',
+                name: 'photo.jpg',
+              },
+            ],
+          }));
+        }),
+      );
     }
 
-    let all_images = this.state.all_images;
-    if (result.hasOwnProperty('assets')) {
-      await result.assets.map((element, index) => {
-        all_images.push({
-          uri: element.uri,
-          type: 'image/jpg',
-          name: 'photo.jpg',
-        });
-      });
-    } else {
-      all_images.push({
-        uri: result.assets[0].uri,
-        type: 'image/jpg',
-        name: 'photo.jpg',
-      });
-    }
-
-    this.setState({
-      all_images: all_images,
-      all_images_error: false,
-    });
+    this.setState({buttonSend: true});
   };
 
   delateSelectedNewImage = async index => {
@@ -230,7 +258,7 @@ export default class EditProductComponent extends React.Component {
   };
 
   sendProduct = async () => {
-    // this.setState({isLoading: true})
+    this.setState({isLoading: true, buttonBlue: false});
     let {all_images, delate_photo, get_old_image} = this.state;
     Keyboard.dismiss();
     let myHeaders = new Headers();
@@ -318,20 +346,14 @@ export default class EditProductComponent extends React.Component {
           console.log(result, 'res');
           if (result.status === true) {
             (await this.setState({
+              buttonBlue: false,
               buttonSend: false,
               modalBool: true,
             })) && (await this.clearAllData());
           } else if (result.status !== true) {
-            // if (result.hasOwnProperty("category_name")) {
-            //   this.setState({
-            //     categoryChanged_error: true,
-            //   });
-            // } else {
-            //   this.setState({
-            //     categoryChanged_error: false,
-            //   });
-            // }
-
+            this.setState({
+              buttonBlue: true,
+            });
             if (result.hasOwnProperty('name')) {
               this.setState({
                 name_error: true,
@@ -351,21 +373,9 @@ export default class EditProductComponent extends React.Component {
                 all_images_error: false,
               });
             }
-
-            // if (
-            //   result.data?.message ==
-            //   "you already have 3 products under this category"
-            // ) {
-            //   await this.setState({ limitError: true });
-            //   let set = setTimeout(() => {
-            //     this.setState({ limitError: false });
-            //     this.clearAllData();
-            //     clearTimeout(set);
-            //   }, 3000);
-            // }
           }
           formdata = new FormData();
-          // this.setState({isLoading: false})
+          this.setState({isLoading: false});
         })
         .catch(error => console.log('error', error));
     }
@@ -1171,44 +1181,12 @@ export default class EditProductComponent extends React.Component {
                       }}>
                       {this.state.all_images?.map((item, index) => {
                         return (
-                          <View
+                          <ImageWithLoadingIndicator
                             key={index}
-                            style={{
-                              marginRight: 10,
-                              position: 'relative',
-                              width: 100,
-                              height: 100,
-                            }}>
-                            <Image
-                              source={{
-                                uri: item.uri,
-                              }}
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                resizeMode: 'cover',
-                              }}
-                            />
-
-                            <TouchableOpacity
-                              onPress={() => this.delateSelectedNewImage(index)}
-                              style={{
-                                width: 20,
-                                height: 20,
-                                position: 'absolute',
-                                right: 5,
-                                top: 5,
-                                backgroundColor: 'white',
-                                borderRadius: 100,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <Image
-                                source={require('../../assets/image/ixs.png')}
-                                style={{width: 10, height: 10}}
-                              />
-                            </TouchableOpacity>
-                          </View>
+                            source={{uri: item.uri}}
+                            onDelete={this.delateSelectedImage}
+                            index={index}
+                          />
                         );
                       })}
                     </View>
@@ -1254,7 +1232,10 @@ export default class EditProductComponent extends React.Component {
 
               <TouchableOpacity
                 onPress={() => {
-                this.sendProduct()
+                  if (this.state.buttonBlue == true) {
+                    this.sendProduct();
+                  }
+
                   // {
                   //   this.state.alldata.facades == this.state.facades &&
                   //   this.state.name == this.state.alldata.name &&
@@ -1270,7 +1251,26 @@ export default class EditProductComponent extends React.Component {
                   marginTop: 60,
                   marginBottom: 350,
                 }}>
-                <BlueButton name="Изменить" />
+                <View
+                  style={{
+                    backgroundColor:
+                      this.state.buttonBlue === true ? '#45b9ea' : '#B5D8FE',
+                    width: 285,
+                    height: 44,
+                    justifyContent: 'center',
+                    borderRadius: 20,
+                  }}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      textAlign: 'center',
+                      fontFamily: 'Poppins_SemiBold',
+                      fontWeight: '700',
+                    }}>
+                    Изменить
+                  </Text>
+                </View>
               </TouchableOpacity>
             </ScrollView>
           )}

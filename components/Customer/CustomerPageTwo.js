@@ -17,6 +17,7 @@ import {
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 // import Slider from "../slider/Slider";
+import HTML from 'react-native-render-html';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';
@@ -407,42 +408,44 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   render() {
-    // console.log(this.state.user[0]?.company_name.split(" "), "namw");
-    // const number = this.state.whatsapp;
-    // const convertedNumber = number.replace(/\D/g, "");
-    // console.log(convertedNumber, "convert");
     const {fontsLoaded} = this.state;
     console.log(screenWidth);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
           <Modal visible={this.state.aboutUsPopup}>
-            <ImageBackground
+            {/* <ImageBackground
               source={require('../../assets/image/blurBg.png')}
-              style={{
-                width: '100%',
-                height: '100%',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}>
+              style={
+                {
+                  // width: '100%',
+                  // height: '100%',
+                  // justifyContent: 'center',
+                  // alignItems: 'center',
+                }
+              }>
               <View
-                style={{
-                  width: '90%',
-                  height: this.state.about_us ? '60%' : '30%',
-                  backgroundColor: '#fff',
-                  borderRadius: 20,
-                  position: 'relative',
-                  paddingHorizontal: 15,
-                  alignItems: 'center',
-                }}>
+                style={
+                  {
+                    // width: '90%',
+                    // height: this.state.about_us ? '100%' : '30%',
+                    // backgroundColor: '#fff',
+                    // borderRadius: 20,
+                    // position: 'relative',
+                    // paddingHorizontal: 15,
+                    // alignItems: 'center',
+                  }
+                }>
                 <Text
-                  style={{
-                    marginTop: 15,
-                    fontSize: 20,
-                    textAlign: 'center',
-                    color: '#2D9EFB',
-                    fontFamily: 'Poppins_500Medium',
-                  }}>
+                  style={
+                    {
+                      // marginTop: 15,
+                      // fontSize: 20,
+                      // textAlign: 'center',
+                      // color: '#2D9EFB',
+                      // fontFamily: 'Poppins_500Medium',
+                    }
+                  }>
                   Дополнительная информация
                 </Text>
 
@@ -451,17 +454,46 @@ export default class DesignerPageTwoComponent extends React.Component {
                     Производитель не добавил доп. информацию
                   </Text>
                 ) : (
-                  <WebView
+                  // <WebView
+                  //   style={{
+                  //     height: 100,
+                  //     width: 280,
+                  //     marginTop: 30,
+                  //     zIndex: 99999,
+                  //   }}
+                  //   source={{
+                  //     html: `<div style="font-size:50px;">${this.state.about_us}</div>`,
+                  //   }}
+                  // />
+                  <View
                     style={{
-                      height: 100,
-                      width: 280,
-                      marginTop: 30,
-                      zIndex: 99999,
-                    }}
-                    source={{
-                      html: `<div style="font-size:50px;">${this.state.about_us}</div>`,
-                    }}
-                  />
+                      flexDirection: 'row',
+                      width: '100%',
+                      flexDirection: 'row',
+                      position: 'relative',
+                      height: '100%',
+                      marginTop: 15,
+                    }}>
+                    <View
+                      style={{
+                        // borderWidth: 1,
+                        // borderColor: '#F5F5F5',
+                        // borderRadius: 6,
+                        position: 'relative',
+                        marginRight: 12,
+                        width: '100%',
+                        paddingHorizontal: 10,
+                      }}>
+                      <HTML
+                        contentWidth={900}
+                        source={{
+                          html: `<div style="font-size: 16px">${
+                            this.state.about_us ? this.state.about_us : ''
+                          }</div>`,
+                        }}
+                      />
+                    </View>
+                  </View>
                 )}
 
                 <TouchableOpacity
@@ -472,7 +504,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                   <BlueButton name="Ок" />
                 </TouchableOpacity>
               </View>
-            </ImageBackground>
+            </ImageBackground> */}
           </Modal>
 
           <Modal visible={this.state.aboutProductPopup}>
@@ -502,10 +534,10 @@ export default class DesignerPageTwoComponent extends React.Component {
                     color: '#2D9EFB',
                     fontFamily: 'Poppins_500Medium',
                   }}>
-                  Дополнительная информация
+                  Дополнительная информация1
                 </Text>
 
-                <WebView
+                {/* <WebView
                   style={{
                     height: 100,
                     width: 280,
@@ -515,8 +547,37 @@ export default class DesignerPageTwoComponent extends React.Component {
                   source={{
                     html: `<div style="font-size:50px;">${this.state.aboutProduct}</div>`,
                   }}
-                />
+                /> */}
 
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    width: '100%',
+                    flexDirection: 'row',
+                    position: 'relative',
+                    // alignItems: "center",
+                    marginTop: 15,
+                  }}>
+                  <View
+                    style={{
+                      borderWidth: 1,
+                      borderColor: '#F5F5F5',
+                      borderRadius: 6,
+                      position: 'relative',
+                      marginRight: 12,
+                      width: '100%',
+                      paddingHorizontal: 10,
+                    }}>
+                    <HTML
+                      contentWidth={700}
+                      source={{
+                        html: `<div style="font-size: 16px">${
+                          this.state.aboutProduct ? this.state.aboutProduct : ''
+                        }</div>`,
+                      }}
+                    />
+                  </View>
+                </View>
                 <TouchableOpacity
                   style={{
                     marginVertical: 20,

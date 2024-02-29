@@ -79,10 +79,11 @@ android {
         applicationId 'com.JustCode.RefectioApp'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 6
-        versionName '6.0'
+        versionCode 8
+        versionName '8.0'
     }
-    signingConfigs {release {
+    signingConfigs {
+        release {
                 storeFile file('refectio.keystore')
                 storePassword '111111'
                 keyAlias 'refectio'

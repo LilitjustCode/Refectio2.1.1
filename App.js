@@ -510,7 +510,6 @@ export default function App() {
           ...prevState,
           userToken: action.userToken,
           userRole: action.userRole,
-
           isLoading: false,
         };
       case 'LOGIN':
@@ -661,21 +660,7 @@ export default function App() {
           barStyle="dark-content"
         />
         <NavigationContainer>
-          {/* {urlLinking.length > 0 && (
-            <Stack.Navigator
-              initialRouteName="GhostPageTwo"
-              screenOptions={({route}) => ({
-                tabBarShowLabel: false,
-                headerShown: false,
-                tabBarActiveTintColor: '#2EB6A5',
-                tabBarInactiveTintColor: 'gray',
-                tabBarStyle: tabBarStyle,
-              })}>
-              <Stack.Screen name="GhostPageTwo" component={GhostPageTwoFunc} />
-            </Stack.Navigator>
-          )} */}
           {
-            //  Designer Pages Tabs
             loginState.userToken !== null && loginState.userRole == '2' ? (
               <Stack.Navigator
                 initialRouteName={

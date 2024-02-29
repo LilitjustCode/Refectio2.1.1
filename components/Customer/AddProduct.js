@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, useState} from 'react';
 import {
   SafeAreaView,
   View,
@@ -21,12 +21,16 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import Loading from '../Component/Loading';
 import RichTextEditorComponent from '../Auth/RichTextEditor';
+import ImageWithLoadingIndicator from './ImageWithLoading';
 
 export default class AddProductComponent extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      all_images: [],
+      buttonSend: true,
       keyboardOpen: false,
+      buttonBlue: false,
       category: false,
       categoryChanged: '',
       categoryChanged_error: '',
@@ -62,7 +66,7 @@ export default class AddProductComponent extends React.Component {
 
       modalBool: false,
 
-      buttonSend: true,
+      // buttonSend: true,
       isLoading: false,
 
       hasFacades: false,
@@ -77,32 +81,35 @@ export default class AddProductComponent extends React.Component {
   formdata = new FormData();
 
   pickImage = async () => {
-    this.setState({buttonSend: false});
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsMultipleSelection: true,
-    //   quality: 0.5,
-    // });
+    this.setState({buttonSend: false, buttonBlue: false});
+
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,
       selectionLimit: 50,
-      // includeBase64: true,
     });
-    let all_images = this.state.all_images;
+
     if (!result.canceled) {
-      await result.assets.map((element, index) => {
-        all_images.push({
-          uri: element.uri,
-          type: 'image/jpg',
-          name: 'photo.jpg',
-        });
-      });
-      this.setState({
-        all_images: all_images,
-        all_images_error: false,
-      });
+      await Promise.all(
+        result.assets.map(async element => {
+          // Simulate asynchronous image upload process with setTimeout
+          await new Promise(resolve => setTimeout(resolve, 1000));
+
+          this.setState(prevState => ({
+            buttonBlue: true,
+            all_images: [
+              ...prevState.all_images,
+              {
+                uri: element.uri,
+                type: 'image/jpg',
+                name: 'photo.jpg',
+              },
+            ],
+          }));
+        }),
+      );
     }
+
     this.setState({buttonSend: true});
   };
 
@@ -176,6 +183,7 @@ export default class AddProductComponent extends React.Component {
   };
 
   sendProduct = async () => {
+    this.setState({buttonBlue: false});
     let {all_images} = this.state;
     console.log('all_images', all_images.length);
     if (all_images.length === 0) {
@@ -250,12 +258,13 @@ export default class AddProductComponent extends React.Component {
       .then(response => response.json())
       .then(async result => {
         console.log(result);
-        this.setState({isLoading: false});
+        this.setState({isLoading: false, buttonBlue: false});
         if (result.status === true) {
           (await this.setState({
             modalBool: true,
           })) && (await this.clearAllData());
         } else if (result.status !== true) {
+          this.setState({buttonBlue: true});
           if (result.hasOwnProperty('category_name')) {
             this.setState({
               categoryChanged_error: true,
@@ -473,7 +482,11 @@ export default class AddProductComponent extends React.Component {
   };
 
   render() {
-    // console.log(this.props.category.parent?.name.length, 'length');
+    console.log(
+      this.state.buttonBlue === true ? 'a' : 'b',
+      this.state.buttonBlue,
+      'length',
+    );
     const longText = this.props.category.name;
     const truncatedText = this.truncateText(longText, 9);
     return (
@@ -617,7 +630,6 @@ export default class AddProductComponent extends React.Component {
                 placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
                 numberOfLines={1}
                 keyboardType="default"
-                
                 style={[
                   {
                     borderWidth: 1,
@@ -945,7 +957,7 @@ export default class AddProductComponent extends React.Component {
                 horizontal={true}
                 style={{marginTop: 30}}
                 showsHorizontalScrollIndicator={false}>
-                <View
+                {/* <View
                   style={{
                     flexDirection: 'row',
                     height: 120,
@@ -991,7 +1003,15 @@ export default class AddProductComponent extends React.Component {
                       </View>
                     );
                   })}
-                </View>
+                </View> */}
+                {this.state.all_images.map((item, index) => (
+                  <ImageWithLoadingIndicator
+                    key={index}
+                    source={{uri: item.uri}}
+                    onDelete={this.delateSelectedImage}
+                    index={index}
+                  />
+                ))}
               </ScrollView>
             )}
             {this.state.limitError === true && (
@@ -1018,6 +1038,7 @@ export default class AddProductComponent extends React.Component {
             <TouchableOpacity
               onPress={() => {
                 if (this.state.buttonSend === true) {
+                  console.log('al');
                   this.sendProduct();
                 }
               }}
@@ -1026,7 +1047,26 @@ export default class AddProductComponent extends React.Component {
                 marginTop: 60,
                 marginBottom: 250,
               }}>
-              <BlueButton name="Добавить" />
+              <View
+                style={{
+                  backgroundColor:
+                    this.state.buttonBlue === true ? '#45b9ea' : '#B5D8FE',
+                  width: 285,
+                  height: 44,
+                  justifyContent: 'center',
+                  borderRadius: 20,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 18,
+                    textAlign: 'center',
+                    fontFamily: 'Poppins_SemiBold',
+                    fontWeight: '700',
+                  }}>
+                  Добавить
+                </Text>
+              </View>
             </TouchableOpacity>
           </ScrollView>
         </View>
