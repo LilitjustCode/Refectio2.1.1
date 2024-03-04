@@ -519,7 +519,7 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-
+    console.log(this.props.route.params?.fromSearch, 'no');
     loadedDataAfterLoadPageOne = async () => {
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
@@ -541,6 +541,9 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
+      if (this.props.route.params?.fromSearch) {
+        loadedDataAfterLoadPageOne();
+      }
     });
   }
 

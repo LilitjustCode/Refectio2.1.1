@@ -66,12 +66,7 @@ export default class AddZakaziComponent extends React.Component {
   form_data = new FormData();
 
   pickImage = async () => {
-    // let result = await ImagePicker.launchImageLibraryAsync({
-    //   mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //   allowsEditing: true,
-    //   aspect: [4, 4],
-    //   quality: 0.5,
-    // });
+
     const result = await launchImageLibrary({
       mediaType: 'photo',
       quality: 1,

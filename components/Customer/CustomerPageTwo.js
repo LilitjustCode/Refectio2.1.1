@@ -177,17 +177,12 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   componentDidMount() {
     const {id, navigation} = this.props;
-    // this.setState({fontsLoaded: true});
-
+    console.log(this.props.route.params?.fromSearch, 'no');
     loadedDataAfterLoadPageOne = async () => {
-      console.log('dddd');
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      console.log(
-        this.state.user_category_for_product[0].parent_category_name,
-        'dddname',
-      );
+
       await this.updateProduct(
         this.state.parent_name.length > 0
           ? this.state.parent_name
@@ -204,7 +199,9 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
-      // loadedDataAfterLoadPageOne();
+      if (this.props.route.params?.fromSearch) {
+        loadedDataAfterLoadPageOne();
+      }
     });
   }
 
