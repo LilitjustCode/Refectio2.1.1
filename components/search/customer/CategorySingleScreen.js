@@ -145,7 +145,7 @@ export default function CategorySingleScreenCustomer({
                     onPress={() => {
                       const routes = navigation.getState()?.routes;
                       const prevRoute = routes[routes.length - 2];
-                      navigation.navigate('CustomerPageTwo', {
+                      navigation.navigate('CustomerPageTwoDuble', {
                         id: item.user_product.id,
                         fromSearch: true,
                         prevRoute,

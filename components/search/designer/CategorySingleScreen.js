@@ -149,7 +149,7 @@ export default function CategorySingleScreenDesigner({
                     onPress={() => {
                       const routes = navigation.getState()?.routes;
                       const prevRoute = routes[routes.length - 2];
-                      navigation.navigate('DesignerPageTwo', {
+                      navigation.navigate('DesignerPageTwoSavedComponent', {
                         id: item.user_product.id,
                         fromSearch: true,
                         prevRoute,

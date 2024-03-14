@@ -1,5 +1,6 @@
 import {useNavigation} from '@react-navigation/native';
 import React, {useState} from 'react';
+import {CommonActions} from '@react-navigation/native';
 import {
   Animated,
   Dimensions,
@@ -39,12 +40,17 @@ export default function Slider2(props) {
       />
     ) : (
       <TouchableOpacity
-        onPress={() =>
+        onPress={() => {
+          navigation.dispatch(
+            CommonActions.setParams({
+              prevRoute: '',
+            }),
+          );
           navigation.navigate('Slider', {
             imagesData: props.slid,
             imgActive,
-          })
-        }
+          });
+        }}
         activeOpacity={1}>
         <Image
           source={{

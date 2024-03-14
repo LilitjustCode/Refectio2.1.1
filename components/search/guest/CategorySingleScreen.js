@@ -148,11 +148,11 @@ export default function CategorySingleScreenGuest({
                     style={{flexDirection: 'row', marginTop: 10}}
                     onPress={() => {
                       const routes = navigation.getState()?.routes;
-                      const prevRoute = routes[routes.length - 2];
-                      navigation.navigate('GhostPageTwo', {
+                      // const prevRoute = routes[routes.length - 2];
+                      navigation.navigate('GhostPageTwoComponentDuble', {
                         id: item.user_product.id,
                         fromSearch: true,
-                        prevRoute,
+                        prevRoute: 'CategorySingleScreen',
                       });
                     }}>
                     <Image

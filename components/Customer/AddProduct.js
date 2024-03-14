@@ -22,6 +22,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import Loading from '../Component/Loading';
 import RichTextEditorComponent from '../Auth/RichTextEditor';
 import ImageWithLoadingIndicator from './ImageWithLoading';
+import LoadingAdd from '../Component/LoadingAdd';
 
 export default class AddProductComponent extends React.Component {
   constructor(props) {
@@ -957,53 +958,7 @@ export default class AddProductComponent extends React.Component {
                 horizontal={true}
                 style={{marginTop: 30}}
                 showsHorizontalScrollIndicator={false}>
-                {/* <View
-                  style={{
-                    flexDirection: 'row',
-                    height: 120,
-                    alignItems: 'center',
-                  }}>
-                  {this.state.all_images.map((item, index) => {
-                    return (
-                      <View
-                        key={index}
-                        style={{
-                          marginRight: 10,
-                          position: 'relative',
-                          width: 100,
-                          height: 100,
-                        }}>
-                        <Image
-                          source={{uri: item.uri}}
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                            resizeMode: 'cover',
-                          }}
-                        />
-
-                        <TouchableOpacity
-                          onPress={() => this.delateSelectedImage(index)}
-                          style={{
-                            width: 20,
-                            height: 20,
-                            position: 'absolute',
-                            right: 5,
-                            top: 5,
-                            backgroundColor: 'white',
-                            borderRadius: 100,
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}>
-                          <Image
-                            source={require('../../assets/image/ixs.png')}
-                            style={{width: 10, height: 10}}
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    );
-                  })}
-                </View> */}
+               
                 {this.state.all_images.map((item, index) => (
                   <ImageWithLoadingIndicator
                     key={index}
@@ -1021,20 +976,7 @@ export default class AddProductComponent extends React.Component {
               </Text>
             )}
 
-            {/* <Text
-              style={{
-                fontFamily: "Poppins_500Medium",
-                lineHeight: 23,
-                fontSize: 16,
-                color: "#5B5B5B",
-                marginBottom: 5,
-                marginTop: 15,
-              }}
-            >
-              Дополнительная информация
-            </Text>
-            <RichTextEditorComponent /> */}
-
+         
             <TouchableOpacity
               onPress={() => {
                 if (this.state.buttonSend === true) {
@@ -1049,8 +991,7 @@ export default class AddProductComponent extends React.Component {
               }}>
               <View
                 style={{
-                  backgroundColor:
-                    this.state.buttonBlue === true ? '#45b9ea' : '#B5D8FE',
+                  backgroundColor: '#B5D8FE',
                   width: 285,
                   height: 44,
                   justifyContent: 'center',
@@ -1073,7 +1014,7 @@ export default class AddProductComponent extends React.Component {
         {this.state.keyboardOpen === false && (
           <CustomerMainPageNavComponent navigation={this.props.navigation} />
         )}
-        {this.state.isLoading && <Loading />}
+        {this.state.isLoading && <LoadingAdd />}
       </SafeAreaView>
     );
   }

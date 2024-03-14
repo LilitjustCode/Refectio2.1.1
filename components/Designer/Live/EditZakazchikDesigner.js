@@ -239,6 +239,7 @@ export default class EditZakazchikDesignerComponent extends React.Component {
       .then(async result => {
         console.log('res', result);
         if (result.status === true) {
+          this.props.navigation.navigate('ZakaziLiveDesigner');
         } else {
           if (result.hasOwnProperty('name')) {
             this.setState({name_error: true});

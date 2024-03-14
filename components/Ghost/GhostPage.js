@@ -321,7 +321,7 @@ export default class GhostPageComponent extends React.Component {
             onPress={async () => {
               this.props.navigation.navigate('GhostPageTwo', {
                 id: item.id,
-                prevroutname: 'name',
+                prevRoute: 'DesignerPage',
               });
             }}>
             <View style={styles.infoCompanyMain}>

@@ -16,13 +16,16 @@ import {
   View,
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
+// import Slider from "../slider/Slider";
+import HTML from 'react-native-render-html';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import WebView from 'react-native-webview';
 import BlueButton from '../../components/Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
 
 const {width: screenWidth} = Dimensions.get('window');
-export default class DesignerPageTwoComponent extends React.Component {
+export default class DesignerPageTwoComponentDuble extends React.Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -141,6 +144,13 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   loadedDataAfterLoadPage = async id => {
     await this.getObjectData(id);
+
+    // await this.updateProduct(
+    //   this.state.parent_name
+    //     ? this.state.parent_name
+    //     : this.state.user_category_for_product[0].parent_category_name,
+    //   id,
+    // );
     this.setState({
       changed:
         this.state.city_for_sales_user.length == this.state.city_count
@@ -387,6 +397,8 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   render() {
+    const {fontsLoaded} = this.state;
+    // console.log(this.props.route.params?.id);
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
         <View style={styles.main}>
@@ -587,7 +599,7 @@ export default class DesignerPageTwoComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={this.handleBackButtonClick}>
+            onPress={() => {this.props.navigation.goBack()}}>
             <Svg
               width={25}
               height={30}

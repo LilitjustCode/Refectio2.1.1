@@ -50,7 +50,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       praizvaditelSelect: false,
 
       getPraizvaditel: [],
-
+      company_name_url: '',
       getPraizvaditelMap: [
         {
           proizvodtel_name: '',
@@ -214,6 +214,7 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.setState({loading: false});
 
         this.setState({
+          company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
@@ -356,30 +357,13 @@ export default class DesignerPageTwoComponent extends React.Component {
     const shareingStartWith = 'refectio.ru/';
     try {
       {
-        this.state.user[0]?.company_name.split(' ').length == 1
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 2
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 3
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.state.user[0].id}`)
-          : (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2] +
-              this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.state.user[0].id}`);
+        this.state.user[0]?.company_name.split(' ').length == 1;
+        url = `${shareingStartWith}${this.state.company_name_url}/${this.state.user[0].id}`;
       }
+
       if (Platform.OS === 'android') {
         await Share.share({message: url});
+        // Handle the result if needed
       } else {
         await Share.share({message: url});
       }
@@ -387,7 +371,6 @@ export default class DesignerPageTwoComponent extends React.Component {
       console.error('Error sharing:', error);
     }
   };
-
   updateProductAfterClickToCategory = async (parent_category_name, index) => {
     const {id} = this.props;
     await this.setState({
@@ -468,7 +451,6 @@ export default class DesignerPageTwoComponent extends React.Component {
         });
     }
   };
-
   addProtocol(url) {
     const protocolRegex = /^https?:\/\//i;
     if (protocolRegex.test(url)) {
@@ -489,7 +471,7 @@ export default class DesignerPageTwoComponent extends React.Component {
 
   handleBackButtonClick() {
     const {id, setId, setUrlLinking} = this.props;
-    if (this.props.route.params.prevRoute == 'DesignerSaved') {
+    if (this.props.route.params?.prevRoute == 'DesignerSaved') {
       this.props.navigation.navigate('DesignerSaved');
     } else {
       if (this.props.route.params?.fromSearch === true) {
@@ -497,16 +479,14 @@ export default class DesignerPageTwoComponent extends React.Component {
         this.props.id = null;
       } else if (
         this.props.route.params?.id ||
-        (this.props.id &&
-          this.props.route.params.prevRoute != 'DesignerSaved' &&
-          this.props.route.params?.fromSearch == false)
+        (this.props.id && this.props.route.params?.fromSearch == false)
       ) {
         this.props.navigation.navigate('DesignerPage', {screen: true});
       } else if (
         this.props.route.params?.id ||
         (this.props.id && !this.props.route.params?.fromSearch)
       ) {
-        this.props.navigation.navigate(this.props.route.params.prevRoute);
+        this.props.navigation.navigate('DesignerPage', {screen: true});
       } else {
         this.props.navigation.goBack();
       }
@@ -518,8 +498,8 @@ export default class DesignerPageTwoComponent extends React.Component {
   }
 
   componentDidMount() {
-    const {id, navigation} = this.props;
-    console.log(this.props.route.params?.fromSearch, 'no');
+    const {id, navigation, urlMy} = this.props;
+    console.log(urlMy, 'no');
     loadedDataAfterLoadPageOne = async () => {
       await this.getObjectData(
         this.props.route.params?.id ? this.props.route.params?.id : id,
@@ -538,11 +518,20 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.props.route.params?.id ? this.props.route.params?.id : id,
     );
     this.focusListener = navigation.addListener('focus', () => {
+      console.log(urlMy, 'no');
       this.loadedDataAfterLoadPage(
         this.props.route.params?.id ? this.props.route.params?.id : id,
       );
       if (this.props.route.params?.fromSearch) {
         loadedDataAfterLoadPageOne();
+        this.setState({change_category_loaded: true});
+      }
+      if (
+        this.props.route.params?.prevRoute == 'DesignerPage' &&
+        urlMy == 'yes'
+      ) {
+        loadedDataAfterLoadPageOne();
+        this.setState({change_category_loaded: true});
       }
     });
   }

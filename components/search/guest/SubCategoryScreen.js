@@ -43,7 +43,7 @@ export default function SubCategoryScreen({navigation, category}) {
               const prevRoute = routes[routes.length - 2];
               return navigation.navigate('CategoryScreen', {
                 category: category,
-                prevRoute: prevRoute,
+                prevRoute: 'CategoryScreen',
                 parentCategoryType: category,
               });
             }}>

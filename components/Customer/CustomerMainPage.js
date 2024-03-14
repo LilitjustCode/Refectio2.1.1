@@ -228,7 +228,7 @@ export default class CustomerMainPageComponent extends React.Component {
     let city_name = filter_data.city_name;
     let show_room = filter_data.show_room;
 
-    console.log(filter_data, 'customer');
+    // console.log(filter_data, 'customer');
 
     let formdata = new FormData();
     console.log(city_name, meshok, made_in_result, 'cityyyy');
@@ -253,7 +253,7 @@ export default class CustomerMainPageComponent extends React.Component {
     )
       .then(response => response.json())
       .then(res => {
-        console.log(res, 'resss');
+        // console.log(res, 'resss');
         if (!res.status) {
           this.setState({
             getAllProducts: [],
@@ -265,7 +265,7 @@ export default class CustomerMainPageComponent extends React.Component {
         let data = res.data.user;
 
         let filtered_category_name = res.data.returnCategoryNameArray[0];
-        console.log(data.length, 'length');
+        // console.log(data.length, 'length');
         for (let i = 0; i < data?.length; i++) {
           if (data[i].slider_photo?.length > 0) {
             let product_image = data[i].slider_photo;
@@ -369,7 +369,7 @@ export default class CustomerMainPageComponent extends React.Component {
     })
       .then(response => response.json())
       .then(res => {
-        console.log(res, 'result');
+        // console.log(res, 'result');
         this.setState({
           logo: res?.data?.[0].logo,
           name: res?.data?.[0].company_name,
@@ -389,6 +389,7 @@ export default class CustomerMainPageComponent extends React.Component {
             onPress={async () => {
               await this.props.navigation.navigate('CustomerPageTwo', {
                 id: item.id,
+                prevRoute: 'DesignerPage',
               });
               // await this.clearAllData();
             }}>
@@ -569,7 +570,7 @@ export default class CustomerMainPageComponent extends React.Component {
               <TouchableOpacity
                 onPress={() => {
                   this.setState({updateAvailable: false});
-                  console.log(this.state.updateAvailable);
+                  // console.log(this.state.updateAvailable);
                 }}
                 style={{position: 'absolute', right: 18, top: 50}}>
                 <Image

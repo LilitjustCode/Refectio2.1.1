@@ -4,7 +4,6 @@ import {
   Dimensions,
   Image,
   ImageBackground,
-  Linking,
   Modal,
   Platform,
   SafeAreaView,
@@ -17,12 +16,15 @@ import {
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import BlueButton from '../../components/Component/Buttons/BlueButton';
+import {Linking} from 'react-native';
+import WebView from 'react-native-webview';
+import BlueButton from '../Component/Buttons/BlueButton';
 import Slider2 from '../slider/Slider2';
-import CustomerMainPageNavComponent from './CustomerMainPageNav';
+import GhostNavComponent from './GhostNav';
 
 const {width: screenWidth} = Dimensions.get('window');
-export default class DesignerPageTwoComponent extends React.Component {
+
+export default class GhostPageTwoComponentDuble extends React.Component {
   constructor(props) {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
@@ -160,7 +162,7 @@ export default class DesignerPageTwoComponent extends React.Component {
       this.props.route.params?.id ||
       (this.props.id && !this.props.route.params?.fromSearch)
     ) {
-      this.props.navigation.navigate('CustomerMainPage', {screen: true});
+      this.props.navigation.navigate('GhostPage', {screen: true});
     }
     setId(null);
     setUrlLinking(null);
@@ -437,8 +439,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                 <View style={[styles.Vipiska, {marginTop: 80}]}>
                   <TouchableOpacity
                     onPress={() => {
-                      Linking.openURL(this.state.urlImage + this.state.extract);
-                      this.setState({VipiskaModal: false});
+                      this.props.navigation.navigate('Modal');
                     }}>
                     <BlueButton name="Подтвердить" />
                   </TouchableOpacity>
@@ -587,7 +588,9 @@ export default class DesignerPageTwoComponent extends React.Component {
               marginLeft: -10,
               paddingBottom: 10,
             }}
-            onPress={this.handleBackButtonClick}>
+            onPress={() => {
+              this.props.navigation.goBack();
+            }}>
             <Svg
               width={25}
               height={30}
@@ -1036,13 +1039,7 @@ export default class DesignerPageTwoComponent extends React.Component {
                     {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
                   ]}
                   onPress={() => {
-                    const number = this.state.whatsapp;
-                    const convertedNumber = number.replace(/\D/g, '');
-                    Linking.openURL(
-                      // `wa.me://+79162939496`
-                      `http://wa.me/${convertedNumber}?text=Здравствуйте! Пишу из приложения Refectio.`,
-                      // `whatsapp://send?text=Здравствуйте!Пишу из приложения Refectio&phone=${this.state.whatsapp}`
-                    ).catch(err => console.log(err));
+                    this.props.navigation.navigate('Modal');
                   }}>
                   <Image
                     source={require('../../assets/image/whatsapp.png')}
@@ -1206,7 +1203,7 @@ export default class DesignerPageTwoComponent extends React.Component {
             </View>
           </ScrollView>
         </View>
-        <CustomerMainPageNavComponent navigation={this.props.navigation} />
+        <GhostNavComponent navigation={this.props.navigation} />
       </SafeAreaView>
     );
   }

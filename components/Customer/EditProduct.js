@@ -11,6 +11,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import LoadingAdd from '../Component/LoadingAdd';
 import ArrowGrayComponent from '../../assets/image/ArrowGray';
 import BlueButton from '../Component/Buttons/BlueButton';
 import CustomerMainPageNavComponent from './CustomerMainPageNav';
@@ -65,7 +66,7 @@ export default class EditProductComponent extends React.Component {
       limitError: false,
 
       delate_photo: [],
-      isLoading: true,
+      isLoading: false,
 
       hasFacades: false,
       hasFrame: false,
@@ -245,7 +246,6 @@ export default class EditProductComponent extends React.Component {
       buttonSend: true,
 
       image_boolean: false,
-      isLoading: true,
 
       hasFacades: false,
       hasFrame: false,
@@ -258,7 +258,7 @@ export default class EditProductComponent extends React.Component {
   };
 
   sendProduct = async () => {
-    this.setState({isLoading: true, buttonBlue: false});
+    this.setState({isLoading: true, buttonBlue: true});
     let {all_images, delate_photo, get_old_image} = this.state;
     Keyboard.dismiss();
     let myHeaders = new Headers();
@@ -349,6 +349,7 @@ export default class EditProductComponent extends React.Component {
               buttonBlue: false,
               buttonSend: false,
               modalBool: true,
+              isLoading: false,
             })) && (await this.clearAllData());
           } else if (result.status !== true) {
             this.setState({
@@ -720,318 +721,98 @@ export default class EditProductComponent extends React.Component {
             </Text>
           </View>
 
-          {this.state.isLoading ? (
-            <Loading />
-          ) : (
-            <ScrollView showsVerticalScrollIndicator={false}>
-              {/* Категория */}
-              <View>
-                <Text
-                  style={[
-                    {
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    },
-                  ]}>
-                  Категория*
-                </Text>
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {/* Категория */}
+            <View>
+              <Text
+                style={[
+                  {
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  },
+                ]}>
+                Категория*
+              </Text>
+              <View
+                style={{
+                  position: 'relative',
+                }}>
                 <View
-                  style={{
-                    position: 'relative',
-                  }}>
-                  <View
-                    style={[
-                      {
-                        borderWidth: 1,
-                        borderColor: '#F5F5F5',
-                        padding: 10,
-                        width: '100%',
-                        borderRadius: 6,
-                        position: 'relative',
-                        height: 45,
-                        marginRight: 12,
-                      },
-                    ]}>
-                    <Text
-                      style={{
-                        color: '#5B5B5B',
-                        fontFamily: 'Poppins_500Medium',
-                      }}>
-                      {this.state.parentCategoryName}
-                      {this.state.categoryName != 'null' &&
-                        this.state.categoryName != null &&
-                        ' -> ' + this.state.categoryName}
-                    </Text>
-                  </View>
-                </View>
-              </View>
-
-              {/* Название */}
-              <View>
-                <Text
                   style={[
                     {
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 25,
+                      borderWidth: 1,
+                      borderColor: '#F5F5F5',
+                      padding: 10,
+                      width: '100%',
+                      borderRadius: 6,
+                      position: 'relative',
+                      height: 45,
+                      marginRight: 12,
                     },
-                    this.state.name_error ? {color: 'red'} : {color: '#5B5B5B'},
                   ]}>
-                  Название*
-                </Text>
-                <TextInput
-                  underlineColorAndroid="transparent"
-                  multiline={false}
-                  placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
-                  numberOfLines={1}
-                  keyboardType="default"
-                  style={[
-                    {
-                      borderWidth: 1,
-                      padding: 10,
-                      paddingRight: 0,
-                      width: '100%',
-                      borderRadius: 5,
-                      fontSize: 13.5,
-                    },
-                    this.state.name_error
-                      ? {borderColor: 'red'}
-                      : {borderColor: '#F5F5F5'},
-                  ]}
-                  value={this.state.name}
-                  onChangeText={text => {
-                    this.setState({name: text, name_error: false});
-                  }}
-                  maxLength={42}
-                />
+                  <Text
+                    style={{
+                      color: '#5B5B5B',
+                      fontFamily: 'Poppins_500Medium',
+                    }}>
+                    {this.state.parentCategoryName}
+                    {this.state.categoryName != 'null' &&
+                      this.state.categoryName != null &&
+                      ' -> ' + this.state.categoryName}
+                  </Text>
+                </View>
               </View>
+            </View>
 
-              {/* Материал */}
-              {!this.state.hasMaterial ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Материал
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Эмаль"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.material}
-                    onChangeText={text => this.setState({material: text})}
-                  />
-                </View>
-              ) : null}
+            {/* Название */}
+            <View>
+              <Text
+                style={[
+                  {
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 25,
+                  },
+                  this.state.name_error ? {color: 'red'} : {color: '#5B5B5B'},
+                ]}>
+                Название*
+              </Text>
+              <TextInput
+                underlineColorAndroid="transparent"
+                multiline={false}
+                placeholder="Кухня ЛРАЙ145 МДФ ПВХ Сатин Бежевый/СИСТЕМА"
+                numberOfLines={1}
+                keyboardType="default"
+                style={[
+                  {
+                    borderWidth: 1,
+                    padding: 10,
+                    paddingRight: 0,
+                    width: '100%',
+                    borderRadius: 5,
+                    fontSize: 13.5,
+                  },
+                  this.state.name_error
+                    ? {borderColor: 'red'}
+                    : {borderColor: '#F5F5F5'},
+                ]}
+                value={this.state.name}
+                onChangeText={text => {
+                  this.setState({name: text, name_error: false});
+                }}
+                maxLength={42}
+              />
+            </View>
 
-              {/* Фасады */}
-              {this.state.hasFacades ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Фасады
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Эмаль"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.facades}
-                    onChangeText={text => this.setState({facades: text})}
-                  />
-                </View>
-              ) : null}
-
-              {/* Корпус */}
-              {this.state.hasFrame ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Корпус
-                  </Text>
-
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="ДСП"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.frame}
-                    onChangeText={text => this.setState({frame: text})}
-                  />
-                </View>
-              ) : null}
-
-              {/* Профиль */}
-              {this.state.hasProfile && (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Профиль
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Aлюминиевый"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.profile}
-                    onChangeText={text => this.setState({profile: text})}
-                  />
-                </View>
-              )}
-
-              {/* Столешница */}
-              {this.state.hasTableTop ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Столешница
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="Камень"
-                    keyboardType="default"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.tabletop}
-                    onChangeText={text => this.setState({tabletop: text})}
-                  />
-                </View>
-              ) : null}
-
-              {/* Высота */}
-              {this.state.hasHeight ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Высота
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="0.5 метров"
-                    keyboardType="decimal-pad"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state.height}
-                    onChangeText={text => this.setState({height: text})}
-                  />
-                </View>
-              ) : null}
-
-              {/* Длина */}
-              {this.state.hasLength ? (
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: 'Poppins_500Medium',
-                      lineHeight: 23,
-                      fontSize: 16,
-                      color: '#5B5B5B',
-                      marginBottom: 5,
-                      marginTop: 12,
-                    }}>
-                    Длина
-                  </Text>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="8 метров"
-                    keyboardType="numeric"
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '100%',
-                      borderRadius: 5,
-                    }}
-                    value={this.state?.length}
-                    onChangeText={text => this.setState({length: text})}
-                  />
-                </View>
-              ) : null}
-
-              {/* Цена */}
+            {/* Материал */}
+            {!this.state.hasMaterial ? (
               <View>
                 <Text
                   style={{
@@ -1042,243 +823,435 @@ export default class EditProductComponent extends React.Component {
                     marginBottom: 5,
                     marginTop: 12,
                   }}>
-                  Цена
+                  Материал
                 </Text>
-                <View style={{flexDirection: 'row'}}>
-                  <TextInput
-                    underlineColorAndroid="transparent"
-                    placeholder="1.000.000"
-                    keyboardType="number-pad"
-                    maxLength={9}
-                    style={{
-                      borderWidth: 1,
-                      borderColor: '#F5F5F5',
-                      padding: 10,
-                      width: '89%',
-                      borderRadius: 5,
-                      marginRight: 5,
-                    }}
-                    value={this.state.price}
-                    onChangeText={text => {
-                      let without_dots = text.split('.').join('');
-                      let with_dots = without_dots
-                        .toString()
-                        .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-
-                      this.setState({price: with_dots});
-                    }}
-                  />
-                  <Image
-                    source={require('../../assets/image/apranqiGin.png')}
-                    style={{width: 30, height: 50}}
-                  />
-                </View>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Эмаль"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.material}
+                  onChangeText={text => this.setState({material: text})}
+                />
               </View>
+            ) : null}
 
-              {/* image */}
-              <Text
-                style={[
-                  {
-                    fontSize: 16,
-                    fontFamily: 'Poppins_500Medium',
-                    marginTop: 15,
-                  },
-                  this.state.all_images_error
-                    ? {color: 'red'}
-                    : {color: '#5B5B5B'},
-                ]}>
-                {this.state.all_images_error
-                  ? 'Загрузите фотографию'
-                  : 'Фотографии продукта*'}
-              </Text>
-              <TouchableOpacity
-                onPress={() => this.pickImage()}
-                style={{
-                  width: 165,
-                  height: 38,
-                  backgroundColor: '#B5D8FE',
-                  borderRadius: 15,
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginTop: 12,
-                }}>
+            {/* Фасады */}
+            {this.state.hasFacades ? (
+              <View>
                 <Text
                   style={{
-                    fontSize: 18,
-                    color: '#fff',
                     fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
                   }}>
-                  Загрузить
+                  Фасады
                 </Text>
-              </TouchableOpacity>
-              <View style={{width: '100%', alignItems: 'flex-start'}}>
-                <ScrollView
-                  horizontal={true}
-                  showsHorizontalScrollIndicator={false}>
-                  {this.state.get_old_image.length > 0 && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        height: 120,
-                        alignItems: 'center',
-                        marginTop: 30,
-                      }}>
-                      {this.state.get_old_image?.map((item, index) => {
-                        return (
-                          <View
-                            key={index}
-                            style={{
-                              marginRight: 10,
-                              position: 'relative',
-                              width: 100,
-                              height: 100,
-                            }}>
-                            <Image
-                              source={{
-                                uri:
-                                  `https://admin.refectio.ru/storage/app/uploads/` +
-                                  item.image,
-                              }}
-                              style={{
-                                width: '100%',
-                                height: '100%',
-                                resizeMode: 'cover',
-                              }}
-                            />
-
-                            <TouchableOpacity
-                              onPress={() => {
-                                this.delateSelectedOldImage(item, index);
-                              }}
-                              style={{
-                                width: 20,
-                                height: 20,
-                                position: 'absolute',
-                                right: 5,
-                                top: 5,
-                                backgroundColor: 'white',
-                                borderRadius: 100,
-                                justifyContent: 'center',
-                                alignItems: 'center',
-                              }}>
-                              <Image
-                                source={require('../../assets/image/ixs.png')}
-                                style={{width: 10, height: 10}}
-                              />
-                            </TouchableOpacity>
-                          </View>
-                        );
-                      })}
-                    </View>
-                  )}
-                  {this.state.all_images.length > 0 && (
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        height: 120,
-                        alignItems: 'center',
-                        marginTop: 30,
-                      }}>
-                      {this.state.all_images?.map((item, index) => {
-                        return (
-                          <ImageWithLoadingIndicator
-                            key={index}
-                            source={{uri: item.uri}}
-                            onDelete={this.delateSelectedImage}
-                            index={index}
-                          />
-                        );
-                      })}
-                    </View>
-                  )}
-                </ScrollView>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Эмаль"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.facades}
+                  onChangeText={text => this.setState({facades: text})}
+                />
               </View>
-              {this.state.limitError === true && (
-                <Text
-                  style={{color: 'red', textAlign: 'center', marginTop: 10}}>
-                  На данный момент можно загружать не более 10 фото по одному
-                  товару.
-                </Text>
-              )}
-              {/* {this.state.max_image_error === true && (
-                <Text
-                  style={{ color: "red", textAlign: "center", marginTop: 10 }}
-                >
-                  Максимальное количество из. 5 шт
-                </Text>
-              )} */}
+            ) : null}
 
-              {/* Дополнительная информация */}
+            {/* Корпус */}
+            {this.state.hasFrame ? (
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}>
+                  Корпус
+                </Text>
+
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="ДСП"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.frame}
+                  onChangeText={text => this.setState({frame: text})}
+                />
+              </View>
+            ) : null}
+
+            {/* Профиль */}
+            {this.state.hasProfile && (
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}>
+                  Профиль
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Aлюминиевый"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.profile}
+                  onChangeText={text => this.setState({profile: text})}
+                />
+              </View>
+            )}
+
+            {/* Столешница */}
+            {this.state.hasTableTop ? (
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}>
+                  Столешница
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="Камень"
+                  keyboardType="default"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.tabletop}
+                  onChangeText={text => this.setState({tabletop: text})}
+                />
+              </View>
+            ) : null}
+
+            {/* Высота */}
+            {this.state.hasHeight ? (
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}>
+                  Высота
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="0.5 метров"
+                  keyboardType="decimal-pad"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state.height}
+                  onChangeText={text => this.setState({height: text})}
+                />
+              </View>
+            ) : null}
+
+            {/* Длина */}
+            {this.state.hasLength ? (
+              <View>
+                <Text
+                  style={{
+                    fontFamily: 'Poppins_500Medium',
+                    lineHeight: 23,
+                    fontSize: 16,
+                    color: '#5B5B5B',
+                    marginBottom: 5,
+                    marginTop: 12,
+                  }}>
+                  Длина
+                </Text>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="8 метров"
+                  keyboardType="numeric"
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '100%',
+                    borderRadius: 5,
+                  }}
+                  value={this.state?.length}
+                  onChangeText={text => this.setState({length: text})}
+                />
+              </View>
+            ) : null}
+
+            {/* Цена */}
+            <View>
               <Text
                 style={{
+                  fontFamily: 'Poppins_500Medium',
+                  lineHeight: 23,
+                  fontSize: 16,
+                  color: '#5B5B5B',
+                  marginBottom: 5,
+                  marginTop: 12,
+                }}>
+                Цена
+              </Text>
+              <View style={{flexDirection: 'row'}}>
+                <TextInput
+                  underlineColorAndroid="transparent"
+                  placeholder="1.000.000"
+                  keyboardType="number-pad"
+                  maxLength={9}
+                  style={{
+                    borderWidth: 1,
+                    borderColor: '#F5F5F5',
+                    padding: 10,
+                    width: '89%',
+                    borderRadius: 5,
+                    marginRight: 5,
+                  }}
+                  value={this.state.price}
+                  onChangeText={text => {
+                    let without_dots = text.split('.').join('');
+                    let with_dots = without_dots
+                      .toString()
+                      .replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+
+                    this.setState({price: with_dots});
+                  }}
+                />
+                <Image
+                  source={require('../../assets/image/apranqiGin.png')}
+                  style={{width: 30, height: 50}}
+                />
+              </View>
+            </View>
+
+            {/* image */}
+            <Text
+              style={[
+                {
                   fontSize: 16,
                   fontFamily: 'Poppins_500Medium',
                   marginTop: 15,
-                  color: '#5B5B5B',
-                }}>
-                Дополнительная информация
-              </Text>
-              <View>
-                <RichTextEditorComponent
-                  value={this.state.about}
-                  navigation={this.props.navigation}
-                  // hideIcon
-                  // hideText={true}
-                  // height={200}
-                />
-              </View>
-
-              {/* button */}
-
-              <TouchableOpacity
-                onPress={() => {
-                  if (this.state.buttonBlue == true) {
-                    this.sendProduct();
-                  }
-
-                  // {
-                  //   this.state.alldata.facades == this.state.facades &&
-                  //   this.state.name == this.state.alldata.name &&
-                  //   this.state.frame == this.state.alldata.frame &&
-                  //   this.state.tabletop == this.state.alldata.tabletop &&
-                  //   this.state.alldata.length == this.state.length
-                  //     ? ''
-                  //     : this.sendProduct();
-                  // }
-                }}
+                },
+                this.state.all_images_error
+                  ? {color: 'red'}
+                  : {color: '#5B5B5B'},
+              ]}>
+              {this.state.all_images_error
+                ? 'Загрузите фотографию'
+                : 'Фотографии продукта*'}
+            </Text>
+            <TouchableOpacity
+              onPress={() => this.pickImage()}
+              style={{
+                width: 165,
+                height: 38,
+                backgroundColor: '#B5D8FE',
+                borderRadius: 15,
+                justifyContent: 'center',
+                alignItems: 'center',
+                marginTop: 12,
+              }}>
+              <Text
                 style={{
-                  alignSelf: 'center',
-                  marginTop: 60,
-                  marginBottom: 350,
+                  fontSize: 18,
+                  color: '#fff',
+                  fontFamily: 'Poppins_500Medium',
                 }}>
-                <View
-                  style={{
-                    backgroundColor:
-                      this.state.buttonBlue === true ? '#45b9ea' : '#B5D8FE',
-                    width: 285,
-                    height: 44,
-                    justifyContent: 'center',
-                    borderRadius: 20,
-                  }}>
-                  <Text
+                Загрузить
+              </Text>
+            </TouchableOpacity>
+            <View style={{width: '100%', alignItems: 'flex-start'}}>
+              <ScrollView
+                horizontal={true}
+                showsHorizontalScrollIndicator={false}>
+                {this.state.get_old_image.length > 0 && (
+                  <View
                     style={{
-                      color: 'white',
-                      fontSize: 18,
-                      textAlign: 'center',
-                      fontFamily: 'Poppins_SemiBold',
-                      fontWeight: '700',
+                      flexDirection: 'row',
+                      height: 120,
+                      alignItems: 'center',
+                      marginTop: 30,
                     }}>
-                    Изменить
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </ScrollView>
-          )}
+                    {this.state.get_old_image?.map((item, index) => {
+                      return (
+                        <View
+                          key={index}
+                          style={{
+                            marginRight: 10,
+                            position: 'relative',
+                            width: 100,
+                            height: 100,
+                          }}>
+                          <Image
+                            source={{
+                              uri:
+                                `https://admin.refectio.ru/storage/app/uploads/` +
+                                item.image,
+                            }}
+                            style={{
+                              width: '100%',
+                              height: '100%',
+                              resizeMode: 'cover',
+                            }}
+                          />
+
+                          <TouchableOpacity
+                            onPress={() => {
+                              this.delateSelectedOldImage(item, index);
+                            }}
+                            style={{
+                              width: 20,
+                              height: 20,
+                              position: 'absolute',
+                              right: 5,
+                              top: 5,
+                              backgroundColor: 'white',
+                              borderRadius: 100,
+                              justifyContent: 'center',
+                              alignItems: 'center',
+                            }}>
+                            <Image
+                              source={require('../../assets/image/ixs.png')}
+                              style={{width: 10, height: 10}}
+                            />
+                          </TouchableOpacity>
+                        </View>
+                      );
+                    })}
+                  </View>
+                )}
+                {this.state.all_images.length > 0 && (
+                  <View
+                    style={{
+                      flexDirection: 'row',
+                      height: 120,
+                      alignItems: 'center',
+                      marginTop: 30,
+                    }}>
+                    {this.state.all_images?.map((item, index) => {
+                      return (
+                        <ImageWithLoadingIndicator
+                          key={index}
+                          source={{uri: item.uri}}
+                          onDelete={this.delateSelectedImage}
+                          index={index}
+                        />
+                      );
+                    })}
+                  </View>
+                )}
+              </ScrollView>
+            </View>
+            {this.state.limitError === true && (
+              <Text style={{color: 'red', textAlign: 'center', marginTop: 10}}>
+                На данный момент можно загружать не более 10 фото по одному
+                товару.
+              </Text>
+            )}
+         
+            <Text
+              style={{
+                fontSize: 16,
+                fontFamily: 'Poppins_500Medium',
+                marginTop: 15,
+                color: '#5B5B5B',
+              }}>
+              Дополнительная информация
+            </Text>
+            <View>
+              <RichTextEditorComponent
+                value={this.state.about}
+                navigation={this.props.navigation}
+              />
+            </View>
+
+            <TouchableOpacity
+              onPress={() => {
+             
+                  this.sendProduct();
+             
+              }}
+              style={{
+                alignSelf: 'center',
+                marginTop: 60,
+                marginBottom: 350,
+              }}>
+              <View
+                style={{
+                  backgroundColor: '#B5D8FE',
+                  width: 285,
+                  height: 44,
+                  justifyContent: 'center',
+                  borderRadius: 20,
+                }}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 18,
+                    textAlign: 'center',
+                    fontFamily: 'Poppins_SemiBold',
+                    fontWeight: '700',
+                  }}>
+                  Изменить
+                </Text>
+              </View>
+            </TouchableOpacity>
+          </ScrollView>
         </View>
 
         {this.state.keyboardOpen === false && (
           <CustomerMainPageNavComponent navigation={this.props.navigation} />
         )}
+        {this.state.isLoading && <LoadingAdd />}
       </SafeAreaView>
     );
   }

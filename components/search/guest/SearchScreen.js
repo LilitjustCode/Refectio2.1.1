@@ -64,15 +64,15 @@ export default function SearchScreenGuest({navigation, category}) {
                 key={i}
                 onPress={() => {
                   const routes = navigation.getState()?.routes;
-                  const prevRoute = routes[routes.length - 2]?.name;
+                  // const prevRoute = routes[routes.length - 2]?.name;
                   el.childrens.length
                     ? navigation.navigate('SubCategoryScreen', {
                         category: el,
-                        prevRoute,
+                        prevRoute: 'SubCategoryScreen',
                       })
                     : navigation.navigate('CategoryScreen', {
                         category: el,
-                        prevRoute,
+                        prevRoute: 'CategoryScreen',
                         parentCategoryType: category,
                       });
                 }}>

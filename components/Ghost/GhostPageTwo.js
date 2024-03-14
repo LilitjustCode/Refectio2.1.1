@@ -15,7 +15,6 @@ import {
   View,
 } from 'react-native';
 import Svg, {Path, Rect} from 'react-native-svg';
-// import Slider from "../slider/Slider";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Linking} from 'react-native';
 import WebView from 'react-native-webview';
@@ -30,50 +29,45 @@ export default class GhostPageTwoComponent extends React.Component {
     super(props);
     this.handleBackButtonClick = this.handleBackButtonClick.bind(this);
     this.state = {
-      bronyModal: false,
-
+      company_name_url: '',
+      loading: false,
+      fontsLoaded: false,
+      RewardModal: false,
+      paramsFromLinking: null,
       changed: '',
       sOpenCityDropDown: false,
-      active: 0,
       parent_name: '',
-      loading: false,
-      id: null,
-
+      active: 0,
       user: [],
+      user_bonus_for_designer: [],
       user_category_for_product: [],
       city_for_sales_user: [],
       products: [],
+      user_id_for_search: '',
 
-      categorySelect: false,
-
-      praizvaditelSelect: false,
-
-      getPraizvaditel: [],
-
-      getPraizvaditelMap: [
+      procentArray: [
         {
-          proizvodtel_name: '',
-          proizvodtel_id: '',
-          proizvoditel_price: '',
-          drobdown_is_open: false,
+          to: '0',
+          from: '',
+          percent: '',
         },
       ],
-
-      praizvaditel_name: '',
+      whatsapp: '',
 
       urlImage: `https://admin.refectio.ru/storage/app/uploads/`,
-
-      category_name: '',
-      category_name_error: false,
-
+      valid_error: false,
       change_category_loaded: false,
+
       pressCategory: true,
-      dmodel_popup: false,
+      show_room: '',
+
+      userLink: '',
+      VipiskaModal: false,
       designerModal: false,
-      whatsapp: '',
+      dmodel_popup: false,
       city_count: null,
-      aboutUsPopup: false,
       about_us: '',
+      aboutUsPopup: false,
 
       aboutProductPopup: false,
       aboutProduct: '',
@@ -83,6 +77,7 @@ export default class GhostPageTwoComponent extends React.Component {
   getObjectData = async id => {
     this.setState({loading: true});
     let userID = id;
+    // console.log(this.props.id, 'ljj');
 
     await fetch(
       `https://admin.refectio.ru/public/api/getOneProizvoditel/user_id=` +
@@ -119,10 +114,11 @@ export default class GhostPageTwoComponent extends React.Component {
           let myItem = arr.splice(receptionАrea, 1);
           arr.push(myItem[0]);
         }
-
+        // console.log(res.data.user[0].about_us);
         this.setState({loading: false});
-
+        // console.log(this.state.loading);
         this.setState({
+          company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
@@ -131,6 +127,110 @@ export default class GhostPageTwoComponent extends React.Component {
           about_us: res.data.user[0].about_us,
         });
       });
+  };
+
+  handleClearData = () => {
+    this.setState({
+      user: [],
+      user_category_for_product: [],
+      city_for_sales_user: [],
+      whatsapp: '',
+      // products: [],
+      city_count: null,
+      about_us: '',
+    });
+  };
+
+  loadedDataAfterLoadPage = async id => {
+    await this.getObjectData(id);
+    this.setState({
+      changed:
+        this.state.city_for_sales_user.length == this.state.city_count
+          ? 'Все города России'
+          : this.state.city_for_sales_user[0].city_name,
+    });
+  };
+
+  handleBackButtonClick() {
+    // this.props.navigation.navigate("CustomerMainPage", { screen: true });
+    const {id, setId, setUrlLinking} = this.props;
+
+    if (this.props.route.params?.fromSearch === true) {
+      this.props.navigation.navigate(this.props.route.params.prevRoute);
+      this.props.id = null;
+    } else if (
+      this.props.route.params?.id ||
+      (this.props.id && !this.props.route.params?.fromSearch)
+    ) {
+      this.props.navigation.navigate('GhostPage', {screen: true});
+    }
+    setId(null);
+    setUrlLinking(null);
+    this.handleClearData();
+  }
+
+  componentDidMount() {
+    const {id, navigation, urlMy} = this.props;
+    console.log(urlMy, 'no');
+    loadedDataAfterLoadPageOne = async () => {
+      await this.getObjectData(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+
+      await this.updateProduct(
+        this.state.parent_name.length > 0
+          ? this.state.parent_name
+          : this.state.user_category_for_product[0].parent_category_name,
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+    };
+    loadedDataAfterLoadPageOne();
+
+    this.loadedDataAfterLoadPage(
+      this.props.route.params?.id ? this.props.route.params?.id : id,
+    );
+    this.focusListener = navigation.addListener('focus', () => {
+      console.log(urlMy, 'no');
+      this.loadedDataAfterLoadPage(
+        this.props.route.params?.id ? this.props.route.params?.id : id,
+      );
+      if (this.props.route.params?.fromSearch) {
+        loadedDataAfterLoadPageOne();
+        this.setState({change_category_loaded: true});
+      }
+      if (
+        this.props.route.params?.prevRoute == 'DesignerPage' &&
+        urlMy == 'yes'
+      ) {
+        loadedDataAfterLoadPageOne();
+        this.setState({change_category_loaded: true});
+      }
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.focusListener) {
+      this.focusListener();
+      this.handleClearData();
+    }
+  }
+
+  handleShare = async () => {
+    const shareingStartWith = 'refectio.ru/';
+    try {
+      {
+        this.state.user[0]?.company_name.split(' ').length == 1;
+        url = `${shareingStartWith}${this.state.company_name_url}/${this.state.user[0].id}`;
+      }
+
+      if (Platform.OS === 'android') {
+        await Share.share({message: url});
+      } else {
+        await Share.share({message: url});
+      }
+    } catch (error) {
+      console.error('Error sharing:', error);
+    }
   };
 
   updateProduct = async (parent_category_name, id) => {
@@ -183,51 +283,19 @@ export default class GhostPageTwoComponent extends React.Component {
         }
 
         this.setState({
+          // user: data.user,
+          // user_bonus_for_designer: res.data.user_bonus_for_designer,
+          // user_category_for_product: res.data.user_category_for_product,
+          // city_for_sales_user: res.data.city_for_sales_user,
           products: data.products,
-
+          // show_plus_button: false,
+          extract: data.user[0].extract,
+          // whatsapp: res.data.user[0].watsap_phone
           change_category_loaded: false,
         });
         this.setState({loading: false});
       })
       .catch(error => console.log('error', error));
-  };
-
-  handleShare = async () => {
-    const shareingStartWith = 'refectio.ru/';
-    try {
-      {
-        this.state.user[0]?.company_name.split(' ').length == 1
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 2
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 3
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.state.user[0].id}`)
-          : (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2] +
-              this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.state.user[0].id}`);
-      }
-
-      if (Platform.OS === 'android') {
-        await Share.share({message: url});
-        // Handle the result if needed
-      } else {
-        await Share.share({message: url});
-      }
-    } catch (error) {
-      console.error('Error sharing:', error);
-    }
   };
 
   updateProductAfterClickToCategory = async (parent_category_name, index) => {
@@ -249,7 +317,6 @@ export default class GhostPageTwoComponent extends React.Component {
       let userID = this.props.route.params?.id
         ? this.props.route.params?.id
         : id;
-
       let myHeaders = new Headers();
       let userToken = await AsyncStorage.getItem('userToken');
       myHeaders.append('Authorization', 'Bearer ' + userToken);
@@ -296,10 +363,14 @@ export default class GhostPageTwoComponent extends React.Component {
           }
 
           this.setState({
+            // user: data.user,
+            // user_bonus_for_designer: res.data.user_bonus_for_designer,
+            // user_category_for_product: res.data.user_category_for_product,
+            // city_for_sales_user: res.data.city_for_sales_user,
             products: data.products,
             // show_plus_button: false,
-            // extract: data.user[0].extract,
-            // whatsapp: res.data.user[0].watsap_phone
+            extract: data.user[0].extract,
+            whatsapp: res.data.user[0].watsap_phone,
             change_category_loaded: false,
             pressCategory: true,
           });
@@ -308,93 +379,6 @@ export default class GhostPageTwoComponent extends React.Component {
 
     // this.setState({ active: index })
   };
-
-  handleClearData = () => {
-    this.setState({
-      user: [],
-      user_category_for_product: [],
-      city_for_sales_user: [],
-      whatsapp: '',
-      city_count: null,
-      about_us: '',
-    });
-    if (this.props.route.params?.fromSearch === true) {
-      console.log('search, yes');
-      this.setState({
-        user: [],
-        user_category_for_product: [],
-        city_for_sales_user: [],
-        whatsapp: '',
-        city_count: null,
-        about_us: '',
-        products: [],
-      });
-    }
-  };
-
-  loadedDataAfterLoadPage = async id => {
-    await this.getObjectData(id);
-    this.setState({
-      changed:
-        this.state.city_for_sales_user.length == this.state.city_count
-          ? 'Все города России'
-          : this.state.city_for_sales_user[0].city_name,
-    });
-  };
-
-  handleBackButtonClick() {
-    const {id, setId, setUrlLinking} = this.props;
-
-    if (this.props.route.params?.fromSearch === true) {
-      this.props.navigation.navigate(this.props.route.params.prevRoute);
-      this.props.id = null;
-    } else if (
-      this.props.route.params?.id ||
-      (this.props.id && !this.props.route.params?.fromSearch)
-    ) {
-      this.props.navigation.navigate('GhostPage', {screen: true});
-    }
-    setId(null);
-    setUrlLinking(null);
-    this.handleClearData();
-  }
-
-  componentDidMount() {
-    const {id, navigation} = this.props;
-    console.log(this.props.route.params?.fromSearch, 'no');
-    loadedDataAfterLoadPageOne = async () => {
-      await this.getObjectData(
-        this.props.route.params?.id ? this.props.route.params?.id : id,
-      );
-
-      await this.updateProduct(
-        this.state.parent_name.length > 0
-          ? this.state.parent_name
-          : this.state.user_category_for_product[0].parent_category_name,
-        this.props.route.params?.id ? this.props.route.params?.id : id,
-      );
-    };
-    loadedDataAfterLoadPageOne();
-
-    this.loadedDataAfterLoadPage(
-      this.props.route.params?.id ? this.props.route.params?.id : id,
-    );
-    this.focusListener = navigation.addListener('focus', () => {
-      this.loadedDataAfterLoadPage(
-        this.props.route.params?.id ? this.props.route.params?.id : id,
-      );
-      if (this.props.route.params?.fromSearch) {
-        loadedDataAfterLoadPageOne();
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    if (this.focusListener) {
-      this.focusListener();
-      this.handleClearData();
-    }
-  }
 
   addProtocol(url) {
     const protocolRegex = /^https?:\/\//i;
@@ -407,256 +391,223 @@ export default class GhostPageTwoComponent extends React.Component {
   render() {
     return (
       <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
-        <Modal visible={this.state.dmodel_popup}>
-          <ImageBackground
-            source={require('../../assets/image/blurBg.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '90%',
-                height: '30%',
-                backgroundColor: '#fff',
-                borderRadius: 20,
-                position: 'relative',
-                paddingHorizontal: 15,
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  right: 18,
-                  top: 18,
-                }}
-                onPress={() => this.setState({dmodel_popup: false})}>
-                <Image
-                  source={require('../../assets/image/ixs.png')}
-                  style={{
-                    width: 22.5,
-                    height: 22.5,
-                  }}
-                />
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  marginTop: 60,
-                  fontSize: 22,
-                  textAlign: 'center',
-                  color: '#2D9EFB',
-                  fontFamily: 'Poppins_500Medium',
-                }}>
-                Предоставляет 3d модели по запросу
-              </Text>
-              <TouchableOpacity
-                style={{
-                  marginTop: 20,
-                }}
-                onPress={() => this.setState({dmodel_popup: false})}>
-                <BlueButton name="Ок" />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </Modal>
-
-        <Modal visible={this.state.aboutUsPopup}>
-          <ImageBackground
-            source={require('../../assets/image/blurBg.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '90%',
-                height: this.state.about_us ? '60%' : '30%',
-                backgroundColor: '#fff',
-                borderRadius: 20,
-                position: 'relative',
-                paddingHorizontal: 15,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  marginTop: 15,
-                  fontSize: 20,
-                  textAlign: 'center',
-                  color: '#2D9EFB',
-                  fontFamily: 'Poppins_500Medium',
-                }}>
-                Дополнительная информация
-              </Text>
-
-              {!this.state.about_us ? (
-                <Text style={{marginVertical: 20}}>
-                  Производитель не добавил доп. информацию
-                </Text>
-              ) : (
-                <WebView
-                  style={{
-                    height: 100,
-                    width: 280,
-                    marginTop: 30,
-                    zIndex: 99999,
-                  }}
-                  source={{
-                    html: `<div style="font-size:55px;">${this.state.about_us}</div>`,
-                  }}
-                />
-              )}
-
-              <TouchableOpacity
-                style={{
-                  marginVertical: 20,
-                }}
-                onPress={() => this.setState({aboutUsPopup: false})}>
-                <BlueButton name="Ок" />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </Modal>
-
-        <Modal visible={this.state.aboutProductPopup}>
-          <ImageBackground
-            source={require('../../assets/image/blurBg.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '90%',
-                height: '60%',
-                backgroundColor: '#fff',
-                borderRadius: 20,
-                position: 'relative',
-                paddingHorizontal: 15,
-                alignItems: 'center',
-              }}>
-              <Text
-                style={{
-                  marginTop: 15,
-                  fontSize: 20,
-                  textAlign: 'center',
-                  color: '#2D9EFB',
-                  fontFamily: 'Poppins_500Medium',
-                }}>
-                Дополнительная информация
-              </Text>
-
-              <WebView
-                style={{
-                  height: 100,
-                  width: 280,
-                  marginTop: 30,
-                  zIndex: 99999,
-                }}
-                source={{
-                  html: `<div style="font-size:55px;">${this.state.aboutProduct}</div>`,
-                }}
-              />
-
-              <TouchableOpacity
-                style={{
-                  marginVertical: 20,
-                }}
-                onPress={() => this.setState({aboutProductPopup: false})}>
-                <BlueButton name="Ок" />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </Modal>
-
-        <Modal visible={this.state.designerModal}>
-          <ImageBackground
-            source={require('../../assets/image/blurBg.png')}
-            style={{
-              width: '100%',
-              height: '100%',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}>
-            <View
-              style={{
-                width: '90%',
-                height: '28%',
-                backgroundColor: '#fff',
-                borderRadius: 20,
-                position: 'relative',
-                paddingHorizontal: 15,
-                alignItems: 'center',
-              }}>
-              <TouchableOpacity
-                style={{
-                  position: 'absolute',
-                  right: 18,
-                  top: 18,
-                }}
-                onPress={() => this.setState({designerModal: false})}>
-                <Image
-                  source={require('../../assets/image/ixs.png')}
-                  style={{
-                    width: 22.5,
-                    height: 22.5,
-                  }}
-                />
-              </TouchableOpacity>
-
-              <Text
-                style={{
-                  marginTop: 60,
-                  fontSize: 22,
-                  textAlign: 'center',
-                  color: '#2D9EFB',
-                  fontFamily: 'Poppins_500Medium',
-                }}>
-                Сотрудничает с дизайнерами
-              </Text>
-              <TouchableOpacity
-                style={{
-                  marginTop: 20,
-                }}
-                onPress={() => this.setState({designerModal: false})}>
-                <BlueButton name="Ок" />
-              </TouchableOpacity>
-            </View>
-          </ImageBackground>
-        </Modal>
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginTop: 15,
-            // marginLeft: -10,
-            paddingBottom: 10,
-          }}
-          onPress={this.handleBackButtonClick}>
-          <Svg
-            width={25}
-            height={30}
-            viewBox="0 0 30 30"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg">
-            <Path
-              d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
-              fill="#94D8F4"
-            />
-          </Svg>
-          <Text style={styles.backText}>Назад</Text>
-        </TouchableOpacity>
-
         <View style={styles.main}>
-          <ScrollView showsVerticalScrollIndicator={false}>
+          <Modal visible={this.state.VipiskaModal}>
+            <ImageBackground
+              source={require('../../assets/image/blurBg.png')}
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  width: '90%',
+                  height: 389,
+                  backgroundColor: '#fff',
+                  borderRadius: 20,
+                  position: 'relative',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    width: 22.5,
+                    height: 22.5,
+                    right: 21.75,
+                    top: 21.75,
+                  }}
+                  onPress={() => this.setState({VipiskaModal: false})}>
+                  <Image
+                    source={require('../../assets/image/ixs.png')}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                    }}
+                  />
+                </TouchableOpacity>
+                <Text
+                  style={{
+                    color: '#2D9EFB',
+                    fontSize: 26,
+                    marginTop: 83,
+                    textAlign: 'center',
+                    fontFamily: 'Poppins_600SemiBold',
+                  }}>
+                  Вы хотите скачать{'\n'}выписку
+                </Text>
+                <View style={[styles.Vipiska, {marginTop: 80}]}>
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.props.navigation.navigate('Modal');
+                    }}>
+                    <BlueButton name="Подтвердить" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    style={{
+                      width: 285,
+                      height: 44,
+                      borderWidth: 3,
+                      borderColor: '#B5D8FE',
+                      borderRadius: 20,
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: 12,
+                    }}
+                    onPress={() => this.setState({VipiskaModal: false})}>
+                    <Text
+                      style={{
+                        color: '#B5D8FE',
+                        fontSize: 18,
+                        fontFamily: 'Poppins_700Bold',
+                      }}>
+                      Отменить
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ImageBackground>
+          </Modal>
+
+          <Modal visible={this.state.dmodel_popup}>
+            <ImageBackground
+              source={require('../../assets/image/blurBg.png')}
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  width: '90%',
+                  height: '30%',
+                  backgroundColor: '#fff',
+                  borderRadius: 20,
+                  position: 'relative',
+                  paddingHorizontal: 15,
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    right: 18,
+                    top: 18,
+                  }}
+                  onPress={() => this.setState({dmodel_popup: false})}>
+                  <Image
+                    source={require('../../assets/image/ixs.png')}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 60,
+                    fontSize: 22,
+                    textAlign: 'center',
+                    color: '#2D9EFB',
+                    fontFamily: 'Poppins_500Medium',
+                  }}>
+                  Предоставляет 3d модели по запросу
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginTop: 20,
+                  }}
+                  onPress={() => this.setState({dmodel_popup: false})}>
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+
+          <Modal visible={this.state.designerModal}>
+            <ImageBackground
+              source={require('../../assets/image/blurBg.png')}
+              style={{
+                width: '100%',
+                height: '100%',
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}>
+              <View
+                style={{
+                  width: '90%',
+                  height: '28%',
+                  backgroundColor: '#fff',
+                  borderRadius: 20,
+                  position: 'relative',
+                  paddingHorizontal: 15,
+                  alignItems: 'center',
+                }}>
+                <TouchableOpacity
+                  style={{
+                    position: 'absolute',
+                    right: 18,
+                    top: 18,
+                  }}
+                  onPress={() => this.setState({designerModal: false})}>
+                  <Image
+                    source={require('../../assets/image/ixs.png')}
+                    style={{
+                      width: 22.5,
+                      height: 22.5,
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <Text
+                  style={{
+                    marginTop: 60,
+                    fontSize: 22,
+                    textAlign: 'center',
+                    color: '#2D9EFB',
+                    fontFamily: 'Poppins_500Medium',
+                  }}>
+                  Сотрудничает с дизайнерами
+                </Text>
+                <TouchableOpacity
+                  style={{
+                    marginTop: 20,
+                  }}
+                  onPress={() => this.setState({designerModal: false})}>
+                  <BlueButton name="Ок" />
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+          </Modal>
+          <TouchableOpacity
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginTop: 15,
+              marginLeft: -10,
+              paddingBottom: 10,
+            }}
+            onPress={this.handleBackButtonClick}>
+            <Svg
+              width={25}
+              height={30}
+              viewBox="0 0 30 30"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg">
+              <Path
+                d="M20.168 27.708a1.458 1.458 0 01-1.137-.54l-7.044-8.75a1.458 1.458 0 010-1.851l7.292-8.75a1.46 1.46 0 112.245 1.866L15.006 17.5l6.3 7.817a1.458 1.458 0 01-1.138 2.391z"
+                fill="#94D8F4"
+              />
+            </Svg>
+            <Text style={styles.backText}>Назад</Text>
+          </TouchableOpacity>
+
+          <ScrollView
+            showsVerticalScrollIndicator={false}
+            style={{marginTop: 15}}>
             <View style={styles.campaign}>
-              {this.state.user.length > 0 ? (
+              {this.state.user.length > 0 && (
                 <>
                   <View style={styles.infoCompanyMain}>
                     <View style={{width: '32%'}}>
@@ -791,7 +742,7 @@ export default class GhostPageTwoComponent extends React.Component {
                           {this.state.user[0].extract !== null && (
                             <TouchableOpacity
                               onPress={() => {
-                                this.props.navigation.navigate('Modal');
+                                this.setState({VipiskaModal: true});
                               }}>
                               <Image
                                 source={require('../../assets/image/sidebar.png')}
@@ -923,7 +874,8 @@ export default class GhostPageTwoComponent extends React.Component {
                           : styles.sOpenCityDropDown
                       }>
                       <ScrollView nestedScrollEnabled={true}>
-                        {this.state.city_for_sales_user.length >= 78 ? (
+                        {this.state.city_for_sales_user.length ==
+                        this.state.city_count ? (
                           <TouchableOpacity
                             style={{
                               width: '100%',
@@ -1042,10 +994,6 @@ export default class GhostPageTwoComponent extends React.Component {
                     )}
                   </View>
                 </>
-              ) : (
-                <View style={styles.loaderBox}>
-                  <ActivityIndicator color={'#868686'} size={'large'} />
-                </View>
               )}
 
               <View
@@ -1061,9 +1009,13 @@ export default class GhostPageTwoComponent extends React.Component {
                 <TouchableOpacity
                   style={[
                     styles.info,
-                    {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
+                    {
+                      borderRightWidth: 2,
+                      borderRightColor: '#EEEEEE',
+                    },
                   ]}
                   onPress={() => {
+                    // this.setState({ aboutUsPopup: true })
                     this.props.navigation.navigate('AboutUsScreen', {
                       value: this.state.about_us,
                       hideText: true,
@@ -1084,11 +1036,7 @@ export default class GhostPageTwoComponent extends React.Component {
                     styles.info,
                     {borderRightWidth: 2, borderRightColor: '#EEEEEE'},
                   ]}
-                  // onPress={() => {
-                  //   this.props.navigation.navigate("Modal");
-                  // }}
                   onPress={() => {
-                    const number = this.state.whatsapp;
                     this.props.navigation.navigate('Modal');
                   }}>
                   <Image
@@ -1101,12 +1049,7 @@ export default class GhostPageTwoComponent extends React.Component {
                   />
                   <Text style={styles.infoText}>Написать в вотсап</Text>
                 </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.info}
-                  // onPress={() => {
-                  //   this.props.navigation.navigate("Modal");
-                  // }}
-                >
+                <View style={styles.info}>
                   <Image
                     source={require('../../assets/image/pcichka.png')}
                     style={{
@@ -1116,9 +1059,8 @@ export default class GhostPageTwoComponent extends React.Component {
                     }}
                   />
                   <Text style={styles.infoText}>Отзывы</Text>
-                </TouchableOpacity>
+                </View>
               </View>
-
               <View style={{zIndex: -1}}>
                 <ScrollView
                   horizontal={true}
@@ -1131,6 +1073,7 @@ export default class GhostPageTwoComponent extends React.Component {
                         onPress={async () => {
                           await this.updateProductAfterClickToCategory(
                             item.parent_category_name,
+                            index,
                           );
                           this.setState({active: index});
                           this.setState({
@@ -1138,13 +1081,13 @@ export default class GhostPageTwoComponent extends React.Component {
                           });
                         }}
                         style={
-                          this.state.active === index
-                            ? styles.categoriesButtonActive
-                            : styles.categoriesButton
+                          this.state.active == index
+                            ? styles.categoryButtonActive
+                            : styles.categoryButton
                         }>
                         <Text
                           style={
-                            this.state.active === index
+                            this.state.active == index
                               ? styles.categoriesNameActive
                               : styles.categoriesName
                           }>
@@ -1167,11 +1110,7 @@ export default class GhostPageTwoComponent extends React.Component {
                   return (
                     <View key={index} style={{marginTop: 18}}>
                       <Slider2 slid={item.product_image} />
-
-                      <View
-                        style={{
-                          width: '100%',
-                        }}>
+                      <View style={{width: '100%'}}>
                         <View style={styles.itemNameBox}>
                           <Text style={styles.itemName}>{item.name}</Text>
                         </View>
@@ -1180,18 +1119,18 @@ export default class GhostPageTwoComponent extends React.Component {
                             style={{
                               color: '#333333',
                               width: '90%',
-                              marginTop: Platform.OS === 'ios' ? 5 : 0,
+                              marginTop: Platform.OS === 'ios' ? 2 : 0,
                             }}>
                             Фасады: {item.facades}
                           </Text>
                         )}
                         {item.frame && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Корпус: {item.frame}
                           </Text>
                         )}
                         {item.profile && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Профиль: {item.profile}
                           </Text>
                         )}
@@ -1201,22 +1140,23 @@ export default class GhostPageTwoComponent extends React.Component {
                           </Text>
                         )}
                         {item.length && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Длина: {item.length.replace('.', ',')} м.
                           </Text>
                         )}
+
                         {item.height && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Высота: {item.height.replace('.', ',')} м.
                           </Text>
                         )}
                         {item.material && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Материал: {item.material}
                           </Text>
                         )}
                         {item.price && (
-                          <Text style={{color: '#333333'}}>
+                          <Text style={{color: '#333333', width: '90%'}}>
                             Цена:{' '}
                             {item.price
                               .toString()
@@ -1261,31 +1201,23 @@ export default class GhostPageTwoComponent extends React.Component {
             </View>
           </ScrollView>
         </View>
-
-        <GhostNavComponent
-          active_page={'Главная'}
-          navigation={this.props.navigation}
-        />
+        <GhostNavComponent navigation={this.props.navigation} />
       </SafeAreaView>
     );
   }
 }
+
 const styles = StyleSheet.create({
   main: {
     flex: 1,
+    backgroundColor: 'white',
     paddingHorizontal: 15,
     position: 'relative',
-    marginTop: 15,
   },
   nameCompanyParent: {
     marginTop: 12,
     paddingLeft: 2,
     flexDirection: 'row',
-    alignItems: 'center',
-  },
-  loaderBox: {
-    flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
   itemNameBox: {
@@ -1301,52 +1233,46 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: '#333333',
     fontWeight: '700',
+    width: '90%',
   },
-  itemType: {
-    fontFamily: 'Raleway_600SemiBold',
-    fontSize: 13,
-    color: '#333333',
-    fontWeight: '700',
+  user: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#F3F3F3',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 15,
   },
   campaign: {
     width: '100%',
     marginBottom: 34,
   },
   infoCompanyMain: {
-    overflow: 'visible',
+    width: '100%',
+    // borderWidth: 1,
+    // borderColor: '#000',
     flexDirection: 'row',
     alignItems: 'center',
-    width: '100%',
   },
   infoCompany: {
     width: '68.7%',
-    // flexDirection: "row",
-    // justifyContent: "space-between",
   },
+  // infoCompany: {
+  //   width: "67%",
+  //   flexDirection: "row",
+  //   justifyContent: "space-between",
+  // },
   categoriesName: {
     fontSize: 14,
     // fontFamily: 'Raleway_SemiBold',
-    fontWeight: '600',
+    fontWeight: '500',
     color: '#333333',
   },
   categoriesNameActive: {
     fontSize: 14,
-    fontWeight: '600',
+    // fontFamily: 'Raleway_600SemiBold',
+    fontWeight: '500',
     color: '#fff',
-  },
-  categoriesButton: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#F5F5F5',
-    borderRadius: 8,
-    marginRight: 6,
-  },
-  categoriesButtonActive: {
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    backgroundColor: '#94D8F4',
-    borderRadius: 8,
-    marginRight: 6,
   },
   info: {
     width: '33.3%',
@@ -1357,12 +1283,7 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 10,
     textAlign: 'center',
-    fontFamily: 'Raleway_400Regular',
-  },
-  zakazInfo: {
-    fontSize: 14,
-    fontFamily: 'Raleway_400Regular',
-    // marginTop: 5
+    fontFamily: 'Raleway_500Medium',
   },
   sOpenCityDropDown: {
     width: '60%',
@@ -1384,6 +1305,156 @@ const styles = StyleSheet.create({
     paddingHorizontal: 5,
     zIndex: 100,
     backgroundColor: '#fff',
+  },
+  categoryButton: {
+    paddingHorizontal: 16,
+    paddingBottom: 11,
+    paddingTop: 9,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 8,
+    marginRight: 6,
+  },
+  categoryButtonActive: {
+    paddingHorizontal: 16,
+    paddingBottom: 12,
+    paddingTop: 8,
+    backgroundColor: '#94D8F4',
+    borderRadius: 8,
+    marginRight: 6,
+  },
+  DesignerRemunerationPercentageParent: {
+    width: '90%',
+    marginTop: 85,
+    alignSelf: 'center',
+  },
+  DesignerRemunerationPercentage: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  procentText: {
+    fontSize: 14,
+    fontFamily: 'Poppins_500Medium',
+    color: '#888888',
+  },
+  procentInput: {
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    borderRadius: 6,
+    width: '22%',
+    height: '100%',
+    paddingLeft: 5,
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#888888',
+    marginRight: 10,
+  },
+  rubli: {
+    height: '100%',
+    width: 21,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#888888',
+    marginRight: 10,
+  },
+  procent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    borderRadius: 6,
+    width: 45,
+    height: '100%',
+    paddingLeft: 5,
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#888888',
+  },
+  presoble: {
+    width: 90,
+    height: 32,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  zakazInfo: {
+    fontSize: 14,
+    fontFamily: 'Raleway_400Regular',
+    // marginTop: 5
+  },
+
+  DesignerRemunerationPercentageParent: {
+    width: '90%',
+    marginTop: 85,
+    alignSelf: 'center',
+  },
+  DesignerRemunerationPercentage: {
+    width: '100%',
+    height: 50,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    marginBottom: 10,
+    justifyContent: 'space-between',
+  },
+  procentText: {
+    fontSize: 14,
+    fontFamily: 'Poppins_500Medium',
+    color: '#888888',
+  },
+  procentInput: {
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    borderRadius: 6,
+    width: '22%',
+    height: '100%',
+    paddingLeft: 5,
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#888888',
+    marginRight: 10,
+  },
+  rubli: {
+    height: '100%',
+    width: 21,
+    backgroundColor: '#F5F5F5',
+    borderRadius: 6,
+    justifyContent: 'center',
+    alignItems: 'center',
+    color: '#888888',
+    marginRight: 10,
+  },
+  procent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#F5F5F5',
+    borderRadius: 6,
+    width: 45,
+    height: '100%',
+    paddingLeft: 5,
+    fontSize: 14,
+    fontWeight: '400',
+    color: '#888888',
+  },
+  presoble: {
+    width: 90,
+    height: 32,
+    backgroundColor: '#F5F5F5',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 8,
+  },
+  Vipiska: {
+    marginHorizontal: 20,
+    alignItems: 'center',
   },
   backText: {
     color: '#94D8F4',

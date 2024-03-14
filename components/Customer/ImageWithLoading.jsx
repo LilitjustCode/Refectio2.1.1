@@ -24,7 +24,7 @@ const ImageWithLoadingIndicator = ({source, onDelete, index}) => {
 
   const handleLoadEnd = () => {
     setLoading(false);
-    setProgress(100); 
+    setProgress(100);
   };
 
   return (
@@ -50,7 +50,7 @@ const ImageWithLoadingIndicator = ({source, onDelete, index}) => {
               justifyContent: 'center',
               alignItems: 'center',
             }}>
-            <ActivityIndicator size="small" color="#0000ff" />
+            <ActivityIndicator size="large" color="#0000ff" />
           </View>
         )}
       </ImageBackground>

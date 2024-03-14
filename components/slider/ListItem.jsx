@@ -21,7 +21,6 @@ const ListItem = React.memo(({item}) => {
       }
     });
   }, [height, width]);
-  console.log(item, 'l');
 
   return (
     <View>

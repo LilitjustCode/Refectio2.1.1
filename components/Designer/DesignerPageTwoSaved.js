@@ -59,7 +59,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
           drobdown_is_open: false,
         },
       ],
-
+      company_name_url: '',
       praizvaditel_name: '',
 
       urlImage: `https://admin.refectio.ru/storage/app/uploads/`,
@@ -216,6 +216,7 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
         console.log(res.data.city_for_sales_user.length, 'data');
 
         this.setState({
+          company_name_url: res.data.user[0].company_name_url,
           user: res.data.user,
           user_category_for_product: arr,
           city_for_sales_user: res.data.city_for_sales_user,
@@ -358,30 +359,13 @@ export default class DesignerPageTwoSavedComponent extends React.Component {
     const shareingStartWith = 'refectio.ru/';
     try {
       {
-        this.state.user[0]?.company_name.split(' ').length == 1
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 2
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1]
-            }/${this.state.user[0].id}`)
-          : this.state.user[0]?.company_name.split(' ').length == 3
-          ? (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2]
-            }/${this.state.user[0].id}`)
-          : (url = `${shareingStartWith}${
-              this.state.user[0]?.company_name.split(' ')[0] +
-              this.state.user[0]?.company_name.split(' ')[1] +
-              this.state.user[0]?.company_name.split(' ')[2] +
-              this.state.user[0]?.company_name.split(' ')[3]
-            }/${this.state.user[0].id}`);
+        this.state.user[0]?.company_name.split(' ').length == 1;
+        url = `${shareingStartWith}${this.state.company_name_url}/${this.state.user[0].id}`;
       }
+
       if (Platform.OS === 'android') {
         await Share.share({message: url});
+        // Handle the result if needed
       } else {
         await Share.share({message: url});
       }

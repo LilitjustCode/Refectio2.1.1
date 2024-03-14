@@ -381,6 +381,7 @@ export default class CustomerMainPageComponent extends React.Component {
             onPress={async () => {
               await this.props.navigation.navigate('DesignerPageTwo', {
                 id: item.id,
+                prevRoute: 'DesignerPage',
               });
               // await this.clearAllData();
             }}>

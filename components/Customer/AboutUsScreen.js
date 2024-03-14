@@ -19,53 +19,21 @@ export default function AboutUsScreen({navigation, value, hideText}) {
   const [disabled, setDisabled] = useState(false);
   const [aboutUs, setAboutUs] = useState(value);
   const webViewRef = useRef(null);
+  const [newtx, setNewtxt] = useState('');
 
-  // useEffect(() => {
-  //   if (webViewRef.current) {
-  //     webViewRef.current.injectJavaScript(`
-  //       const contentHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
-  //       window.ReactNativeWebView.postMessage(contentHeight);
-  //     `);
-  //   }
-  // }, [aboutUs]);
-
-  // const onMessage = event => {
-  //   const contentHeight = parseInt(event.nativeEvent.data, 10);
-  //   if (!isNaN(contentHeight) && webViewRef.current) {
-  //     webViewRef.current.setNativeProps({
-  //       style: {
-  //         height: contentHeight + 'px',
-  //       },
-  //     });
-  //   }
-  // };
-
-  // updateAboutUs = async () => {
-  //   let myHeaders = new Headers();
-  //   let userToken = await AsyncStorage.getItem("userToken");
-  //   let AuthStr = "Bearer " + userToken;
-  //   myHeaders.append("Authorization", AuthStr);
-
-  //   let formdata = new FormData();
-  //   console.log(userToken);
-  //   console.log('aboutUs',aboutUs);
-  //   formdata.append("about_us", aboutUs);
-
-  //   let requestOptions = {
-  //     method: "POST",
-  //     headers: myHeaders,
-  //     body: formdata,
-  //     redirect: "follow",
-  //   };
-
-  //   fetch(`https://admin.refectio.ru/public/api/update_about_us_user`, requestOptions)
-  //     .then((response) => response.json())
-  //     .then((result) => {
-  //       console.log(result);
-  //       navigation.goBack()
-  //     })
-  //     .catch((error) => console.log("error", error));
-  // }
+  // const modifiedHtmlString = aboutUs
+  //   .replace(/<p>/g, '<span>')
+  //   .replace(/<\/p>/g, '</span><br>');
+  console.log(aboutUs, 'as');
+  useEffect(() => {
+    // Replace <p> with <span> and <br> after </span>
+    const modifiedHtmlString = aboutUs
+      .replace(/<p>/g, '<span>')
+      .replace(/<\/p>/g, '</span><br>');
+    setNewtxt(modifiedHtmlString);
+    // Use modifiedHtmlString as needed
+    console.log(modifiedHtmlString);
+  }, [aboutUs]);
 
   useEffect(() => {
     const keyboardDidShowListener = Keyboard.addListener(
@@ -131,39 +99,28 @@ export default function AboutUsScreen({navigation, value, hideText}) {
                   width: '100%',
                   // paddingHorizontal: 10,
                 }}>
-                {/* <HTML
-                  contentWidth={700}
-                  // source={{
-                  //   html: `<div style="font-size: 16px">${aboutUs}</div>`,
-                  // }}
-                  source={{html: aboutUs}}
-                /> */}
-
                 <WebView
                   ref={webViewRef}
                   style={{
-                    width: 300,
+                    width: '100%',
                     zIndex: 99999,
                     flex: 1,
                     overflow: 'hidden',
-                    height: 800,
-                    // Add other styles as needed
+                    height:
+                      aboutUs.length >= 1000
+                        ? aboutUs.length - 200
+                        : aboutUs.length + 100,
                   }}
                   source={{
-                    html: `<div style="font-size:50px; overflow: hidden; height:auto; width:1000">${aboutUs}</div>`,
+                    html: `<div style="font-size:50px; overflow: hidden; height:auto; width:1000">${newtx}</div>`,
                   }}
-                  // onMessage={onMessage}
-                  // // injectedJavaScriptBeforeContentLoaded={true}
-                  // javaScriptEnabled={true}
                 />
               </View>
             </View>
             <TouchableOpacity
               style={{
                 alignSelf: 'center',
-                // position: 'absolute',
-                // bottom: '10%',
-                marginTop: 20,
+                marginTop: aboutUs.length > 1440 ? -170 : 20,
                 marginBottom: 20,
               }}
               disabled={disabled}
